@@ -2,8 +2,6 @@
 
 namespace App;
 
-//require_once __DIR__ . '/../vendor/autoload.php';
-
 use Docopt;
 
 function runGendiff()
@@ -20,6 +18,7 @@ function runGendiff()
     Options:
       -h --help                  Show this screen
       -v --version               Show version
+      --format <fmt>             Report format [default: stylish]
 
     DOCOPT;
 
