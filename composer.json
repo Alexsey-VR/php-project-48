@@ -18,7 +18,9 @@
             "src/Gendiff.php",
             "src/CommandInterface.php",
             "src/Command.php",
-            "src/OutputInterface.php"
+            "src/OutputInterface.php",
+            "src/FileReaderInterface.php",
+            "src/FileReader.php"
         ]
     },
     "authors": [

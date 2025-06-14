@@ -5,6 +5,7 @@ namespace App;
 use Docopt;
 use App\OutputInterface;
 use App\Command;
+use App\FileReader;
 
 function runGendiff(): void
 {
@@ -33,8 +34,9 @@ function runGendiff(): void
             return Docopt::handle($docopt, array('version' => '1.0.6'));
         }
     };
-    $cliData = $output->parseCommandData($docopt);
 
-    $command = new ViewFilesCommand($output);
+    $fileReader = new FileReader();
+    $cliData = $output->parseCommandData($docopt);
+    $command = new ViewFilesCommand($fileReader);
     $command->execute($cliData);
 }
