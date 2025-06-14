@@ -4,14 +4,12 @@ namespace App;
 
 use Docopt;
 use App\OutputInterface;
-use App\CommandInterface;
-use App\Invoker;
 use App\Command;
 
 function runGendiff(): void
 {
 
-    $doc = <<<'DOCOPT'
+    $docopt = <<<'DOCOPT'
     gendiff -h
 
     Generate diff
@@ -35,9 +33,8 @@ function runGendiff(): void
             return Docopt::handle($docopt, array('version' => '1.0.6'));
         }
     };
+    $cliData = $output->parseCommandData($docopt);
 
-    $command = new Command($output, $doc);
-    $invoker = new Invoker();
-    $invoker->setCommand($command);
-    $invoker->run();
+    $command = new ViewFilesCommand($output);
+    $command->execute($cliData);
 }

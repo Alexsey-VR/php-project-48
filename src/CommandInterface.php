@@ -4,5 +4,5 @@ namespace App;
 
 interface CommandInterface
 {
-    public function execute();
+    public function execute(object $cliData);
 }
