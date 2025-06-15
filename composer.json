@@ -17,8 +17,10 @@
             "vendor/docopt/docopt/src/docopt.php",
             "src/Gendiff.php",
             "src/CommandInterface.php",
-            "src/Command.php",
+            "src/FilesDiffCommand.php",
+            "src/DisplayCommand.php",
             "src/OutputInterface.php",
+            "src/Output.php",
             "src/FileReaderInterface.php",
             "src/FileReader.php"
         ]

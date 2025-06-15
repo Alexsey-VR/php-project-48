@@ -2,9 +2,10 @@
 
 namespace App;
 
-use Docopt;
 use App\OutputInterface;
-use App\Command;
+use App\Output;
+use App\FilesDiffCommand;
+use App\DisplayCommand;
 use App\FileReader;
 
 function runGendiff(): void
@@ -27,16 +28,14 @@ function runGendiff(): void
 
     DOCOPT;
 
-    $output = new class implements OutputInterface
-    {
-        public function parseCommandData(string $docopt): object
-        {
-            return Docopt::handle($docopt, array('version' => '1.0.6'));
-        }
-    };
+    $output = new Output($docopt);
+    $cliData = $output->parseCommandData();
 
-    $fileReader = new FileReader();
-    $cliData = $output->parseCommandData($docopt);
-    $command = new ViewFilesCommand($fileReader);
-    $command->execute($cliData);
+    $filesDiffCommand = new FilesDiffCommand();
+    $filesContent = $filesDiffCommand->setFileReader(new FileReader())
+                                     ->execute($cliData);
+
+    $displayCommand = new DisplayCommand();
+    $displayCommand->execute((object)$filesContent)
+                   ->showDiffsToConsole();
 }

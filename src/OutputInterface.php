@@ -4,5 +4,5 @@ namespace App;
 
 interface OutputInterface
 {
-    public function parseCommandData(string $docopt): object;
+    public function parseCommandData(): object;
 }

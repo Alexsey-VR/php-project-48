@@ -4,5 +4,5 @@ namespace App;
 
 interface CommandInterface
 {
-    public function execute(object $cliData);
+    public function execute(object $data): object | null;
 }
