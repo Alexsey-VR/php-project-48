@@ -13,6 +13,8 @@ class FilesDiffCommand implements CommandInterface
     {
         $this->file1Content = [];
         $this->file2Content = [];
+
+        return $this;
     }
 
     public function setFileReader(FileReaderInterface $fileReader): object

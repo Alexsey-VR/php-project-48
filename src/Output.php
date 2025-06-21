@@ -15,6 +15,6 @@ class Output implements OutputInterface
 
     public function parseCommandData(): object
     {
-        return (new Docopt)->handle($this->docopt, array('version' => '1.0.6'));
+        return (new Docopt())->handle($this->docopt, array('version' => '1.0.6'));
     }
 }

@@ -15,14 +15,7 @@
         },
         "files": [
             "vendor/docopt/docopt/src/docopt.php",
-            "src/Gendiff.php",
-            "src/CommandInterface.php",
-            "src/FilesDiffCommand.php",
-            "src/DisplayCommand.php",
-            "src/OutputInterface.php",
-            "src/Output.php",
-            "src/FileReaderInterface.php",
-            "src/FileReader.php"
+            "src/Gendiff.php"
         ]
     },
     "authors": [

@@ -11,6 +11,8 @@ class DisplayCommand implements CommandInterface
     {
         $this->filesContent = [];
         $this->filesDiffContent = [];
+
+        return $this;
     }
 
     private function constructContent($accum, $item)
@@ -25,20 +27,21 @@ class DisplayCommand implements CommandInterface
         $this->filesContent[] = array_reduce(
             get_object_vars($data)['file1'],
             [$this, 'constructContent'],
-            "{") . "\r}\n";
+            "{"
+        ) . "\r}\n";
 
         $this->filesContent[] = "file2.json content:\n";
         $this->filesContent[] = array_reduce(
             get_object_vars($data)['file2'],
             [$this, 'constructContent'],
-            "{") . "\n}\n";
+            "{"
+        ) . "\n}\n";
 
         $file1Array = get_object_vars($data)['file1'];
         $file1Keys = array_keys($file1Array);
         $file2Array = get_object_vars($data)['file2'];
         $this->filesDiffContent = array_map(
-            function($file1Key) use ($file1Array, $file2Array)
-            {
+            function ($file1Key) use ($file1Array, $file2Array) {
                 if (array_key_exists($file1Key, $file2Array)) {
                     if (!strcmp($file1Array[$file1Key], $file2Array[$file1Key])) {
                         return "    " . $file1Array[$file1Key] . "\n";
@@ -49,7 +52,8 @@ class DisplayCommand implements CommandInterface
                 } else {
                     return "  - " . $file1Array[$file1Key] . "\n";
                 }
-            }, $file1Keys
+            },
+            $file1Keys
         );
         return $this;
     }

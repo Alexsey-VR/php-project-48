@@ -22,14 +22,30 @@ function runGendiff(): void
 
     DOCOPT;
 
-    $output = new Output($docopt);
-    $cliData = $output->parseCommandData();
+    $factory = new CommandFactory($docopt);
 
-    $filesDiffCommand = new FilesDiffCommand();
-    $filesContent = $filesDiffCommand->setFileReader(new FileReader())
-                                     ->execute($cliData);
+    $outputParser = $factory->getCommand("parse");
+    if (is_null($outputParser)) {
+        print_r("error: can't create command to parse command data\n");
+    } else {
+        $cliData = $outputParser->parseCommandData();
+    }
 
-    $displayCommand = new DisplayCommand();
-    $displayCommand->execute((object)$filesContent)
-                   ->showDiffsToConsole();
+    $filesDiffCommand = $factory->getCommand("difference");
+    if (is_null($filesDiffCommand)) {
+        print_r("error: can't create command to get files difference\n");
+        exit;
+    } else {
+        $filesContent = $filesDiffCommand->setFileReader(new FileReader())
+                                         ->execute($cliData);
+    }
+
+    $displayCommand = $factory->getCommand("show");
+    if (is_null($displayCommand)) {
+        print_r("error: can't create command to show differences to console\n");
+        exit;
+    } else {
+        $displayCommand->execute((object)$filesContent)
+                       ->showDiffsToConsole();
+    }
 }
