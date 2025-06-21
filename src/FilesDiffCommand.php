@@ -1,10 +1,6 @@
 <?php
 
-namespace App;
-
-use App\CommandInterface;
-use App\FileReaderInterface;
-use App\FileReader;
+namespace Differ;
 
 class FilesDiffCommand implements CommandInterface
 {

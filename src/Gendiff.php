@@ -1,12 +1,6 @@
 <?php
 
-namespace App;
-
-use App\OutputInterface;
-use App\Output;
-use App\FilesDiffCommand;
-use App\DisplayCommand;
-use App\FileReader;
+namespace Differ;
 
 function runGendiff(): void
 {

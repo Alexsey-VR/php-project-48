@@ -1,8 +1,6 @@
 <?php
 
-namespace App;
-
-use App\FileReaderInterface;
+namespace Differ;
 
 class FileReader implements FileReaderInterface
 {

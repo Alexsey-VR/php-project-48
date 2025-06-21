@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace Differ;
 
-use App\OutputInterface;
 use Docopt;
 
 class Output implements OutputInterface

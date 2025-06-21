@@ -3,6 +3,6 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function App\runGendiff;
+use function Differ\runGendiff;
 
 runGendiff();

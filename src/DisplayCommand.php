@@ -1,8 +1,6 @@
 <?php
 
-namespace App;
-
-use App\CommandInterface;
+namespace Differ;
 
 class DisplayCommand implements CommandInterface
 {
