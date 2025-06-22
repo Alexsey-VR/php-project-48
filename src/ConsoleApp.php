@@ -7,12 +7,9 @@ class ConsoleApp
     private string $docopt;
     private array $commandTypeList;
     private $currentCommand;
+    private array $cliData;
+    private array $filesContent;
     private CommandFactoryInterface $commandFactory;
-    private CommandLineParserInterface $commandLineParser;
-    private CommandInterface $filesDiffCommand;
-    private CommandInterface $displayCommand;
-    private object $cliData;
-    private object $filesContent;
 
     public function __construct()
     {
@@ -46,37 +43,16 @@ class ConsoleApp
                     $this->cliData = $this->currentCommand->execute();
                     break;
                 case "difference":
-                    $this->filesContent = $this->currentCommand->setFileReader(new FileReader())
-                                                               ->execute($this->cliData);
+                    $this->currentCommand->setFileReader(new FileReader());
+                    $this->filesContent = $this->currentCommand->execute($this->cliData);
                     break;
                 case "show":
-                    $this->currentCommand->execute($this->filesContent)
-                                         ->showDiffsToConsole();
+                    $this->currentCommand->execute($this->filesContent);
+                    $this->currentCommand->showDiffsToConsole();
                     break;
                 default:
                     throw new \Exception('unknown command type');
             }
         }
-/*
-        if ($this->commandLineParser = $this->commandFactory->getCommand("parse")) {
-            $this->cliData = $this->commandLineParser->execute();
-        } else {
-            throw new \Exception("can't create command line parser");
-        }
-
-        if ($this->filesDiffCommand = $this->commandFactory->getCommand("difference")) {
-            $this->filesContent = $this->filesDiffCommand->setFileReader(new FileReader())
-                                                         ->execute($this->cliData);
-        } else {
-            throw new \Exception("can't create files difference command");
-        }
-
-        if ($this->displayCommand = $this->commandFactory->getCommand("show")) {
-            $this->displayCommand->execute($this->filesContent)
-                                 ->showDiffsToConsole();
-        } else {
-            throw new \Exception("can't create display command");
-        }
-*/
     }
 }

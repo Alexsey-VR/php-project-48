@@ -13,26 +13,22 @@ class FilesDiffCommand implements CommandInterface
     {
         $this->file1Content = [];
         $this->file2Content = [];
-
-        return $this;
     }
 
-    public function setFileReader(FileReaderInterface $fileReader): object
+    public function setFileReader(FileReaderInterface $fileReader)
     {
         $this->fileReader = $fileReader;
-
-        return $this;
     }
 
-    public function execute(object $cliData): object
+    public function execute(array $cliData): ?array
     {
-        if (isset($cliData->args['FILE1']) && isset($cliData->args['FILE2'])) {
-            $this->file1Content = $this->fileReader->readFile($cliData->args['FILE1']);
-            $this->file2Content = $this->fileReader->readFile($cliData->args['FILE2']);
+        if (isset($cliData['FILE1']) && isset($cliData['FILE2'])) {
+            $this->file1Content = $this->fileReader->readFile($cliData['FILE1']);
+            $this->file2Content = $this->fileReader->readFile($cliData['FILE2']);
         }
 
         return
-        (object)[
+        [
             'file1' => $this->file1Content,
             'file2' => $this->file2Content
         ];

@@ -4,5 +4,5 @@ namespace Differ;
 
 interface CommandInterface
 {
-    public function execute(object $data): object | null;
+    public function execute(array $data): ?array;
 }

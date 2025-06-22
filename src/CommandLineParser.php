@@ -13,8 +13,9 @@ class CommandLineParser implements CommandLineParserInterface
         $this->docopt = $docopt;
     }
 
-    public function execute(): object | null
+    public function execute(): ?array
     {
-        return (new Docopt())->handle($this->docopt, array('version' => '1.0.6'));
+        return (new Docopt())->handle($this->docopt, array('version' => '1.0.6'))
+                             ->args;
     }
 }

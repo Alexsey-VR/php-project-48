@@ -4,5 +4,5 @@ namespace Differ;
 
 interface CommandLineParserInterface
 {
-    public function execute(): object | null;
+    public function execute(): ?array;
 }
