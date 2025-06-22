@@ -4,7 +4,7 @@ namespace Differ;
 
 use Docopt;
 
-class Output implements OutputInterface
+class CommandLineParser implements CommandLineParserInterface
 {
     private string $docopt;
 
@@ -13,7 +13,7 @@ class Output implements OutputInterface
         $this->docopt = $docopt;
     }
 
-    public function parseCommandData(): object
+    public function execute(): object | null
     {
         return (new Docopt())->handle($this->docopt, array('version' => '1.0.6'));
     }

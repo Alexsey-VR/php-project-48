@@ -11,10 +11,10 @@ class CommandFactory implements CommandFactoryInterface
         $this->docopt = $docopt;
     }
 
-    public function getCommand(string $commandType): CommandInterface | OutputInterface | null
+    public function getCommand(string $commandType): CommandInterface | CommandLineParserInterface | null
     {
         if (!strcmp($commandType, "parse")) {
-            return new Output($this->docopt);
+            return new CommandLineParser($this->docopt);
         } elseif (!strcmp($commandType, "difference")) {
             return new FilesDiffCommand();
         } elseif (!strcmp($commandType, "show")) {
