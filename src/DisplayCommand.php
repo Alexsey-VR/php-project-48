@@ -25,21 +25,21 @@ class DisplayCommand implements CommandInterface
 
         $this->filesContent[] = "file1.json content:\n";
         $this->filesContent[] = array_reduce(
-            get_object_vars($data)['file1'],
+            $data->file1,
             [$this, 'constructContent'],
             "{"
         ) . "\r}\n";
 
         $this->filesContent[] = "file2.json content:\n";
         $this->filesContent[] = array_reduce(
-            get_object_vars($data)['file2'],
+            $data->file2,
             [$this, 'constructContent'],
             "{"
         ) . "\n}\n";
 
-        $file1Array = get_object_vars($data)['file1'];
+        $file1Array = $data->file1;
         $file1Keys = array_keys($file1Array);
-        $file2Array = get_object_vars($data)['file2'];
+        $file2Array = $data->file2;
         $this->filesDiffContent = array_map(
             function ($file1Key) use ($file1Array, $file2Array) {
                 if (array_key_exists($file1Key, $file2Array)) {

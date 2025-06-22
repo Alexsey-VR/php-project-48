@@ -4,5 +4,6 @@ namespace Differ;
 
 interface CommandFactoryInterface
 {
-    public function getCommand(string $commandType): CommandInterface | CommandLineParserInterface | null;
+    public function getCommandTypeList(): array;
+    public function getCommand(string $commandType): CommandInterface | CommandLineParserInterface;
 }

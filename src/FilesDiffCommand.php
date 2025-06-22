@@ -26,9 +26,9 @@ class FilesDiffCommand implements CommandInterface
 
     public function execute(object $cliData): object
     {
-        if (isset($cliData['FILE1']) && isset($cliData['FILE2'])) {
-            $this->file1Content = $this->fileReader->readFile($cliData['FILE1']);
-            $this->file2Content = $this->fileReader->readFile($cliData['FILE2']);
+        if (isset($cliData->args['FILE1']) && isset($cliData->args['FILE2'])) {
+            $this->file1Content = $this->fileReader->readFile($cliData->args['FILE1']);
+            $this->file2Content = $this->fileReader->readFile($cliData->args['FILE2']);
         }
 
         return
