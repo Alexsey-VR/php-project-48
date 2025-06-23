@@ -5,6 +5,7 @@ namespace Differ;
 class FilesDiffCommand implements CommandInterface
 {
     private FileReaderInterface $fileReader;
+    private array $filesData;
     private array $file1Content;
     private array $file2Content;
     private array $filesDiffContent;
@@ -15,22 +16,34 @@ class FilesDiffCommand implements CommandInterface
         $this->file2Content = [];
     }
 
-    public function setFileReader(FileReaderInterface $fileReader)
+    public function setFileReader(FileReaderInterface $fileReader): CommandInterface
     {
         $this->fileReader = $fileReader;
+
+        return $this;
     }
 
-    public function execute(array $cliData): ?array
+    public function getFileNames(CommandInterface $command): CommandInterface
     {
-        if (isset($cliData['FILE1']) && isset($cliData['FILE2'])) {
-            $this->file1Content = $this->fileReader->readFile($cliData['FILE1']);
-            $this->file2Content = $this->fileReader->readFile($cliData['FILE2']);
-        }
+        $this->filesData = $command->getFileNames();
 
+        return $this;
+    }
+
+    public function execute(CommandInterface $command = null): CommandInterface
+    {
+        $this->file1Content = $this->fileReader->readFile($this->filesData['FILE1']);
+        $this->file2Content = $this->fileReader->readFile($this->filesData['FILE2']);
+
+        return $this;
+    }
+
+    public function getFilesContent()
+    {
         return
         [
-            'file1' => $this->file1Content,
-            'file2' => $this->file2Content
+            "FILE1" => $this->file1Content,
+            "FILE2" => $this->file2Content
         ];
     }
 }

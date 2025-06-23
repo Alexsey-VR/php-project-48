@@ -18,46 +18,42 @@ class DisplayCommand implements CommandInterface
         return $accum .= "\n    " . $item;
     }
 
-    public function execute(array $data): ?array
+    public function execute(CommandInterface $command = null): CommandInterface
     {
+        $file1Content = $command->getFilesContent()['FILE1'];
+        $file2Content = $command->getFilesContent()['FILE2'];
 
         $this->filesContent[] = "file1.json content:\n";
         $this->filesContent[] = array_reduce(
-            $data['file1'],
+            $file1Content,
             [$this, 'constructContent'],
             "{"
         ) . "\r}\n";
 
         $this->filesContent[] = "file2.json content:\n";
         $this->filesContent[] = array_reduce(
-            $data['file2'],
+            $file2Content,
             [$this, 'constructContent'],
             "{"
         ) . "\n}\n";
 
-        $file1Array = $data['file1'];
-        $file1Keys = array_keys($file1Array);
-        $file2Array = $data['file2'];
+        $file1Keys = array_keys($file1Content);
         $this->filesDiffContent = array_map(
-            function ($file1Key) use ($file1Array, $file2Array) {
-                if (array_key_exists($file1Key, $file2Array)) {
-                    if (!strcmp($file1Array[$file1Key], $file2Array[$file1Key])) {
-                        return "    " . $file1Array[$file1Key] . "\n";
+            function ($file1Key) use ($file1Content, $file2Content) {
+                if (array_key_exists($file1Key, $file2Content)) {
+                    if (!strcmp($file1Content[$file1Key], $file2Content[$file1Key])) {
+                        return "    " . $file1Content[$file1Key] . "\n";
                     } else {
-                        return "  - " . $file1Array[$file1Key] . "\n" .
-                               "  + " . $file2Array[$file1Key] . "\n";
+                        return "  - " . $file1Content[$file1Key] . "\n" .
+                               "  + " . $file2Content[$file1Key] . "\n";
                     }
                 } else {
-                    return "  - " . $file1Array[$file1Key] . "\n";
+                    return "  - " . $file1Content[$file1Key] . "\n";
                 }
             },
             $file1Keys
         );
-        return
-        [
-            "content" => $this->filesContent,
-            "diff" => $this->filesDiffContent
-        ];
+        return $this;
     }
 
     public function showContentToConsole()
@@ -68,5 +64,10 @@ class DisplayCommand implements CommandInterface
     public function showDiffsToConsole()
     {
         echo "{\n" . implode("", $this->filesDiffContent) . "}\n";
+    }
+
+    public function getDiffs()
+    {
+        return "{\n" . implode("", $this->filesDiffContent) . "}\n";
     }
 }
