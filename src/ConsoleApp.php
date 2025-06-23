@@ -39,7 +39,7 @@ class ConsoleApp
 
         $this->currentCommand = $this->commandFactory->getCommand("difference");
         $this->nextCommand = $this->currentCommand
-                                  ->getFileNames($this->nextCommand)
+                                  ->setFileNames($this->nextCommand)
                                   ->setFileReader(new FileReader())
                                   ->execute();
 

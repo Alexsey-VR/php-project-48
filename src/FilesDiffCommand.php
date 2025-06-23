@@ -23,7 +23,7 @@ class FilesDiffCommand implements CommandInterface
         return $this;
     }
 
-    public function getFileNames(CommandInterface $command): CommandInterface
+    public function setFileNames(CommandInterface $command): CommandInterface
     {
         $this->filesData = $command->getFileNames();
 

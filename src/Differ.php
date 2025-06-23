@@ -17,7 +17,7 @@ function genDiff(string $pathToFile1, string $pathToFile2)
     $nextCommand = $parserCommand->setFileNames($fileNames);
 
     $currentCommand = new FilesDiffCommand();
-    $nextCommand = $currentCommand->getFileNames($nextCommand)
+    $nextCommand = $currentCommand->setFileNames($nextCommand)
                                   ->setFileReader(new FileReader())
                                   ->execute();
 
