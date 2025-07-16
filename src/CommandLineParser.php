@@ -23,13 +23,14 @@ class CommandLineParser implements CommandInterface
 
     public function setFileNames(array $fileNames): CommandInterface
     {
-        $this->args["FILE1"] = $fileNames["FILE1"];
-        $this->args["FILE2"] = $fileNames["FILE2"];
-
+        $keys = array_keys($fileNames);
+        foreach ($keys as $key) {
+            $this->args[$key] = $fileNames[$key];    
+        }
         return $this;
     }
 
-    public function getFileNames()
+    public function getFileNames(): array
     {
         return $this->args;
     }
