@@ -20,8 +20,10 @@ class DisplayCommand implements CommandInterface
 
     public function execute(CommandInterface $command = null): CommandInterface
     {
-        $file1Content = $command->getFilesContent()['FILE1'];
-        $file2Content = $command->getFilesContent()['FILE2'];
+        $filesContent = $command->getFilesContent();
+        $keys = array_keys($filesContent);
+        $file1Content = $filesContent[$keys[0]];
+        $file2Content = $filesContent[$keys[1]];
 
         $this->filesContent[] = "file1.json content:\n";
         $this->filesContent[] = array_reduce(
