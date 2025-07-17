@@ -16,8 +16,11 @@ class CommandLineParser implements CommandInterface
 
     public function execute(CommandInterface $command = null): CommandInterface
     {
-        $this->args = (new Docopt())->handle($this->docopt, array('version' => '1.0.6'))
-                                    ->args;
+        if (is_null($command)) {
+            $this->args = (new Docopt())->handle($this->docopt, array('version' => '1.0.6'))
+                                        ->args;
+        }
+
         return $this;
     }
 
@@ -25,7 +28,7 @@ class CommandLineParser implements CommandInterface
     {
         $keys = array_keys($fileNames);
         foreach ($keys as $key) {
-            $this->args[$key] = $fileNames[$key];    
+            $this->args[$key] = $fileNames[$key];
         }
         return $this;
     }
