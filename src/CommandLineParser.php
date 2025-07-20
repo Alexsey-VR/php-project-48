@@ -6,7 +6,7 @@ use Docopt;
 
 class CommandLineParser implements CommandInterface
 {
-    private string $docopt;
+    private $docopt;
     private array $args;
 
     public function __construct(string $docopt = "")
