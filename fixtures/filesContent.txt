@@ -1,0 +1,13 @@
+file1.json content:
+{
+    hexlet.io
+    50
+    123.234.53.22
+    
+}
+file2.json content:
+{
+    20
+    1
+    hexlet.io
+}
