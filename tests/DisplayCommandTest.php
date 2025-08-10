@@ -4,58 +4,77 @@ namespace Differ;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\DisplayCommand;
-use Fixtures\CommandLineParsersStub;
 
 #[CoversClass(DisplayCommand::class)]
+#[CoversMethod(DisplayCommand::class, 'execute')]
 class DisplayCommandTest extends TestCase
 {
-    public $displayCmd;
-    private $file1Content;
-    private $file2Content;
+    private $filesContent;
+    private $filesDiffs;
+    private $filesDiffCmd;
 
     protected function setUp(): void
-    {
-        $this->displayCmd = new DisplayCommand();
-    
-        $this->file1Content =
-        [
-            "id" => "none",
-            "host" => "hexlet.io",
-            "timeout" => 50
-        ];
-        $this->file2Content =
-        [
-            "timeout" => 20,
-            "verbose" => 1,
-            "host" => "hexlet.io"
-        ];
+    {    
+        $this->filesContent = "file 1 content:\n" .
+            "{\n" .
+            "    'id': 'none',\n" .
+            "    'host': 'hexlet.io',\n" .
+            "    'timeout': 50\n" .
+            "}\n" .
+            "file 2 content:\n" .
+            "{\n" .
+            "    'timeout': 20,\n" .
+            "    'verbose': 1,\n" .
+            "    'host': 'hexlet.io'\n" .
+            "}\n";
+
+        $this->filesDiffs = "{\n" .
+            " +  'id': 'none',\n" .
+            "    'host': 'hexlet.io',\n" .
+            " -  'timeout': 50,\n" .
+            " +  'timeout': 20,\n" .
+            " +  'verbose': 1\n" .
+            "}\n";
+
+        $this->filesDiffCmd = $this->createConfiguredStub(
+            FilesDiffCommand::class,
+            [
+                'getFilesContent' => $this->filesContent,
+                'getFilesDiffs' => $this->filesDiffs,
+            ]
+        );
     }
 
     public function testInstance()
     {
-        $this->assertInstanceOf(DisplayCommand::class, $this->displayCmd);
+        $displayCmd = new DisplayCommand();
+
+        $this->assertInstanceOf(DisplayCommand::class, $displayCmd);
     }
 
-    public function testExecute()
+    public function testFilesDiffs()
     {
-        $filesDiffCmd = $this->createConfiguredStub(
-            FilesDiffCommand::class,
-            [
-                'getFilesContent' =>
-                [
-                    "FILE1" => $this->file1Content,
-                    "FILE2" => $this->file2Content
-                ]
-            ]
-        );
+        $displayCmd = new DisplayCommand();
 
-        $this->assertInstanceOf(DisplayCommand::class, $this->displayCmd
-                                                            ->execute($filesDiffCmd));
+        $displayCmd->execute($this->filesDiffCmd);
+        $this->expectOutputString($this->filesDiffs);
     }
 
-    public function testGetDiffs()
+    public function testFilesContent()
     {
-        $this->assertEquals("{\n}\n", $this->displayCmd->getDiffs());
+        $displayCmd = new DisplayCommand();
+
+        $displayCmd->setMode("content")->execute($this->filesDiffCmd);
+        $this->expectOutputString($this->filesContent);
+    }
+
+    public function testUnknownDisplayMode()
+    {
+        $displayCmd = new DisplayCommand();
+
+        $displayCmd->setMode("extra")->execute($this->filesDiffCmd);
+        $this->expectOutputString("error: unknown mode");
     }
 }
