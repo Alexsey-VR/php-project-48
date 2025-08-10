@@ -8,27 +8,14 @@ class ConsoleApp
     private CommandInterface $currentCommand;
     private CommandInterface $nextCommand;
     private CommandFactoryInterface $commandFactory;
+    private FileReaderInterface $fileReader;
 
-    public function __construct()
-    {
-        $this->docopt = <<<'DOCOPT'
-        gendiff -h
-
-        Generate diff
-
-        Usage:
-          gendiff (-h|--help)
-          gendiff (-v|--version)
-          gendiff [Options]... FILE1 FILE2
-
-        Options:
-          -h --help                  Show this screen
-          -v --version               Show version
-          --format <fmt>             Report format [default: stylish]
-
-        DOCOPT;
-
-        $this->commandFactory = new CommandFactory($this->docopt);
+    public function __construct(
+      CommandFactoryInterface $commandFactory,
+      FileReaderInterface $fileReader
+    ) {      
+      $this->commandFactory = $commandFactory;
+      $this->fileReader = $fileReader;
     }
 
     public function run(): void
@@ -39,13 +26,11 @@ class ConsoleApp
 
         $this->currentCommand = $this->commandFactory->getCommand("difference");
         $this->nextCommand = $this->currentCommand
-                                  ->setFileNames($this->nextCommand)
-                                  ->setFileReader(new FileReader())
-                                  ->execute();
+                                  ->setFileReader($this->fileReader)
+                                  ->execute($this->nextCommand);
 
         $this->currentCommand = $this->commandFactory->getCommand("show");
         $this->currentCommand
-             ->execute($this->nextCommand)
-             ->showDiffsToConsole();
+             ->execute($this->nextCommand);
     }
 }
