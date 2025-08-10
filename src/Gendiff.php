@@ -2,7 +2,7 @@
 
 namespace Differ;
 
-function runGendiff(): void
+function runGendiff(CommandFactoryInterface $commandFactory = null): void
 {
     $docopt = <<<'DOCOPT'
     gendiff -h
@@ -21,7 +21,10 @@ function runGendiff(): void
 
     DOCOPT;
 
-    $commandFactory = new CommandFactory($docopt);
+    if (is_null($commandFactory)) {
+        $commandFactory = new CommandFactory($docopt);
+    }
+    
     $fileReader = new FileReader();
 
     $consoleApp = new ConsoleApp($commandFactory, $fileReader);
