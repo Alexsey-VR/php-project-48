@@ -2,10 +2,7 @@
 
 namespace Differ;
 
-//require_once __DIR__ . '/../vendor/autoload.php';
-
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use function Differ\runGendiff;
 
