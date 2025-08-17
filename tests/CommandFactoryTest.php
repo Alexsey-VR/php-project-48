@@ -21,7 +21,7 @@ class CommandFactoryTest extends TestCase
     {
         $fileHandler = fopen(__DIR__ . "/../fixtures/docopt.txt", 'r');
         $fileData = [];
-        while (($docopt[] = fgets($fileHandler, 4096)) !== false);
+        while (($fileData[] = fgets($fileHandler, 4096)) !== false);
         fclose($fileHandler);
         $docopt = implode("\n", $fileData);
 
