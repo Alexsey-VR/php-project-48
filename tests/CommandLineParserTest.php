@@ -12,9 +12,6 @@ use Differ\CommandLineParser;
 #[CoversMethod(CommandLineParser::class, 'getFileNames')]
 class CommandLineParserTest extends TestCase
 {
-    private $fixturesFileHandler;
-    private $fixturesData;
-
     public function testFileNames()
     {
         $cmdLineParser = new CommandLineParser();

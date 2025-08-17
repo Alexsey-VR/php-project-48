@@ -48,7 +48,7 @@ class GendiffTest extends TestCase
                            ]);
 
         $this->expectOutputString(
-            $outputString);        
+            $outputString);
 
         runGendiff($commandFactoryMock);
     }

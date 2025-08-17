@@ -16,7 +16,7 @@ class DisplayCommandTest extends TestCase
     private $filesDiffCmd;
 
     protected function setUp(): void
-    {    
+    {
         $this->filesContent = "file 1 content:\n" .
             "{\n" .
             "    'id': 'none',\n" .

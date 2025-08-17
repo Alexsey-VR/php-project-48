@@ -11,7 +11,7 @@ use Differ\FileReader;
 use Differ\DisplayCommand;
 
 #[CoversNothing]
-class genDiffUserTest extends TestCase
+class GenDiffUserTest extends TestCase
 {
     function testFilesDiffer()
     {
