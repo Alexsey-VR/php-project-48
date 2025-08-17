@@ -13,14 +13,14 @@ jobs:
             matrix:
                 os: [ubuntu-latest, macos-latest]
 
-        -name: Checkout code
+        - name: Checkout code
         uses: actions/checkout@v4
 
-        -name: Install project
+        - name: Install project
         run: make install
 
-        -name: Validate files for linter
+        - name: Validate files for linter
         run: make lint
 
-        -name: Run unit tests
+        - name: Run unit tests
         run: make test
