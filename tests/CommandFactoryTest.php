@@ -19,13 +19,7 @@ class CommandFactoryTest extends TestCase
     #[CoversFunction(CommandFactory::class, 'getCommand')]
     public function testGetCommand()
     {
-        $fileHandler = fopen(__DIR__ . "/../fixtures/docopt.txt", 'r');
-        $fileData = [];
-        while (($fileData[] = fgets($fileHandler, 4096)) !== false);
-        fclose($fileHandler);
-        $docopt = implode("\n", $fileData);
-
-        $commandFactory = new CommandFactory($docopt);
+        $commandFactory = new CommandFactory();
 
         // Test for CommandLineParse
         $this->assertInstanceOf(CommandLineParser::class, $commandFactory->getCommand('parse'));
