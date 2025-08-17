@@ -21,10 +21,10 @@ class CommandFactoryTest extends TestCase
     {
         $commandFactory = new CommandFactory();
 
-        // Test for CommandLineParse
+        // Test for CommandLineParser
         $this->assertInstanceOf(CommandLineParser::class, $commandFactory->getCommand('parse'));
 
-        // Test for FileDiffCommand
+        // Test for FilesDiffCommand
         $this->assertInstanceOf(FilesDiffCommand::class, $commandFactory->getCommand('difference'));
 
         // Test for DisplayCommand

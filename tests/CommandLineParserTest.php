@@ -15,17 +15,9 @@ class CommandLineParserTest extends TestCase
     private $fixturesFileHandler;
     private $fixturesData;
 
-    protected function setUp(): void
-    {
-        $this->fixturesFileHandler = fopen(__DIR__ . "/../fixtures/docopt.txt", "r");
-        $docoptInput = [];
-        while (($docoptInput[] = fgets($this->fixturesFileHandler, 4096)) !== false);
-        $this->fixturesData = implode("\n", $docoptInput);
-    }
-    
     public function testFileNames()
     {
-        $cmdLineParser = new CommandLineParser($this->fixturesData);
+        $cmdLineParser = new CommandLineParser();
 
         $fileNames = [
             "FILE1" => __DIR__ . "/../file1.json",
@@ -40,15 +32,10 @@ class CommandLineParserTest extends TestCase
 
     public function testExecute()
     {
-        $cmdLineParser = new CommandLineParser($this->fixturesData);
+        $cmdLineParser = new CommandLineParser();
 
         $stub = $this->createStub(CommandLineParser::class);
 
         $this->assertInstanceOf(CommandLineParser::class, $cmdLineParser->execute($stub));
-    }
-
-    protected function tearDown(): void
-    {
-        fclose($this->fixturesFileHandler);
     }
 }

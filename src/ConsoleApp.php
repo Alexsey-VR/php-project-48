@@ -4,7 +4,6 @@ namespace Differ;
 
 class ConsoleApp
 {
-    private string $docopt;
     private CommandInterface $currentCommand;
     private CommandInterface $nextCommand;
     private CommandFactoryInterface $commandFactory;
