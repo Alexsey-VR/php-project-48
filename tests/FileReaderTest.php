@@ -11,15 +11,16 @@ use Differ\FileReader;
 #[CoversMethod(FileReader::class, 'readFile')]
 class FileReaderTest extends TestCase
 {
+    public const JSON_FILE_FOR_ARRAY = __DIR__ . "/../fixtures/fileForArray.json";
     public function testReadFileAsObject()
     {
         $fileReader = new FileReader();
 
         $fileContent = $fileReader->readFile(
-            __DIR__ . "/../fixtures/fileForArray.json");
+            self::JSON_FILE_FOR_ARRAY);
         
         $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . "/../fixtures/fileForArray.json",
+            self::JSON_FILE_FOR_ARRAY,
             json_encode($fileContent));
     }
 
@@ -28,12 +29,12 @@ class FileReaderTest extends TestCase
         $fileReader = new FileReader();
 
         $fileContent = $fileReader->readFile(
-            __DIR__ . "/../fixtures/fileForArray.json",
+            self::JSON_FILE_FOR_ARRAY,
             true
         );
         
         $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . "/../fixtures/fileForArray.json",
+            self::JSON_FILE_FOR_ARRAY,
             json_encode($fileContent));
     }
 
