@@ -15,13 +15,17 @@ class CommandFactory implements CommandFactoryInterface
     {
         switch ($commandType) {
             case "parse":
-                return new CommandLineParser($this->docopt);
+                $requestedCommand = new CommandLineParser($this->docopt);
+                break;
             case "difference":
-                return new FilesDiffCommand();
+                $requestedCommand = new FilesDiffCommand();
+                break;
             case "show":
-                return new DisplayCommand();
+                $requestedCommand = new DisplayCommand();
+                break;
             default:
                 return null;
         }
+        return $requestedCommand;
     }
 }
