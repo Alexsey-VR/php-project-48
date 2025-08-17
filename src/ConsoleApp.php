@@ -11,11 +11,11 @@ class ConsoleApp
     private FileReaderInterface $fileReader;
 
     public function __construct(
-      CommandFactoryInterface $commandFactory,
-      FileReaderInterface $fileReader
-    ) {      
-      $this->commandFactory = $commandFactory;
-      $this->fileReader = $fileReader;
+        CommandFactoryInterface $commandFactory,
+        FileReaderInterface $fileReader
+    ) {
+        $this->commandFactory = $commandFactory;
+        $this->fileReader = $fileReader;
     }
 
     public function run(): void

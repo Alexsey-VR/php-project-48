@@ -6,11 +6,11 @@ class DisplayCommand implements CommandInterface
 {
     // Property to store displaying mode
     private string $mode;
-    const AVAILABLE_MODES = [
+    public const AVAILABLE_MODES = [
         "differents",
-        "content" 
+        "content"
     ];
-    
+
     public function __construct(string $mode = self::AVAILABLE_MODES[0])
     {
         $this->mode = $mode;

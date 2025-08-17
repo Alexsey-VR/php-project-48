@@ -24,7 +24,7 @@ function runGendiff(CommandFactoryInterface $commandFactory = null): void
     if (is_null($commandFactory)) {
         $commandFactory = new CommandFactory($docopt);
     }
-    
+
     $fileReader = new FileReader();
 
     $consoleApp = new ConsoleApp($commandFactory, $fileReader);
