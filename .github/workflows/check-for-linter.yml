@@ -1,0 +1,26 @@
+name: check-for-linter
+on:
+    push:
+        branches: main
+    pull_request:
+        branches: main
+
+jobs:
+    build:
+        runs-on: ${{matrix.os}}
+
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest]
+
+        -name: Checkout code
+        uses: actions/checkout@v4
+
+        -name: Install project
+        run: make install
+
+        -name: Validate files for linter
+        run: make lint
+
+        -name: Run unit tests
+        run: make test
