@@ -13,7 +13,7 @@ use Differ\DisplayCommand;
 #[CoversNothing]
 class GenDiffUserTest extends TestCase
 {
-    function testFilesDiffer()
+    public function testFilesDiffer()
     {
         $outputString = "{\n" .
         "    hexlet.io\n" .
