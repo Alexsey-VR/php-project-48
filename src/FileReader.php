@@ -14,7 +14,7 @@ class FileReader implements FileReaderInterface
             fclose($handle);
             $type = gettype($result);
             if ($type === 'object') {
-                return (get_object_vars($result));
+                return get_object_vars($result);
             } elseif ($type === 'array') {
                 return $result;
             }
