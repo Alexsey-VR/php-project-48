@@ -12,6 +12,19 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - name: Setup PHP with Xdebug
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: '8.3'
+                coverage: xdebug
+            
+            - name: Install dependencies with composer
+              run: composer update --no-ansi --no-interaction --no-progress
+          
+            - name: Run tests with phpunit/phpunit
+              run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
             - name: Install project
               run: make install
@@ -23,6 +36,6 @@ jobs:
               run: make test
 
             - name: SonarQube Scan
-              uses: SonarSource/sonarqube-scan-action@v5.3.0
+              uses: SonarSource/sonarqube-scan-action@v5
               env:
-                SONAR_TOKEN: ${{secrets.PHP_PROJECT_48_SECRET}}
+                SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
