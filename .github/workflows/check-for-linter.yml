@@ -22,9 +22,6 @@ jobs:
             
             - name: Install dependencies with composer
               run: composer update --no-ansi --no-interaction --no-progress
-          
-            - name: Run tests with phpunit/phpunit
-              run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
             - name: Install project
               run: make install
