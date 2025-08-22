@@ -8,7 +8,10 @@ lint:
 	composer exec --verbose phpcs -- --standard=PSR12 src bin
 
 test:
-	XDEBUG_MODE=coverage composer exec --verbose vendor/bin/phpunit tests -- --coverage-text --coverage-clover=/coverage.xml
+	XDEBUG_MODE=coverage composer exec --verbose vendor/bin/phpunit tests -- --coverage-text
+
+test-sonar:
+	XDEBUG_MODE=coverage composer exec --verbose vendor/bin/phpunit tests -- --coverage-clover=coverage.xml
 
 test-dev:
 	XDEBUG_MODE=coverage composer exec --verbose vendor/bin/phpunit tests -- --coverage-html ./reports
