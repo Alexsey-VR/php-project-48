@@ -11,7 +11,7 @@ test:
 	XDEBUG_MODE=coverage composer exec --verbose vendor/bin/phpunit tests -- --coverage-text
 
 test-sonar:
-	composer exec vendor/bin/phpunit tests -- --coverage-clover coverage.xml
+	XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover=coverage.xml tests
 
 test-dev:
 	XDEBUG_MODE=coverage composer exec --verbose vendor/bin/phpunit tests -- --coverage-html ./reports
