@@ -83,13 +83,14 @@ class FilesDiffCommand implements CommandInterface
                             array_key_exists($fileKey, $file1Content) &&
                             !strcmp($file1Content[$fileKey], $file2Content[$fileKey])
                         ) {
-                            return "    " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n";
+                            $result = "    " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n";
                         } elseif (array_key_exists($fileKey, $file1Content)) {
-                            return "  - " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n" .
+                            $result = "  - " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n" .
                                 "  + " . $fileKey . ": " . $this->normalizeData($file2Content[$fileKey]) . "\n";
                         } else {
-                            return "  + " . $fileKey . ": " . $this->normalizeData($file2Content[$fileKey]) . "\n";
+                            $result = "  + " . $fileKey . ": " . $this->normalizeData($file2Content[$fileKey]) . "\n";
                         }
+                        return $result;
                     } else {
                         return "  - " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n";
                     }

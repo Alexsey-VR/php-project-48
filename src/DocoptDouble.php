@@ -17,7 +17,7 @@ class DocoptDouble
         ];
     }
 
-    public function handle(string $data, array $default)
+    public function handle()
     {
         return $this;
     }

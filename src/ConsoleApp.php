@@ -7,7 +7,6 @@ class ConsoleApp
     private CommandInterface $currentCommand;
     private CommandInterface $nextCommand;
     private CommandFactoryInterface $commandFactory;
-    private FileReaderInterface $fileReader;
 
     public function __construct(
         CommandFactoryInterface $commandFactory
