@@ -10,11 +10,9 @@ class ConsoleApp
     private FileReaderInterface $fileReader;
 
     public function __construct(
-        CommandFactoryInterface $commandFactory,
-        FileReaderInterface $fileReader
+        CommandFactoryInterface $commandFactory
     ) {
         $this->commandFactory = $commandFactory;
-        $this->fileReader = $fileReader;
     }
 
     public function run(): void
@@ -25,7 +23,6 @@ class ConsoleApp
 
         $this->currentCommand = $this->commandFactory->getCommand("difference");
         $this->nextCommand = $this->currentCommand
-                                  ->setFileReader($this->fileReader)
                                   ->execute($this->nextCommand);
 
         $this->currentCommand = $this->commandFactory->getCommand("show");

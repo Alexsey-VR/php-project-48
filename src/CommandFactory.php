@@ -4,21 +4,24 @@ namespace Differ;
 
 class CommandFactory implements CommandFactoryInterface
 {
-    private string $docopt;
+    private $parser;
+    private $fileReader;
 
-    public function __construct(string $docopt = '')
+    public function __construct($parser, $fileReader)
     {
-        $this->docopt = $docopt;
+        $this->parser = $parser;
+        $this->fileReader = $fileReader;
     }
 
     public function getCommand(string $commandType): ?CommandInterface
     {
         switch ($commandType) {
             case "parse":
-                $requestedCommand = new CommandLineParser($this->docopt);
+                $requestedCommand = new CommandLineParser($this->parser);
                 break;
             case "difference":
-                $requestedCommand = new FilesDiffCommand();
+                $requestedCommand = (new FilesDiffCommand())
+                                        ->setFileReader($this->fileReader);
                 break;
             case "show":
                 $requestedCommand = new DisplayCommand();

@@ -15,16 +15,13 @@ class GenDiffUserTest extends TestCase
 {
     public function testFilesDiffer()
     {
-        $outputString = "{\n" .
-        "    hexlet.io\n" .
-        "  - 50\n" .
-        "  + 20\n" .
-        "  - 123.234.53.22\n" .
-        "  - \n" .
-        "}\n";
-
-        $this->expectOutputString($outputString);
-
+        ob_start();
         genDiff(__DIR__ . "/../file1.json", __DIR__ . "/../file2.json");
+        $outputBuffer = ob_get_clean();
+
+        $this->assertStringEqualsFile(
+            __DIR__ . "/../fixtures/filesDiffs.txt",
+            $outputBuffer
+        );
     }
 }

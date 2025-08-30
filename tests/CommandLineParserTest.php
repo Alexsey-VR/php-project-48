@@ -6,10 +6,12 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\CommandLineParser;
+use Differ\DocoptDouble;
 
 #[CoversClass(CommandLineParser::class)]
 #[CoversMethod(CommandLineParser::class, 'setFileNames')]
 #[CoversMethod(CommandLineParser::class, 'getFileNames')]
+#[CoversClass(DocoptDouble::class)]
 class CommandLineParserTest extends TestCase
 {
     public function testFileNames()
@@ -29,10 +31,17 @@ class CommandLineParserTest extends TestCase
 
     public function testExecute()
     {
-        $cmdLineParser = new CommandLineParser();
+        $parser = new DocoptDouble();
+        $cmdLineParser = new CommandLineParser($parser);
 
-        $stub = $this->createStub(CommandLineParser::class);
+        ob_start();
+        $cmdLineParser->execute();
+        $outputBuffer = ob_get_clean();
 
-        $this->assertInstanceOf(CommandLineParser::class, $cmdLineParser->execute($stub));
+        $this->assertEquals(
+            "",
+            $outputBuffer
+        );
     }
+        
 }

@@ -10,7 +10,10 @@ use Differ\DisplayCommand;
 
 function genDiff(string $pathToFile1, string $pathToFile2)
 {
-    $commandFactory = new CommandFactory();
+    $commandFactory = new CommandFactory(
+        new \Docopt(),
+        new FileReader()
+    );
     $parserCommand = $commandFactory->getCommand('parse');
     $fileNames = [
         "FILE1" => $pathToFile1,
@@ -19,8 +22,7 @@ function genDiff(string $pathToFile1, string $pathToFile2)
     $nextCommand = $parserCommand->setFileNames($fileNames);
 
     $currentCommand = $commandFactory->getCommand('difference');
-    $nextCommand = $currentCommand->setFileReader(new FileReader())
-                                  ->execute($nextCommand);
+    $nextCommand = $currentCommand->execute($nextCommand);
 
     $currentCommand = $commandFactory->getCommand('show');
     return $currentCommand->execute($nextCommand);

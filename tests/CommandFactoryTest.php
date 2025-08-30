@@ -9,17 +9,24 @@ use Differ\CommandFactory;
 use Differ\CommandLineParser;
 use Differ\FilesDiffCommand;
 use Differ\DisplayCommand;
+use Differ\FileReader;
+use Differ\DocoptDouble;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(DisplayCommand::class)]
+#[CoversClass(DocoptDouble::class)]
+#[CoversClass(FileReader::class)]
 class CommandFactoryTest extends TestCase
 {
     #[CoversFunction(CommandFactory::class, 'getCommand')]
     public function testGetCommand()
     {
-        $commandFactory = new CommandFactory();
+        $commandFactory = new CommandFactory(
+            new DocoptDouble(),
+            new FileReader()
+        );
 
         // Test for CommandLineParser
         $this->assertInstanceOf(CommandLineParser::class, $commandFactory->getCommand('parse'));

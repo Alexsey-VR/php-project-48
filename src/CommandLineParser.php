@@ -2,23 +2,28 @@
 
 namespace Differ;
 
-use Docopt;
-
 class CommandLineParser implements CommandInterface
 {
-    private $docopt;
+    private string $parserDescriptor;
+    private $parser;
     private array $args;
 
-    public function __construct(string $docopt = "")
+    public function __construct($parser = null)
     {
-        $this->docopt = $docopt;
+        $this->parser = $parser;
+
+        $filename = __DIR__ . "/../docopt.txt";
+        $handler = @fopen($filename, 'r');
+        $filesize = filesize($filename);
+        $this->parserDescriptor = fread($handler, $filesize);
+        fclose($handler);
     }
 
     public function execute(CommandInterface $command = null): CommandInterface
     {
         if (is_null($command)) {
-            $this->args = (new Docopt())->handle($this->docopt, array('version' => '1.0.6'))
-                                        ->args;
+            $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
+            $this->args = $objArgs->args;
         }
 
         return $this;

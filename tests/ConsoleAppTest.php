@@ -16,50 +16,26 @@ use Differ\FileReader;
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
 #[CoversMethod(ConsoleApp::class, 'run')]
+#[CoversClass(DocoptDouble::class)]
+#[CoversClass(CommandLineParser::class)]
 class ConsoleAppTest extends TestCase
 {
     public function testConsoleAppRunning()
     {
-        $outputString = "{\n" .
-        "    hexlet.io\n" .
-        "  - 50\n" .
-        "  + 20\n" .
-        "  - 123.234.53.22\n" .
-        "  - \n" .
-        "}\n";
-
-        $commandLineParserStubToGetContent = $this->createConfiguredStub(
-            CommandLineParser::class,
-            [
-                'getFileNames' => [
-                    'FILE1' => __DIR__ . "/../file1.json",
-                    'FILE2' => __DIR__ . "/../file2.json"
-                ]
-            ]
-        );
-        $cmdLineParserStub = $this->createConfiguredStub(
-            CommandLineParser::class,
-            [
-                'execute' => $commandLineParserStubToGetContent
-            ]
+        $commandFactory = new CommandFactory(
+            new DocoptDouble(),
+            new FileReader()
         );
 
-        $filesDiffCommand = new FilesDiffCommand();
-        $displayCommand = new DisplayCommand();
+        $consoleApp = new ConsoleApp($commandFactory);
 
-        $commandFactoryMock = $this->createMock(CommandFactory::class);
-        $commandFactoryMock->expects($this->exactly(3))
-                           ->method('getCommand')
-                           ->willReturnMap([
-                                ['parse', $cmdLineParserStub],
-                                ['difference', $filesDiffCommand],
-                                ['show', $displayCommand]
-                           ]);
-        $fileReader = new FileReader();
-
-        $consoleApp = new ConsoleApp($commandFactoryMock, $fileReader);
+        ob_start();
         $consoleApp->run();
+        $outputBuffer = ob_get_clean();
 
-        $this->expectOutputString($outputString);
+        $this->assertStringEqualsFile(
+            __DIR__ . "/../fixtures/filesDiffs.txt",
+            $outputBuffer
+        );
     }
 }
