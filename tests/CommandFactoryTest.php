@@ -20,24 +20,31 @@ use Differ\DocoptDouble;
 #[CoversClass(FileReader::class)]
 class CommandFactoryTest extends TestCase
 {
-    #[CoversFunction(CommandFactory::class, 'getCommand')]
-    public function testGetCommand()
+    private $commandFactory;
+
+    public function setUp(): void
     {
-        $commandFactory = new CommandFactory(
+        $this->commandFactory = new CommandFactory(
             new DocoptDouble(),
             new FileReader()
         );
+    }
+
+    #[CoversFunction(CommandFactory::class, 'getCommand')]
+    public function testGetCommand()
+    {
+        
 
         // Test for CommandLineParser
-        $this->assertInstanceOf(CommandLineParser::class, $commandFactory->getCommand('parse'));
+        $this->assertInstanceOf(CommandLineParser::class, $this->commandFactory->getCommand('parse'));
 
         // Test for FilesDiffCommand
-        $this->assertInstanceOf(FilesDiffCommand::class, $commandFactory->getCommand('difference'));
+        $this->assertInstanceOf(FilesDiffCommand::class, $this->commandFactory->getCommand('difference'));
 
         // Test for DisplayCommand
-        $this->assertInstanceOf(DisplayCommand::class, $commandFactory->getCommand('show'));
+        $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->getCommand('show'));
 
         // Test for undefined command
-        $this->assertNull($commandFactory->getCommand('undefined'));
+        $this->assertNull($this->commandFactory->getCommand('undefined'));
     }
 }
