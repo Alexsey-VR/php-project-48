@@ -12,9 +12,22 @@ class FilesDiffCommand implements CommandInterface
     private array $filesContent;
     private string $filesContentString;
 
-    private function constructContent($accum, $item)
+    private function constructContent($accum, $item): string
     {
         return $accum .= "\n    " . $item;
+    }
+
+    private function normalizeData($data): string
+    {
+        if (is_bool($data)) {
+            if ($data) {
+                return "true";
+            } else {
+                return "false";
+            }
+        } else {
+            return $data;
+        }
     }
 
     public function __construct()
@@ -61,20 +74,27 @@ class FilesDiffCommand implements CommandInterface
             $this->filesContentString = implode("", $this->filesContent);
 
             $file1Keys = array_keys($file1Content);
+            $file2Keys = array_keys($file2Content);
+            $mergedFileKeys = array_unique(array_merge($file1Keys, $file2Keys));
             $this->filesDiffs = array_map(
-                function ($file1Key) use ($file1Content, $file2Content) {
-                    if (array_key_exists($file1Key, $file2Content)) {
-                        if (!strcmp($file1Content[$file1Key], $file2Content[$file1Key])) {
-                            return "    " . $file1Content[$file1Key] . "\n";
+                function ($fileKey) use ($file1Content, $file2Content) {
+                    if (array_key_exists($fileKey, $file2Content)) {
+                        if (
+                            array_key_exists($fileKey, $file1Content) &&
+                            !strcmp($file1Content[$fileKey], $file2Content[$fileKey])
+                        ) {
+                            return "    " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n";
+                        } elseif (array_key_exists($fileKey, $file1Content)) {
+                            return "  - " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n" .
+                                "  + " . $fileKey . ": " . $this->normalizeData($file2Content[$fileKey]) . "\n";
                         } else {
-                            return "  - " . $file1Content[$file1Key] . "\n" .
-                                "  + " . $file2Content[$file1Key] . "\n";
+                            return "  + " . $fileKey . ": " . $this->normalizeData($file2Content[$fileKey]) . "\n";
                         }
                     } else {
-                        return "  - " . $file1Content[$file1Key] . "\n";
+                        return "  - " . $fileKey . ": " . $this->normalizeData($file1Content[$fileKey]) . "\n";
                     }
                 },
-                $file1Keys
+                $mergedFileKeys
             );
             $this->filesDiffsString = "{\n" . implode("", $this->filesDiffs) . "}\n";
         }
@@ -82,12 +102,12 @@ class FilesDiffCommand implements CommandInterface
         return $this;
     }
 
-    public function getFilesContent()
+    public function getFilesContent(): string
     {
         return $this->filesContentString;
     }
 
-    public function getFilesDiffs()
+    public function getFilesDiffs(): string
     {
         return $this->filesDiffsString;
     }
