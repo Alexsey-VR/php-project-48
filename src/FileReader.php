@@ -34,7 +34,7 @@ class FileReader implements FileReaderInterface
                 } elseif ($type === 'array') {
                     return $result;
                 }
-            } else if ($fileFormat === 'yaml' || $fileFormat === 'yml') {
+            } elseif ($fileFormat === 'yaml' || $fileFormat === 'yml') {
                 $handle = fopen($filename, "r");
                 $result = Yaml::parse(fread($handle, self::MAX_FILE_SIZE), Yaml::PARSE_OBJECT_FOR_MAP);
                 fclose($handle);
