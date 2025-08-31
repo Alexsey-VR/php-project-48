@@ -6,9 +6,11 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\DisplayCommand;
+use Differ\DifferException;
 
 #[CoversClass(DisplayCommand::class)]
 #[CoversMethod(DisplayCommand::class, 'execute')]
+#[CoversClass(DifferException::class)]
 class DisplayCommandTest extends TestCase
 {
     private $filesContent;
@@ -74,7 +76,7 @@ class DisplayCommandTest extends TestCase
     {
         $displayCmd = new DisplayCommand();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown mode for display\\n/");
 
         $displayCmd->setMode("extra")->execute($this->filesDiffCmd);

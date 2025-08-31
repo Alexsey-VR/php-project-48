@@ -26,28 +26,24 @@ class FileReader implements FileReaderInterface
             $fileFormat = end($fileNameParts);
             if ($fileFormat === 'json') {
                 $handle = fopen($filename, "r");
-                $result = json_decode(fread($handle, self::MAX_FILE_SIZE), $isArray);
+                $jsonVariables = json_decode(fread($handle, self::MAX_FILE_SIZE), $isArray);
                 fclose($handle);
-                $type = gettype($result);
+                $type = gettype($jsonVariables);
                 if ($type === 'object') {
-                    return get_object_vars($result);
+                    $fileContentArray = get_object_vars($jsonVariables);
                 } elseif ($type === 'array') {
-                    return $result;
+                    $fileContentArray = $jsonVariables;
                 }
             } elseif ($fileFormat === 'yaml' || $fileFormat === 'yml') {
                 $handle = fopen($filename, "r");
-                $result = Yaml::parse(fread($handle, self::MAX_FILE_SIZE), Yaml::PARSE_OBJECT_FOR_MAP);
+                $yamlVariables = Yaml::parse(fread($handle, self::MAX_FILE_SIZE), Yaml::PARSE_OBJECT_FOR_MAP);
                 fclose($handle);
-                $type = gettype($result);
-                if ($type === 'object') {
-                    return get_object_vars($result);
-                } elseif ($type === 'array') {
-                    return $result;
-                }
+                $fileContentArray = get_object_vars($yamlVariables);
             } else {
-                throw new \Exception("Unknown files format: \n" .
-                                    "use .json, .yaml (.yml) enstead \n");
+                throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
             }
+
+            return $fileContentArray;
         } else {
             return null;
         }

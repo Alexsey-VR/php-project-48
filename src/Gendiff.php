@@ -11,7 +11,7 @@ function runGendiff(
     $consoleApp = new ConsoleApp($commandFactory);
     try {
         $consoleApp->run();
-    } catch (\Exception $e) {
+    } catch (DifferException $e) {
         print_r("{$e->getMessage()}");
     }
 }

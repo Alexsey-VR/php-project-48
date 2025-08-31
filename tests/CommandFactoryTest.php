@@ -11,6 +11,7 @@ use Differ\FilesDiffCommand;
 use Differ\DisplayCommand;
 use Differ\FileReader;
 use Differ\DocoptDouble;
+use Differ\DifferException;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -18,6 +19,7 @@ use Differ\DocoptDouble;
 #[CoversClass(DisplayCommand::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FileReader::class)]
+#[CoversClass(DifferException::class)]
 class CommandFactoryTest extends TestCase
 {
     private $commandFactory;
@@ -45,6 +47,9 @@ class CommandFactoryTest extends TestCase
         $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->getCommand('show'));
 
         // Test for undefined command
-        $this->assertNull($this->commandFactory->getCommand('undefined'));
+        $this->expectException(DifferException::class);
+        $this->expectExceptionMessageMatches("/internal error: unknown command factory option\\n/");
+
+        $this->commandFactory->getCommand('undefined');
     }
 }

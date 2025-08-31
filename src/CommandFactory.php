@@ -6,7 +6,6 @@ class CommandFactory implements CommandFactoryInterface
 {
     private $parser;
     private $fileReader;
-    private $displayMode;
 
     public function __construct($parser, $fileReader)
     {
@@ -28,7 +27,7 @@ class CommandFactory implements CommandFactoryInterface
                 $requestedCommand = new DisplayCommand();
                 break;
             default:
-                return null;
+                throw new DifferException("internal error: unknown command factory option\n");
         }
         return $requestedCommand;
     }

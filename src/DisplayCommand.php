@@ -4,7 +4,7 @@ namespace Differ;
 
 class DisplayCommand implements CommandInterface
 {
-    // Property to store displaying mode
+    // Property to store displaying mode for debug
     private string $mode;
     public const AVAILABLE_MODES = [
         "differents",
@@ -27,7 +27,7 @@ class DisplayCommand implements CommandInterface
                     print_r($command->getFilesContent());
                     break;
                 default:
-                    throw new \Exception("internal error: unknown mode for display\n");
+                    throw new DifferException("internal error: unknown mode for display\n");
             }
         }
 
