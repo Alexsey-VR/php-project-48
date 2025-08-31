@@ -27,7 +27,7 @@ class DisplayCommand implements CommandInterface
                     print_r($command->getFilesContent());
                     break;
                 default:
-                    print_r("error: unknown mode");
+                    throw new \Exception("internal error: unknown mode for display\n");
             }
         }
 

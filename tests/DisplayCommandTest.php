@@ -74,7 +74,9 @@ class DisplayCommandTest extends TestCase
     {
         $displayCmd = new DisplayCommand();
 
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageMatches("/internal error: unknown mode for display\\n/");
+
         $displayCmd->setMode("extra")->execute($this->filesDiffCmd);
-        $this->expectOutputString("error: unknown mode");
     }
 }

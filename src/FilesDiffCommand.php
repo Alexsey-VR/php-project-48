@@ -14,7 +14,7 @@ class FilesDiffCommand implements CommandInterface
 
     private function constructContent($accum, $item): string
     {
-        return $accum .= "\n    " . $item;
+        return $accum .= "\n    " . $this->normalizeData($item);
     }
 
     private function normalizeData($data): string
@@ -57,14 +57,17 @@ class FilesDiffCommand implements CommandInterface
             $file1Content = $this->filesDataItems[0];
             $file2Content = $this->filesDataItems[1];
 
-            $this->filesContent[] = "file1.json content:\n";
+            $filename1Path = explode("/", $this->filesPaths[0]);
+            $filename2Path = explode("/", $this->filesPaths[1]);
+
+            $this->filesContent[] = end($filename1Path) . " content:\n";
             $this->filesContent[] = array_reduce(
                 $file1Content,
                 [$this, 'constructContent'],
                 "{"
             ) . "\n}\n";
 
-            $this->filesContent[] = "file2.json content:\n";
+            $this->filesContent[] = end($filename2Path) . " content:\n";
             $this->filesContent[] = array_reduce(
                 $file2Content,
                 [$this, 'constructContent'],

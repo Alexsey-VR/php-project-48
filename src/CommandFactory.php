@@ -6,6 +6,7 @@ class CommandFactory implements CommandFactoryInterface
 {
     private $parser;
     private $fileReader;
+    private $displayMode;
 
     public function __construct($parser, $fileReader)
     {

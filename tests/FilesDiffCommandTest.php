@@ -17,9 +17,13 @@ class FilesDiffCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fileNames = [
+        $this->fileNames['JSON'] = [
             "FILE1" => __DIR__ . "/../file1.json",
             "FILE2" => __DIR__ . "/../file2.json"
+        ];
+        $this->fileNames['YAML'] = [
+            "FILE1" => __DIR__ . "/../file1.yaml",
+            "FILE2" => __DIR__ . "/../file2.yaml"
         ];
     }
 
@@ -32,12 +36,12 @@ class FilesDiffCommandTest extends TestCase
             $diffCommand->setFileReader(new FileReader()));
     }
 
-    public function testExecute()
+    public function testExecuteForJSON()
     {
         $cmdLineParser = $this->createConfiguredStub(
             CommandLineParser::class,
             [
-                'getFileNames' => $this->fileNames
+                'getFileNames' => $this->fileNames['JSON']
             ]
         );
 
@@ -48,7 +52,37 @@ class FilesDiffCommandTest extends TestCase
                                  ->getFilesContent();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesContent.txt",
+            __DIR__ . "/../fixtures/filesJSONContent.txt",
+            $resultContent
+        );
+
+        $resultDiffs = $diffCommand->setFileReader(new FileReader())
+                                 ->execute($cmdLineParser)
+                                 ->getFilesDiffs();
+
+        $this->assertStringEqualsFile(
+            __DIR__ . "/../fixtures/filesDiffs.txt",
+            $resultDiffs
+        );
+    }
+
+    public function testExecuteForYAML()
+    {
+        $cmdLineParser = $this->createConfiguredStub(
+            CommandLineParser::class,
+            [
+                'getFileNames' => $this->fileNames['YAML']
+            ]
+        );
+
+        $diffCommand = new FilesDiffCommand();
+
+        $resultContent = $diffCommand->setFileReader(new FileReader())
+                                 ->execute($cmdLineParser)
+                                 ->getFilesContent();
+
+        $this->assertStringEqualsFile(
+            __DIR__ . "/../fixtures/filesYAMLContent.txt",
             $resultContent
         );
 

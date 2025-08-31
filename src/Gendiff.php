@@ -9,5 +9,9 @@ function runGendiff(
     )
 ): void {
     $consoleApp = new ConsoleApp($commandFactory);
-    $consoleApp->run();
+    try {
+        $consoleApp->run();
+    } catch (\Exception $e) {
+        print_r("{$e->getMessage()}");
+    }
 }
