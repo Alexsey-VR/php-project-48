@@ -15,7 +15,7 @@ jobs:
               with:
                 fetch-depth: 0
             - name: Setup PHP with Xdebug
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4
               with:
                 php-version: '8.3'
                 coverage: xdebug
