@@ -19,7 +19,7 @@ class FileReader implements FileReaderInterface
         $this->fileFormat = $fileFormat;
     }
 
-    public function readFile(string $filename, bool $isArray = null): ?array
+    public function readFile(string $filename, bool $isArray = true): ?array
     {
         if (file_exists($filename)) {
             $fileNameParts = explode(".", $this->normalizeFilename($filename));
@@ -35,10 +35,7 @@ class FileReader implements FileReaderInterface
                     $fileContentArray = $jsonVariables;
                 }
             } elseif ($fileFormat === 'yaml' || $fileFormat === 'yml') {
-                $handle = fopen($filename, "r");
-                $yamlVariables = Yaml::parse(fread($handle, self::MAX_FILE_SIZE), Yaml::PARSE_OBJECT_FOR_MAP);
-                fclose($handle);
-                $fileContentArray = get_object_vars($yamlVariables);
+                $fileContentArray = Yaml::parseFile($filename);
             } else {
                 throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
             }
