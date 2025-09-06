@@ -38,6 +38,47 @@ class FilesDiffCommand implements CommandInterface
         return $normalizedValue;
     }
 
+    private function stylish(array $differenceContent): array
+    {
+        return array_map(
+            function ($differenceItem) {
+                $result = null;
+                if (!strcmp($differenceItem["status"],"not changed")) {
+                    $result = "    " .
+                            $differenceItem["fileKey"] .
+                            ": " .
+                            $differenceItem["file1Content"] .
+                            "\n";
+                } elseif (!strcmp($differenceItem["status"],"changed")) {
+                    $result = "  - " .
+                            $differenceItem["fileKey"] .
+                            ": " .
+                            $differenceItem["file1Content"] .
+                            "\n" .
+                            "  + " .
+                            $differenceItem["fileKey"] .
+                            ": " .
+                            $differenceItem["file2Content"] .
+                            "\n";
+                } else if (!strcmp($differenceItem["status"],"added")) {
+                    $result = "  + " .
+                            $differenceItem["fileKey"] .
+                            ": " .
+                            $differenceItem["file2Content"] .
+                            "\n";                    
+                } else if (!strcmp($differenceItem["status"],"deleted")) {
+                    $result = "  - " .
+                            $differenceItem["fileKey"] .
+                            ": " .
+                            $differenceItem["file1Content"] .
+                            "\n";
+                }
+                return $result;
+            },
+            $differenceContent
+        );
+    }
+
     private function getDifference($contentListKeys, $file1Content, $file2Content): array
     {
         return array_map(
@@ -47,16 +88,35 @@ class FilesDiffCommand implements CommandInterface
                         array_key_exists($fileKey, $file1Content) &&
                         !strcmp($file1Content[$fileKey], $file2Content[$fileKey])
                     ) {
-                        $result = "    " . $fileKey . ": " . $file1Content[$fileKey] . "\n";
+                        $result = [
+                            "status" => "not changed",
+                            "fileKey" => $fileKey,
+                            "file1Content" => $file1Content[$fileKey],
+                            "file2Content" => $file1Content[$fileKey]
+                        ];
                     } elseif (array_key_exists($fileKey, $file1Content)) {
-                        $result = "  - " . $fileKey . ": " . $file1Content[$fileKey] . "\n" .
-                            "  + " . $fileKey . ": " . $file2Content[$fileKey] . "\n";
+                        $result = [
+                            "status" => "changed",
+                            "fileKey" => $fileKey,
+                            "file1Content" => $file1Content[$fileKey],
+                            "file2Content" => $file2Content[$fileKey]
+                        ];
                     } else {
-                        $result = "  + " . $fileKey . ": " . $file2Content[$fileKey] . "\n";
+                        $result = [
+                            "status" => "added",
+                            "fileKey" => $fileKey,
+                            "file1Content" => null,
+                            "file2Content" => $file2Content[$fileKey]
+                        ];
                     }
                     return $result;
                 } else {
-                    return "  - " . $fileKey . ": " . $file1Content[$fileKey] . "\n";
+                    return [
+                        "status" => "deleted",
+                        "fileKey" => $fileKey,
+                        "file1Content" => $file1Content[$fileKey],
+                        "file2Content" => null
+                    ];
                 }
             },
             $contentListKeys
@@ -121,11 +181,14 @@ class FilesDiffCommand implements CommandInterface
             $file1Keys = array_keys($file1Content);
             $file2Keys = array_keys($file2Content);
             $mergedFileKeys = array_unique(array_merge($file1Keys, $file2Keys));
-            $this->filesDiffs = $this->getDifference(
+            
+            $contentAnalysisResult = $this->getDifference(
                 $mergedFileKeys,
                 $file1Content,
                 $file2Content
             );
+
+            $this->filesDiffs = $this->stylish($contentAnalysisResult);
             $this->filesDiffsString = "{\n" . implode("", $this->filesDiffs) . "}\n";
         }
 
