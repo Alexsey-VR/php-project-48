@@ -32,7 +32,7 @@ class FilesDiffCommand implements CommandInterface
             $normalizedValue = array_map(
                 fn ($item) => $this->normalizeData($item),
                 $data
-            ); 
+            );
         }
 
         return $normalizedValue;
@@ -43,13 +43,13 @@ class FilesDiffCommand implements CommandInterface
         return array_map(
             function ($differenceItem) {
                 $result = null;
-                if (!strcmp($differenceItem["status"],"not changed")) {
+                if (!strcmp($differenceItem["status"], "not changed")) {
                     $result = "    " .
                             $differenceItem["fileKey"] .
                             ": " .
                             $differenceItem["file1Content"] .
                             "\n";
-                } elseif (!strcmp($differenceItem["status"],"changed")) {
+                } elseif (!strcmp($differenceItem["status"], "changed")) {
                     $result = "  - " .
                             $differenceItem["fileKey"] .
                             ": " .
@@ -60,13 +60,13 @@ class FilesDiffCommand implements CommandInterface
                             ": " .
                             $differenceItem["file2Content"] .
                             "\n";
-                } else if (!strcmp($differenceItem["status"],"added")) {
+                } elseif (!strcmp($differenceItem["status"], "added")) {
                     $result = "  + " .
                             $differenceItem["fileKey"] .
                             ": " .
                             $differenceItem["file2Content"] .
-                            "\n";                    
-                } else if (!strcmp($differenceItem["status"],"deleted")) {
+                            "\n";
+                } elseif (!strcmp($differenceItem["status"], "deleted")) {
                     $result = "  - " .
                             $differenceItem["fileKey"] .
                             ": " .
@@ -181,7 +181,7 @@ class FilesDiffCommand implements CommandInterface
             $file1Keys = array_keys($file1Content);
             $file2Keys = array_keys($file2Content);
             $mergedFileKeys = array_unique(array_merge($file1Keys, $file2Keys));
-            
+
             $contentAnalysisResult = $this->getDifference(
                 $mergedFileKeys,
                 $file1Content,
