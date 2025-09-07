@@ -105,50 +105,57 @@ class FilesDiffCommand implements CommandInterface
         return array_reduce(
             $fileContentKeys,
             function ($contentDescriptor, $fileKey) {
-                if (array_key_exists($fileKey, $contentDescriptor["file2Content"])) {
-                    if (array_key_exists($fileKey, $contentDescriptor["file1Content"])) {
-                        $descriptorItem = $contentDescriptor;
-                        if ($descriptorItem["file1Content"][$fileKey] === $descriptorItem["file2Content"][$fileKey]) {
-                            if (is_array($descriptorItem["file1Content"][$fileKey])) {
-                                $mergedFileKeys = array_keys(array_merge(
-                                    $descriptorItem["file1Content"][$fileKey],
-                                    $descriptorItem["file2Content"][$fileKey]
-                                ));
-                                $contentDescriptor["result"][] = getDifference(
-                                    $mergedFileKeys,
-                                    $descriptorItem["file1Content"],
-                                    $descriptorItem["file2Content"]
-                                );
-                            } else {
-                                $contentDescriptor["result"][] = [
-                                    "level" => $descriptorItem["level"] + 1,
-                                    "status" => "not changed",
-                                    "fileKey" => $fileKey,
-                                    "file1Content" => $descriptorItem["file1Content"][$fileKey],
-                                    "file2Content" => $descriptorItem["file1Content"][$fileKey]
-                                ];
-                            }
+                if (
+                    array_key_exists($fileKey, $contentDescriptor["file2Content"]) &&
+                    array_key_exists($fileKey, $contentDescriptor["file1Content"])
+                ) {
+                    $descriptorItem = $contentDescriptor;
+                    if ($descriptorItem["file1Content"][$fileKey] === $descriptorItem["file2Content"][$fileKey]) {
+                        if (is_array($descriptorItem["file1Content"][$fileKey])) {
+                            $mergedFileKeys = array_keys(array_merge(
+                                $descriptorItem["file1Content"][$fileKey],
+                                $descriptorItem["file2Content"][$fileKey]
+                            ));
+                            $contentDescriptor["result"][] = getDifference(
+                                $mergedFileKeys,
+                                $descriptorItem["file1Content"],
+                                $descriptorItem["file2Content"]
+                            );
                         } else {
-                            $descriptorItem = $contentDescriptor;
                             $contentDescriptor["result"][] = [
                                 "level" => $descriptorItem["level"] + 1,
-                                "status" => "changed",
+                                "status" => "not changed",
                                 "fileKey" => $fileKey,
                                 "file1Content" => $descriptorItem["file1Content"][$fileKey],
-                                "file2Content" => $descriptorItem["file2Content"][$fileKey]
+                                "file2Content" => $descriptorItem["file1Content"][$fileKey]
                             ];
                         }
                     } else {
                         $descriptorItem = $contentDescriptor;
                         $contentDescriptor["result"][] = [
                             "level" => $descriptorItem["level"] + 1,
-                            "status" => "added",
+                            "status" => "changed",
                             "fileKey" => $fileKey,
-                            "file1Content" => null,
+                            "file1Content" => $descriptorItem["file1Content"][$fileKey],
                             "file2Content" => $descriptorItem["file2Content"][$fileKey]
                         ];
                     }
-                } else {
+                } elseif (
+                    array_key_exists($fileKey, $contentDescriptor["file2Content"]) &&
+                    !array_key_exists($fileKey, $contentDescriptor["file1Content"])
+                ) {
+                    $descriptorItem = $contentDescriptor;
+                    $contentDescriptor["result"][] = [
+                        "level" => $descriptorItem["level"] + 1,
+                        "status" => "added",
+                        "fileKey" => $fileKey,
+                        "file1Content" => null,
+                        "file2Content" => $descriptorItem["file2Content"][$fileKey]
+                    ];
+                } elseif (
+                    !array_key_exists($fileKey, $contentDescriptor["file2Content"]) &&
+                    array_key_exists($fileKey, $contentDescriptor["file1Content"])
+                ) {
                     $descriptorItem = $contentDescriptor;
                     $contentDescriptor["result"][] = [
                         "level" => $descriptorItem["level"] + 1,
