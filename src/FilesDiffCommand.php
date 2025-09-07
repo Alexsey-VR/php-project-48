@@ -43,53 +43,22 @@ class FilesDiffCommand implements CommandInterface
         return array_map(
             function ($differenceItem) {
                 $result = null;
-                $itemLevel = str_repeat("    ", $differenceItem["level"] - 1);
+                $itemLevelShift = str_repeat("    ", $differenceItem["level"] - 1);
+                $file1Item = is_array($differenceItem["file2Content"])?
+                    $this->stylish($differenceItem["file1Content"]) : $differenceItem["file1Content"];
+                $file2Item = is_array($differenceItem["file2Content"])?
+                    $this->stylish($differenceItem["file2Content"]) : $differenceItem["file2Content"];
+
                 if (!strcmp($differenceItem["status"], "not changed")) {
-                    if (is_array($differenceItem["file1Content"])) {
-                        $result = $itemLevel .
-                            "    " . $differenceItem["fileKey"] . ": " .
-                            stylish($differenceItem["file1Content"]);
-                    } else {
-                        $result = $itemLevel .
-                            "    " . $differenceItem["fileKey"] . ": " .
-                            $differenceItem["file1Content"];
-                    }
+                    $result = $itemLevelShift . "    " . $differenceItem["fileKey"] . ": " . $file1Item;  
                 } elseif (!strcmp($differenceItem["status"], "changed")) {
-                    if (is_array($differenceItem["file1Content"])) {
-                        $result = $itemLevel .
-                            "  - " . $differenceItem["fileKey"] . ": " .
-                            stylish($differenceItem["file1Content"]) . "\n" .
-                            "  + " . $differenceItem["fileKey"] . ": ";
-                        if (is_array($differenceItem["file2Content"])) {
-                            $result = $result . stylish($differenceItem["file2Content"]);
-                        } else {
-                            $result = $result . $differenceItem["file2Content"];
-                        }
-                    } else {
-                        $result = $itemLevel .
-                        "  - " . $differenceItem["fileKey"] . ": " .
-                        $differenceItem["file1Content"] . "\n" .
-                        $itemLevel .
-                        "  + " . $differenceItem["fileKey"] . ": ";
-                        if (is_array($differenceItem["file2Content"])) {
-                            $result = $result . stylish($differenceItem["file2Content"]);
-                        } else {
-                            $result = $result . $differenceItem["file2Content"];
-                        }
-                    }
+                    $result = $itemLevelShift . "  - " . $differenceItem["fileKey"] . ": " . $file1Item . "\n" .
+                        $itemLevelShift . "  + " . $differenceItem["fileKey"] . ": " . $file2Item;
                 } elseif (!strcmp($differenceItem["status"], "added")) {
-                    $result = $itemLevel .
-                    "  + " . $differenceItem["fileKey"] . ": ";
-                    if (is_array($differenceItem["file2Content"])) {
-                        $result = $result .
-                            stylish($differenceItem["file2Content"]);
-                    } else {
-                        $result = $result . $differenceItem["file2Content"];
-                    }
+                    $result = $itemLevelShift . "  + " . $differenceItem["fileKey"] . ": " . $file2Item;
                 } elseif (!strcmp($differenceItem["status"], "deleted")) {
-                    $result = $itemLevel .
-                    "  - " . $differenceItem["fileKey"] . ": " .
-                        $differenceItem["file1Content"];
+                    $result = $itemLevelShift .
+                    "  - " . $differenceItem["fileKey"] . ": " . $file1Item;
                 }
                 $result = $result . "\n";
 
