@@ -43,83 +43,131 @@ class FilesDiffCommand implements CommandInterface
         return array_map(
             function ($differenceItem) {
                 $result = null;
+                $itemLevel = str_repeat("    ", $differenceItem["level"] - 1);
                 if (!strcmp($differenceItem["status"], "not changed")) {
-                    $result = "    " .
-                            $differenceItem["fileKey"] .
-                            ": " .
-                            $differenceItem["file1Content"] .
-                            "\n";
+                    if (is_array($differenceItem["file1Content"])) {
+                        $result = $itemLevel .
+                            "    " . $differenceItem["fileKey"] . ": " .
+                            stylish($differenceItem["file1Content"]);
+                    } else {
+                        $result = $itemLevel .
+                            "    " . $differenceItem["fileKey"] . ": " .
+                            $differenceItem["file1Content"];
+                    }
                 } elseif (!strcmp($differenceItem["status"], "changed")) {
-                    $result = "  - " .
-                            $differenceItem["fileKey"] .
-                            ": " .
-                            $differenceItem["file1Content"] .
-                            "\n" .
-                            "  + " .
-                            $differenceItem["fileKey"] .
-                            ": " .
-                            $differenceItem["file2Content"] .
-                            "\n";
+                    if (is_array($differenceItem["file1Content"])) {
+                        $result = $itemLevel .
+                            "  - " . $differenceItem["fileKey"] . ": " .
+                            stylish($differenceItem["file1Content"]) . "\n" .
+                            "  + " . $differenceItem["fileKey"] . ": ";
+                        if (is_array($differenceItem["file2Content"])) {
+                            $result = $result . stylish($differenceItem["file2Content"]);
+                        } else {
+                            $result = $result . $differenceItem["file2Content"];
+                        }
+                    } else {
+                        $result = $itemLevel .
+                        "  - " . $differenceItem["fileKey"] . ": " .
+                        $differenceItem["file1Content"] . "\n" .
+                        $itemLevel .
+                        "  + " . $differenceItem["fileKey"] . ": ";
+                        if (is_array($differenceItem["file2Content"])) {
+                            $result = $result . stylish($differenceItem["file2Content"]);
+                        } else {
+                            $result = $result . $differenceItem["file2Content"];
+                        }
+                    }
                 } elseif (!strcmp($differenceItem["status"], "added")) {
-                    $result = "  + " .
-                            $differenceItem["fileKey"] .
-                            ": " .
-                            $differenceItem["file2Content"] .
-                            "\n";
+                    $result = $itemLevel .
+                    "  + " . $differenceItem["fileKey"] . ": ";
+                    if (is_array($differenceItem["file2Content"])) {
+                        $result = $result .
+                            stylish($differenceItem["file2Content"]);
+                    } else {
+                        $result = $result . $differenceItem["file2Content"];
+                    }
                 } elseif (!strcmp($differenceItem["status"], "deleted")) {
-                    $result = "  - " .
-                            $differenceItem["fileKey"] .
-                            ": " .
-                            $differenceItem["file1Content"] .
-                            "\n";
+                    $result = $itemLevel .
+                    "  - " . $differenceItem["fileKey"] . ": " .
+                        $differenceItem["file1Content"];
                 }
+                $result = $result . "\n";
+
                 return $result;
             },
             $differenceContent
         );
     }
 
-    private function getDifference($contentListKeys, $file1Content, $file2Content): array
+    private function getDifference($fileContentKeys, $file1Content, $file2Content): array
     {
-        return array_map(
-            function ($fileKey) use ($file1Content, $file2Content) {
-                if (array_key_exists($fileKey, $file2Content)) {
-                    if (
-                        array_key_exists($fileKey, $file1Content) &&
-                        !strcmp($file1Content[$fileKey], $file2Content[$fileKey])
-                    ) {
-                        $result = [
-                            "status" => "not changed",
-                            "fileKey" => $fileKey,
-                            "file1Content" => $file1Content[$fileKey],
-                            "file2Content" => $file1Content[$fileKey]
-                        ];
-                    } elseif (array_key_exists($fileKey, $file1Content)) {
-                        $result = [
-                            "status" => "changed",
-                            "fileKey" => $fileKey,
-                            "file1Content" => $file1Content[$fileKey],
-                            "file2Content" => $file2Content[$fileKey]
-                        ];
+        $contentDescriptor = [];
+        return array_reduce(
+            $fileContentKeys,
+            function ($contentDescriptor, $fileKey) {
+                if (array_key_exists($fileKey, $contentDescriptor["file2Content"])) {
+                    if (array_key_exists($fileKey, $contentDescriptor["file1Content"])) {
+                        $descriptorItem = $contentDescriptor;
+                        if ($descriptorItem["file1Content"][$fileKey] === $descriptorItem["file2Content"][$fileKey]) {
+                            if (is_array($descriptorItem["file1Content"][$fileKey])) {
+                                $mergedFileKeys = array_keys(array_merge(
+                                    $descriptorItem["file1Content"][$fileKey],
+                                    $descriptorItem["file2Content"][$fileKey]
+                                ));
+                                $contentDescriptor["result"][] = getDifference(
+                                    $mergedFileKeys,
+                                    $descriptorItem["file1Content"],
+                                    $descriptorItem["file2Content"]
+                                );
+                            } else {
+                                $contentDescriptor["result"][] = [
+                                    "level" => $descriptorItem["level"] + 1,
+                                    "status" => "not changed",
+                                    "fileKey" => $fileKey,
+                                    "file1Content" => $descriptorItem["file1Content"][$fileKey],
+                                    "file2Content" => $descriptorItem["file1Content"][$fileKey]
+                                ];
+                            }
+                        } else {
+                            $descriptorItem = $contentDescriptor;
+                            $contentDescriptor["result"][] = [
+                                "level" => $descriptorItem["level"] + 1,
+                                "status" => "changed",
+                                "fileKey" => $fileKey,
+                                "file1Content" => $descriptorItem["file1Content"][$fileKey],
+                                "file2Content" => $descriptorItem["file2Content"][$fileKey]
+                            ];
+                        }
                     } else {
-                        $result = [
+                        $descriptorItem = $contentDescriptor;
+                        $contentDescriptor["result"][] = [
+                            "level" => $descriptorItem["level"] + 1,
                             "status" => "added",
                             "fileKey" => $fileKey,
                             "file1Content" => null,
-                            "file2Content" => $file2Content[$fileKey]
+                            "file2Content" => $descriptorItem["file2Content"][$fileKey]
                         ];
                     }
-                    return $result;
                 } else {
-                    return [
+                    $descriptorItem = $contentDescriptor;
+                    $contentDescriptor["result"][] = [
+                        "level" => $descriptorItem["level"] + 1,
                         "status" => "deleted",
                         "fileKey" => $fileKey,
-                        "file1Content" => $file1Content[$fileKey],
+                        "file1Content" => $descriptorItem["file1Content"][$fileKey],
                         "file2Content" => null
                     ];
                 }
+
+                return $contentDescriptor;
             },
-            $contentListKeys
+            [
+                "level" => 0,
+                "status" => null,
+                "fileKey" => "init",
+                "file1Content" => $file1Content,
+                "file2Content" => $file2Content
+            ]
         );
     }
 
@@ -178,17 +226,15 @@ class FilesDiffCommand implements CommandInterface
 
             $this->filesContentString = implode("", $this->filesContent);
 
-            $file1Keys = array_keys($file1Content);
-            $file2Keys = array_keys($file2Content);
-            $mergedFileKeys = array_unique(array_merge($file1Keys, $file2Keys));
-
-            $contentAnalysisResult = $this->getDifference(
+            $mergedFileKeys = array_keys(array_merge($file1Content, $file2Content));
+            $contentDescriptor = $this->getDifference(
                 $mergedFileKeys,
                 $file1Content,
                 $file2Content
             );
 
-            $this->filesDiffs = $this->stylish($contentAnalysisResult);
+            $this->filesDiffs = $this->stylish($contentDescriptor["result"]);
+
             $this->filesDiffsString = "{\n" . implode("", $this->filesDiffs) . "}\n";
         }
 
