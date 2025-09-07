@@ -44,13 +44,13 @@ class FilesDiffCommand implements CommandInterface
             function ($differenceItem) {
                 $result = null;
                 $itemLevelShift = str_repeat("    ", $differenceItem["level"] - 1);
-                $file1Item = is_array($differenceItem["file2Content"])?
+                $file1Item = is_array($differenceItem["file2Content"]) ?
                     $this->stylish($differenceItem["file1Content"]) : $differenceItem["file1Content"];
-                $file2Item = is_array($differenceItem["file2Content"])?
+                $file2Item = is_array($differenceItem["file2Content"]) ?
                     $this->stylish($differenceItem["file2Content"]) : $differenceItem["file2Content"];
 
                 if (!strcmp($differenceItem["status"], "not changed")) {
-                    $result = $itemLevelShift . "    " . $differenceItem["fileKey"] . ": " . $file1Item;  
+                    $result = $itemLevelShift . "    " . $differenceItem["fileKey"] . ": " . $file1Item;
                 } elseif (!strcmp($differenceItem["status"], "changed")) {
                     $result = $itemLevelShift . "  - " . $differenceItem["fileKey"] . ": " . $file1Item . "\n" .
                         $itemLevelShift . "  + " . $differenceItem["fileKey"] . ": " . $file2Item;
