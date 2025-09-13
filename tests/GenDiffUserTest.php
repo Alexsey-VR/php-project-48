@@ -16,11 +16,14 @@ class GenDiffUserTest extends TestCase
     public function testFilesDiffer()
     {
         ob_start();
-        genDiff(__DIR__ . "/../file1.json", __DIR__ . "/../file2.json");
+        genDiff(
+            __DIR__ . "/../fixtures/file1.json",
+            __DIR__ . "/../fixtures/file2.json"
+        );
         $outputBuffer = ob_get_clean();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesDiffs.txt",
+            __DIR__ . "/../fixtures/filesRecursiveDiffs.txt",
             $outputBuffer
         );
     }

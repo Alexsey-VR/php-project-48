@@ -1,8 +1,8 @@
 {
     host: hexlet.io
-  - timeout: 50
-  + timeout: 20
-  - proxy: 123.234.53.22
-  - follow: false
-  + verbose: true
+  - timeout: 50 # Старое значение
+  + timeout: 20 # Новое значение
+  - proxy: 123.234.53.22 # Удалена
+  - follow: false # Удалена
+  + verbose: true # Добавлена
 }

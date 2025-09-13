@@ -1,13 +1,13 @@
-file1.json content:
+File file1Entry.json content:
 {
-    hexlet.io
-    50
-    123.234.53.22
-    false
+    host: hexlet.io
+    timeout: 50
+    proxy: 123.234.53.22
+    follow: false
 }
-file2.json content:
+File file2Entry.json content:
 {
-    20
-    true
-    hexlet.io
+    timeout: 20
+    verbose: true
+    host: hexlet.io
 }

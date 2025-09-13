@@ -5,6 +5,7 @@ namespace Differ;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\FileReader;
 use Differ\DifferException;
 
@@ -17,22 +18,32 @@ class FilesDiffCommandTest extends TestCase
 {
     private $fileNames;
 
-    protected function setUp(): void
-    {
+ /*   protected function setUp(): void
+    { */
+        /*
         $this->fileNames['JSON'] = [
-            "FILE1" => __DIR__ . "/../file1.json",
-            "FILE2" => __DIR__ . "/../file2.json"
+            "FILE1" => __DIR__ . "/../fixtures/file1.json",
+            "FILE2" => __DIR__ . "/../fixtures/file2.json"
         ];
+        */
+        /*
+        $this->fileNames['JSON'] = [
+            "FILE1" => __DIR__ . "/../fixtures/file1Entry.json",
+            "FILE2" => __DIR__ . "/../fixtures/file2Entry.json"
+        ];
+        
         $this->fileNames['YAML'] = [
-            "FILE1" => __DIR__ . "/../file1.yaml",
-            "FILE2" => __DIR__ . "/../file2.yaml"
+            "FILE1" => __DIR__ . "/../fixtures/file1Entry.yaml",
+            "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
         ];
+        */
+        /*
         $this->fileNames['Exception'] = [
             "FILE1" => __DIR__ . "/../fixtures/file1.txt",
-            "FILE2" => __DIR__ . "/../file2.yaml"
+            "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
         ];
-    }
-
+        */
+ /*   } */
     public function testSetFileReader()
     {
         $diffCommand = new FilesDiffCommand();
@@ -42,12 +53,35 @@ class FilesDiffCommandTest extends TestCase
             $diffCommand->setFileReader(new FileReader()));
     }
 
-    public function testExecuteForJSON()
+    public static function getFileNames(): array
+    {
+        $fileNamesData = [
+            [
+                'fileNamesInput' => [
+                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.json",
+                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.json"
+                ],
+                'outputFilePath' => __DIR__ . "/../fixtures/filesJSONContent.txt"
+            ],
+            [
+                'fileNamesInput' => [
+                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.yaml",
+                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
+                ],
+                'outputFilePath' => __DIR__ . "/../fixtures/filesYAMLContent.txt"
+            ]
+        ];
+
+        return $fileNamesData;
+    }
+
+    #[DataProvider('getFileNames')]
+    public function testExecute($fileNamesInput, $outputFilePath)
     {
         $cmdLineParser = $this->createConfiguredStub(
             CommandLineParser::class,
             [
-                'getFileNames' => $this->fileNames['JSON']
+                'getFileNames' => $fileNamesInput
             ]
         );
 
@@ -58,7 +92,7 @@ class FilesDiffCommandTest extends TestCase
                                  ->getFilesContent();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesJSONContent.txt",
+            $outputFilePath,
             $resultContent
         );
 
@@ -71,7 +105,7 @@ class FilesDiffCommandTest extends TestCase
             $resultDiffs
         );
     }
-
+/*
     public function testExecuteForYAML()
     {
         $cmdLineParser = $this->createConfiguredStub(
@@ -101,13 +135,16 @@ class FilesDiffCommandTest extends TestCase
             $resultDiffs
         );
     }
-
+*/
     public function testExecuteForException()
     {
         $cmdLineParser = $this->createConfiguredStub(
             CommandLineParser::class,
             [
-                'getFileNames' => $this->fileNames['Exception']
+                'getFileNames' => /*$this->fileNames['Exception']*/ [
+                    "FILE1" => __DIR__ . "/../fixtures/file1.txt",
+                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
+                ]
             ]
         );
 

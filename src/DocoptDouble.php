@@ -12,8 +12,8 @@ class DocoptDouble
             "--help" => null,
             "--version" => null,
             "Options" => 0,
-            "FILE1" => "file1.json",
-            "FILE2" => "file2.json"
+            "FILE1" => __DIR__ . "/../fixtures/file1.json",
+            "FILE2" => __DIR__ . "/../fixtures/file2.json"
         ];
     }
 
