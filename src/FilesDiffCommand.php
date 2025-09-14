@@ -87,6 +87,61 @@ class FilesDiffCommand implements CommandInterface
         );
     }
 
+    private function getNextItemStatus(
+        $file1Content,
+        $file2Content,
+        $currentStatus,
+        $nextItemIsNotArray
+    ): string {
+        $status = self::STATUS_KEYS[0];
+        $bothFilesKeySet = isset($file1Content, $file2Content);
+        $file1KeyOnlySet = isset($file1Content) && !isset($file2Content);
+        $file2KeyOnlySet = !isset($file1Content) && isset($file2Content);
+
+        if (isset($file1Content, $file2Content)) {
+            $status = ($file1Content === $file2Content) ?
+                self::STATUS_KEYS[0] : self::STATUS_KEYS[1];
+        } elseif (isset($file1Content) && !isset($file2Content)) {
+            $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
+                self::STATUS_KEYS[0] : self::STATUS_KEYS[3];
+        } elseif (!isset($file1Content) && isset($file2Content)) {
+            $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
+                self::STATUS_KEYS[0] : self::STATUS_KEYS[2];
+        }
+
+        return $status;
+    }
+
+    private function getInitDifferenceDescriptor(
+        $status,
+        $level,
+        $fileKey,
+        $file1Content,
+        $file2Content
+    ): array {
+        if ($status === self::STATUS_KEYS[2]) {
+            $initDifferenceDescriptor = [
+                "file1Content" => $file2Content,
+                "file2Content" => $file2Content,
+            ];
+        } elseif ($status === self::STATUS_KEYS[3]) {
+            $initDifferenceDescriptor = [
+                "file1Content" => $file1Content,
+                "file2Content" => $file1Content,
+            ];
+        } else {
+            $initDifferenceDescriptor = [
+                "file1Content" => $file1Content,
+                "file2Content" => $file2Content,
+            ];
+        }
+        $initDifferenceDescriptor["level"] = $level;
+        $initDifferenceDescriptor["status"] = $status;
+        $initDifferenceDescriptor["fileKey"] = $fileKey;
+
+        return $initDifferenceDescriptor;
+    }
+
     private function getDifference(
         $fileContentKeys,
         $initDifferenceDescriptor
@@ -96,53 +151,33 @@ class FilesDiffCommand implements CommandInterface
             function ($differenceDescriptor, $fileKey) {
                 $file1Item = $differenceDescriptor["file1Content"];
                 $file2Item = $differenceDescriptor["file2Content"];
-                $currentStatus = $differenceDescriptor['status'];
 
+                $currentStatus = $differenceDescriptor['status'];
                 $file1Content = $file1Item[$fileKey] ?? null;
                 $file2Content = $file2Item[$fileKey] ?? null;
-
-                $bothFilesKeySet = isset($file1Content, $file2Content);
-                $file1KeyOnlySet = isset($file1Content) && !isset($file2Content);
-                $file2KeyOnlySet = !isset($file1Content) && isset($file2Content);
-
                 $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
 
-                if ($bothFilesKeySet) {
-                    $status = ($file1Content === $file2Content) ?
-                        self::STATUS_KEYS[0] : self::STATUS_KEYS[1];
-                } elseif ($file1KeyOnlySet) {
-                    $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
-                        self::STATUS_KEYS[0] : self::STATUS_KEYS[3];
-                } elseif ($file2KeyOnlySet) {
-                    $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
-                        self::STATUS_KEYS[0] : self::STATUS_KEYS[2];
-                }
+                $status = $this->getNextItemStatus(
+                    $file1Content,
+                    $file2Content,
+                    $currentStatus,
+                    $nextItemIsNotArray
+                );
 
                 $level = $differenceDescriptor["level"] + 1;
                 $contentKeys = array_keys(array_merge(
                     is_array($file1Content) ? $file1Content : [],
                     is_array($file2Content) ? $file2Content : []
                 ));
-                if ($status === self::STATUS_KEYS[2]) {
-                    $initDifferenceDescriptor = [
-                        "file1Content" => $file2Content,
-                        "file2Content" => $file2Content,
-                    ];
-                } elseif ($status === self::STATUS_KEYS[3]) {
-                    $initDifferenceDescriptor = [
-                        "file1Content" => $file1Content,
-                        "file2Content" => $file1Content,
-                    ];
-                } else {
-                    $initDifferenceDescriptor = [
-                        "file1Content" => $file1Content,
-                        "file2Content" => $file2Content,
-                    ];
-                }
-                $initDifferenceDescriptor["level"] = $level;
-                $initDifferenceDescriptor["status"] = $status;
-                $initDifferenceDescriptor["fileKey"] = $fileKey;
 
+                $initDifferenceDescriptor = $this->getInitDifferenceDescriptor(
+                    $status,
+                    $level,
+                    $fileKey,
+                    $file1Content,
+                    $file2Content
+                );
+                
                 $differenceDescriptor["output"][] = $this->getDifference(
                     $contentKeys,
                     $initDifferenceDescriptor
