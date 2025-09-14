@@ -108,23 +108,14 @@ class FilesDiffCommand implements CommandInterface
                 $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
 
                 if ($bothFilesKeySet) {
-                    if ($file1Content === $file2Content) {
-                        $status = self::STATUS_KEYS[0];
-                    } else {
-                        $status = self::STATUS_KEYS[1];
-                    }
+                    $status = ($file1Content === $file2Content) ?
+                        self::STATUS_KEYS[0] : self::STATUS_KEYS[1];
                 } elseif ($file1KeyOnlySet) {
-                    if (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) {
-                        $status = self::STATUS_KEYS[0];
-                    } else {
-                        $status = self::STATUS_KEYS[3];
-                    }
+                    $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
+                        self::STATUS_KEYS[0] : self::STATUS_KEYS[3];
                 } elseif ($file2KeyOnlySet) {
-                    if (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) {
-                        $status = self::STATUS_KEYS[0];
-                    } else {
-                        $status = self::STATUS_KEYS[2];
-                    }
+                    $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
+                        self::STATUS_KEYS[0] : self::STATUS_KEYS[2];
                 }
 
                 $level = $differenceDescriptor["level"] + 1;
