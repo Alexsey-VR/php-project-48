@@ -177,7 +177,7 @@ class FilesDiffCommand implements CommandInterface
                     $file1Content,
                     $file2Content
                 );
-                
+
                 $differenceDescriptor["output"][] = $this->getDifference(
                     $contentKeys,
                     $initDifferenceDescriptor
