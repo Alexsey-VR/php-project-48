@@ -15,7 +15,7 @@ class FilesDiffCommand implements CommandInterface
     private string $files2ContentString;
     private string $filesContentString;
     private const array STATUS_KEYS = [
-        "not changed", "changed", "added", "deleted", "empty"
+        "not changed", "changed", "added", "deleted", "empty", "new value"
     ];
     private const array STATUS_PREFIXES = [
         self::STATUS_KEYS[0] => "    ",
@@ -25,13 +25,11 @@ class FilesDiffCommand implements CommandInterface
     ];
     private const array STATUS_COMMENTS = [
         self::STATUS_KEYS[0] => "",
-        self::STATUS_KEYS[1] => [
-            self::STATUS_KEYS[3] => " # Старое значение",
-            self::STATUS_KEYS[2] => " # Новое значение"
-        ],
+        self::STATUS_KEYS[1] => " # Старое значение",
         self::STATUS_KEYS[3] => " # Удалена",
         self::STATUS_KEYS[2] => " # Добавлена",
-        self::STATUS_KEYS[4] => "# значения нет, но пробел после : есть"
+        self::STATUS_KEYS[4] => "# значения нет, но пробел после : есть",
+        self::STATUS_KEYS[5] => " # Новое значение"
     ];
 
     private function normalizeData($data)
@@ -98,13 +96,13 @@ class FilesDiffCommand implements CommandInterface
         $file1KeyOnlySet = isset($file1Content) && !isset($file2Content);
         $file2KeyOnlySet = !isset($file1Content) && isset($file2Content);
 
-        if (isset($file1Content, $file2Content)) {
+        if ($bothFilesKeySet) {
             $status = ($file1Content === $file2Content) ?
                 self::STATUS_KEYS[0] : self::STATUS_KEYS[1];
-        } elseif (isset($file1Content) && !isset($file2Content)) {
+        } elseif ($file1KeyOnlySet) {
             $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
                 self::STATUS_KEYS[0] : self::STATUS_KEYS[3];
-        } elseif (!isset($file1Content) && isset($file2Content)) {
+        } elseif ($file2KeyOnlySet) {
             $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
                 self::STATUS_KEYS[0] : self::STATUS_KEYS[2];
         }
@@ -152,10 +150,10 @@ class FilesDiffCommand implements CommandInterface
                 $file1Item = $differenceDescriptor["file1Content"];
                 $file2Item = $differenceDescriptor["file2Content"];
 
-                $currentStatus = $differenceDescriptor['status'];
                 $file1Content = $file1Item[$fileKey] ?? null;
                 $file2Content = $file2Item[$fileKey] ?? null;
                 $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
+                $currentStatus = $differenceDescriptor['status'];
 
                 $status = $this->getNextItemStatus(
                     $file1Content,
@@ -215,6 +213,37 @@ class FilesDiffCommand implements CommandInterface
         );
     }
 
+    private function getStyledItem(
+        $contentItem,
+        $prefixKey,
+        $contentKey,
+        $commentKey
+    ): string {
+        $embeddedItem = self::STATUS_PREFIXES[$prefixKey] .
+            "{$contentItem['fileKey']}: " .
+            "{$contentItem[$contentKey]}" .
+            self::STATUS_COMMENTS[$commentKey];
+
+        return $embeddedItem;
+    }
+
+    private function getStyledArray(
+        $contentItem,
+        $styledItems,
+        $prefixKey,
+        $commentKey,
+        $itemLevelShift
+    ): string {
+        $embeddedItem = self::STATUS_PREFIXES[$prefixKey] .
+            "{$contentItem['fileKey']}: {" . self::STATUS_COMMENTS[$commentKey] . "\n" .
+            implode($styledItems) .
+            $itemLevelShift . self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
+            "}";
+
+        return $embeddedItem;
+    }
+
+
     private function stylish(array $content): array
     {
         return array_reduce(
@@ -223,7 +252,6 @@ class FilesDiffCommand implements CommandInterface
                 $itemLevelShift = str_repeat(self::STATUS_PREFIXES[self::STATUS_KEYS[0]], $contentItem["level"] - 1);
 
                 $statusComment = self::STATUS_COMMENTS[$contentItem["status"]];
-                $emptyComment = self::STATUS_COMMENTS[self::STATUS_KEYS[4]];
 
                 if (isset($contentItem["output"])) {
                     $firstContentIsArray = is_array($contentItem["file1Content"]) &&
@@ -233,50 +261,58 @@ class FilesDiffCommand implements CommandInterface
 
                     if ($firstContentIsArray) {
                         $altDeleteComment = ($contentItem['file1Content'] === "") ?
-                        $emptyComment  : "{$statusComment[self::STATUS_KEYS[3]]}";
+                            self::STATUS_COMMENTS[self::STATUS_KEYS[4]]  : self::STATUS_COMMENTS[self::STATUS_KEYS[1]];
 
-                        $altAddedComment = ($contentItem['file2Content'] === "") ?
-                        $emptyComment  : "{$statusComment[self::STATUS_KEYS[2]]}";
+                        $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
+                            self::STATUS_KEYS[4] : self::STATUS_KEYS[5];
+
+                        $styledArray = $this->getStyledArray(
+                            contentItem: $contentItem,
+                            styledItems: $this->stylish($contentItem["output"]),
+                            prefixKey: "deleted",
+                            commentKey: self::STATUS_KEYS[1],
+                            itemLevelShift: $itemLevelShift
+                        );
+
+                        $styledItem = $this->getStyledItem(
+                            contentItem: $contentItem,
+                            prefixKey: self::STATUS_KEYS[2],
+                            contentKey: 'file2Content',
+                            commentKey: $altAddedCommentKey
+                        );
 
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES["deleted"] .
-                                    "{$contentItem['fileKey']}: ";
-                        $result[] = "{" .
-                                    self::STATUS_COMMENTS[self::STATUS_KEYS[1]]["deleted"] .
-                                    "\n" . implode($this->stylish($contentItem["output"])) .
-                                    $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
-                                    "}\n";
-
+                                    $styledArray .
+                                    "\n";
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[2]] .
-                                    "{$contentItem['fileKey']}: " .
-                                    "{$contentItem['file2Content']}" .
-                                    "{$altAddedComment}" .
+                                    $styledItem .
                                     "\n";
                     } elseif ($secondContentIsArray) {
-                        $altDeleteComment = ($contentItem['file1Content'] === "") ?
-                        $emptyComment  : "{$statusComment[self::STATUS_KEYS[3]]}";
+                        $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
+                            self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
 
-                        $altAddedComment = ($contentItem['file2Content'] === "") ?
-                        $emptyComment  : "{$statusComment[self::STATUS_KEYS[2]]}";
+                        $styledItem = $this->getStyledItem(
+                            contentItem: $contentItem,
+                            prefixKey: self::STATUS_KEYS[3],
+                            contentKey: 'file1Content',
+                            commentKey: $altDeletedCommentKey
+                        );
+
+                        $styledArray = $this->getStyledArray(
+                            contentItem: $contentItem,
+                            styledItems: $this->stylish($contentItem["output"]),
+                            prefixKey: self::STATUS_KEYS[2],
+                            commentKey: self::STATUS_KEYS[5],
+                            itemLevelShift: $itemLevelShift
+                        );
 
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[3]] .
-                                    "{$contentItem['fileKey']}: " .
-                                    "{$contentItem['file1Content']}" .
-                                    "{$altDeleteComment}" .
+                                    $styledItem .
                                     "\n";
 
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[2]] .
-                                    "{$contentItem['fileKey']}: ";
-                        $result[] = "{" .
-                                    self::STATUS_COMMENTS[self::STATUS_KEYS[1]][self::STATUS_KEYS[2]] .
-                                    "\n" . implode($this->stylish($contentItem["output"])) .
-                                    $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
-                                    "}\n";
+                                    $styledArray .
+                                    "\n";
                     } else {
                         $arrayStatusPrefix = (is_array($contentItem["output"]) &&
                             ($contentItem["status"] === self::STATUS_KEYS[1])) ?
@@ -298,38 +334,50 @@ class FilesDiffCommand implements CommandInterface
                     }
                 } else {
                     if ($contentItem["status"] === self::STATUS_KEYS[1]) {
-                        $altDeleteComment = ($contentItem['file1Content'] === "") ?
-                        $emptyComment  : "{$statusComment[self::STATUS_KEYS[3]]}";
+                        $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
+                            self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
 
-                        $altAddedComment = ($contentItem['file2Content'] === "") ?
-                        $emptyComment  : "{$statusComment[self::STATUS_KEYS[2]]}";
+                        $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
+                            self::STATUS_KEYS[4]  : self::STATUS_KEYS[5];
 
+                        $styledItem = $this->getStyledItem(
+                            contentItem: $contentItem,
+                            prefixKey: self::STATUS_KEYS[3],
+                            contentKey: 'file1Content',
+                            commentKey: $altDeletedCommentKey
+                        );
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[3]] .
-                                    "{$contentItem['fileKey']}: " .
-                                    "{$contentItem['file1Content']}" .
-                                    "{$altDeleteComment}" .
+                                    $styledItem .
                                     "\n";
 
+                        $styledItem = $this->getStyledItem(
+                            contentItem: $contentItem,
+                            prefixKey: self::STATUS_KEYS[2],
+                            contentKey: 'file2Content',
+                            commentKey: $altAddedCommentKey
+                        );
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[2]] .
-                                    "{$contentItem['fileKey']}: " .
-                                    "{$contentItem['file2Content']}" .
-                                    "{$altAddedComment}" .
+                                    $styledItem .
                                     "\n";
                     } elseif (isset($contentItem['file1Content'])) {
+                        $styledItem = $this->getStyledItem(
+                            contentItem: $contentItem,
+                            prefixKey: $contentItem["status"],
+                            contentKey: 'file1Content',
+                            commentKey: $contentItem["status"]
+                        );
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[$contentItem["status"]] .
-                                    "{$contentItem['fileKey']}: " .
-                                    "{$contentItem['file1Content']}" .
-                                    self::STATUS_COMMENTS[$contentItem["status"]] .
+                                    $styledItem .
                                     "\n";
                     } else {
+                        $styledItem = $this->getStyledItem(
+                            contentItem: $contentItem,
+                            prefixKey: $contentItem["status"],
+                            contentKey: 'file2Content',
+                            commentKey: $contentItem["status"]
+                        );
                         $result[] = $itemLevelShift .
-                                    self::STATUS_PREFIXES[$contentItem["status"]] .
-                                    "{$contentItem['fileKey']}: " .
-                                    "{$contentItem['file2Content']}" .
-                                    self::STATUS_COMMENTS[$contentItem["status"]] .
+                                    $styledItem .
                                     "\n";
                     }
                 }
