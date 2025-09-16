@@ -216,27 +216,27 @@ class FilesDiffCommand implements CommandInterface
     private function getStyledItem(
         $contentItem,
         $prefixKey,
-        $contentKey,
+        $currentContent,
         $commentKey
     ): string {
         $embeddedItem = self::STATUS_PREFIXES[$prefixKey] .
             "{$contentItem['fileKey']}: " .
-            "{$contentItem[$contentKey]}" .
+            "{$currentContent}" .
             self::STATUS_COMMENTS[$commentKey];
 
         return $embeddedItem;
     }
 
-    private function getStyledArray(
+    private function getStyledList(
         $contentItem,
-        $styledItems,
+        $currentItemList,
         $prefixKey,
         $commentKey,
         $itemLevelShift
     ): string {
         $embeddedItem = self::STATUS_PREFIXES[$prefixKey] .
             "{$contentItem['fileKey']}: {" . self::STATUS_COMMENTS[$commentKey] . "\n" .
-            implode($styledItems) .
+            implode($currentItemList) .
             $itemLevelShift . self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
             "}";
 
@@ -250,21 +250,20 @@ class FilesDiffCommand implements CommandInterface
             function ($result, $contentItem) {
                 $itemLevelShift = str_repeat(self::STATUS_PREFIXES[self::STATUS_KEYS[0]], $contentItem["level"] - 1);
 
-                $firstContentIsArray = is_array($contentItem["file1Content"]) &&
-                    !is_array($contentItem["file2Content"]);
-                $secondContentIsArray = !is_array($contentItem["file1Content"]) &&
-                    is_array($contentItem["file2Content"]);
-                $bothContentIsArray = is_array($contentItem["file1Content"]) &&
-                    is_array($contentItem["file2Content"]);
+                $firstContent = $contentItem["file1Content"];
+                $secondContent = $contentItem["file2Content"];
+                $firstContentIsArray = is_array($firstContent) && !is_array($secondContent);
+                $secondContentIsArray = !is_array($firstContent) && is_array($secondContent);
+                $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
 
                 if ($firstContentIsArray) {
-                    $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
+                    $altAddedCommentKey = ($secondContent === "") ?
                         self::STATUS_KEYS[4] : self::STATUS_KEYS[5];
 
-                    $styledArray = $this->getStyledArray(
+                    $styledArray = $this->getStyledList(
                         contentItem: $contentItem,
-                        styledItems: $this->stylish($contentItem["output"]),
-                        prefixKey: "deleted",
+                        currentItemList: $this->stylish($contentItem["output"]),
+                        prefixKey: self::STATUS_KEYS[3],
                         commentKey: self::STATUS_KEYS[1],
                         itemLevelShift: $itemLevelShift
                     );
@@ -275,29 +274,29 @@ class FilesDiffCommand implements CommandInterface
                     $styledItem = $this->getStyledItem(
                         contentItem: $contentItem,
                         prefixKey: self::STATUS_KEYS[2],
-                        contentKey: 'file2Content',
+                        currentContent: $secondContent,
                         commentKey: $altAddedCommentKey
                     );
                     $result[] = $itemLevelShift .
                                 $styledItem .
                                 "\n";
                 } elseif ($secondContentIsArray) {
-                    $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
+                    $altDeletedCommentKey = ($firstContent === "") ?
                         self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
 
                     $styledItem = $this->getStyledItem(
                         contentItem: $contentItem,
                         prefixKey: self::STATUS_KEYS[3],
-                        contentKey: 'file1Content',
+                        currentContent: $firstContent,
                         commentKey: $altDeletedCommentKey
                     );
                     $result[] = $itemLevelShift .
                                 $styledItem .
                                 "\n";
 
-                    $styledArray = $this->getStyledArray(
+                    $styledArray = $this->getStyledList(
                         contentItem: $contentItem,
-                        styledItems: $this->stylish($contentItem["output"]),
+                        currentItemList: $this->stylish($contentItem["output"]),
                         prefixKey: self::STATUS_KEYS[2],
                         commentKey: self::STATUS_KEYS[5],
                         itemLevelShift: $itemLevelShift
@@ -313,9 +312,9 @@ class FilesDiffCommand implements CommandInterface
                     $altStatusCommentKey = ($contentItem["status"] === self::STATUS_KEYS[1]) ?
                         self::STATUS_KEYS[0] : $contentItem["status"];
 
-                    $styledArray = $this->getStyledArray(
+                    $styledArray = $this->getStyledList(
                         contentItem: $contentItem,
-                        styledItems: $this->stylish($contentItem["output"]),
+                        currentItemList: $this->stylish($contentItem["output"]),
                         prefixKey: $arrayStatusPrefixKey,
                         commentKey: $altStatusCommentKey,
                         itemLevelShift: $itemLevelShift
@@ -324,16 +323,16 @@ class FilesDiffCommand implements CommandInterface
                                 $styledArray .
                                 "\n";
                 } elseif ($contentItem["status"] === self::STATUS_KEYS[1]) {
-                    $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
+                    $altDeletedCommentKey = ($firstContent === "") ?
                         self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
 
-                    $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
+                    $altAddedCommentKey = ($secondContent === "") ?
                         self::STATUS_KEYS[4]  : self::STATUS_KEYS[5];
 
                     $styledItem = $this->getStyledItem(
                         contentItem: $contentItem,
                         prefixKey: self::STATUS_KEYS[3],
-                        contentKey: 'file1Content',
+                        currentContent: $firstContent,
                         commentKey: $altDeletedCommentKey
                     );
                     $result[] = $itemLevelShift .
@@ -343,17 +342,17 @@ class FilesDiffCommand implements CommandInterface
                     $styledItem = $this->getStyledItem(
                         contentItem: $contentItem,
                         prefixKey: self::STATUS_KEYS[2],
-                        contentKey: 'file2Content',
+                        currentContent: $secondContent,
                         commentKey: $altAddedCommentKey
                     );
                     $result[] = $itemLevelShift .
                                 $styledItem .
                                 "\n";
-                } elseif (isset($contentItem['file1Content'])) {
+                } elseif (isset($firstContent)) {
                     $styledItem = $this->getStyledItem(
                         contentItem: $contentItem,
                         prefixKey: $contentItem["status"],
-                        contentKey: 'file1Content',
+                        currentContent: $firstContent,
                         commentKey: $contentItem["status"]
                     );
                     $result[] = $itemLevelShift .
@@ -363,7 +362,7 @@ class FilesDiffCommand implements CommandInterface
                     $styledItem = $this->getStyledItem(
                         contentItem: $contentItem,
                         prefixKey: $contentItem["status"],
-                        contentKey: 'file2Content',
+                        currentContent: $secondContent,
                         commentKey: $contentItem["status"]
                     );
                     $result[] = $itemLevelShift .
