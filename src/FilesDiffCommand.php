@@ -26,8 +26,8 @@ class FilesDiffCommand implements CommandInterface
     private const array STATUS_COMMENTS = [
         self::STATUS_KEYS[0] => "",
         self::STATUS_KEYS[1] => " # Старое значение",
-        self::STATUS_KEYS[3] => " # Удалена",
         self::STATUS_KEYS[2] => " # Добавлена",
+        self::STATUS_KEYS[3] => " # Удалена",
         self::STATUS_KEYS[4] => "# значения нет, но пробел после : есть",
         self::STATUS_KEYS[5] => " # Новое значение"
     ];
@@ -243,7 +243,6 @@ class FilesDiffCommand implements CommandInterface
         return $embeddedItem;
     }
 
-
     private function stylish(array $content): array
     {
         return array_reduce(
@@ -251,135 +250,125 @@ class FilesDiffCommand implements CommandInterface
             function ($result, $contentItem) {
                 $itemLevelShift = str_repeat(self::STATUS_PREFIXES[self::STATUS_KEYS[0]], $contentItem["level"] - 1);
 
-                $statusComment = self::STATUS_COMMENTS[$contentItem["status"]];
+                $firstContentIsArray = is_array($contentItem["file1Content"]) &&
+                    !is_array($contentItem["file2Content"]);
+                $secondContentIsArray = !is_array($contentItem["file1Content"]) &&
+                    is_array($contentItem["file2Content"]);
+                $bothContentIsArray = is_array($contentItem["file1Content"]) &&
+                    is_array($contentItem["file2Content"]);
 
-                if (isset($contentItem["output"])) {
-                    $firstContentIsArray = is_array($contentItem["file1Content"]) &&
-                        !is_array($contentItem["file2Content"]);
-                    $secondContentIsArray = !is_array($contentItem["file1Content"]) &&
-                        is_array($contentItem["file2Content"]);
+                if ($firstContentIsArray) {
+                    $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
+                        self::STATUS_KEYS[4] : self::STATUS_KEYS[5];
 
-                    if ($firstContentIsArray) {
-                        $altDeleteComment = ($contentItem['file1Content'] === "") ?
-                            self::STATUS_COMMENTS[self::STATUS_KEYS[4]]  : self::STATUS_COMMENTS[self::STATUS_KEYS[1]];
+                    $styledArray = $this->getStyledArray(
+                        contentItem: $contentItem,
+                        styledItems: $this->stylish($contentItem["output"]),
+                        prefixKey: "deleted",
+                        commentKey: self::STATUS_KEYS[1],
+                        itemLevelShift: $itemLevelShift
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledArray .
+                                "\n";
 
-                        $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
-                            self::STATUS_KEYS[4] : self::STATUS_KEYS[5];
+                    $styledItem = $this->getStyledItem(
+                        contentItem: $contentItem,
+                        prefixKey: self::STATUS_KEYS[2],
+                        contentKey: 'file2Content',
+                        commentKey: $altAddedCommentKey
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledItem .
+                                "\n";
+                } elseif ($secondContentIsArray) {
+                    $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
+                        self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
 
-                        $styledArray = $this->getStyledArray(
-                            contentItem: $contentItem,
-                            styledItems: $this->stylish($contentItem["output"]),
-                            prefixKey: "deleted",
-                            commentKey: self::STATUS_KEYS[1],
-                            itemLevelShift: $itemLevelShift
-                        );
+                    $styledItem = $this->getStyledItem(
+                        contentItem: $contentItem,
+                        prefixKey: self::STATUS_KEYS[3],
+                        contentKey: 'file1Content',
+                        commentKey: $altDeletedCommentKey
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledItem .
+                                "\n";
 
-                        $styledItem = $this->getStyledItem(
-                            contentItem: $contentItem,
-                            prefixKey: self::STATUS_KEYS[2],
-                            contentKey: 'file2Content',
-                            commentKey: $altAddedCommentKey
-                        );
+                    $styledArray = $this->getStyledArray(
+                        contentItem: $contentItem,
+                        styledItems: $this->stylish($contentItem["output"]),
+                        prefixKey: self::STATUS_KEYS[2],
+                        commentKey: self::STATUS_KEYS[5],
+                        itemLevelShift: $itemLevelShift
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledArray .
+                                "\n";
+                } elseif ($bothContentIsArray) {
+                    $arrayStatusPrefixKey = (is_array($contentItem["output"]) &&
+                        ($contentItem["status"] === self::STATUS_KEYS[1])) ?
+                        self::STATUS_KEYS[0] : $contentItem["status"];
 
-                        $result[] = $itemLevelShift .
-                                    $styledArray .
-                                    "\n";
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
-                    } elseif ($secondContentIsArray) {
-                        $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
-                            self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
+                    $altStatusCommentKey = ($contentItem["status"] === self::STATUS_KEYS[1]) ?
+                        self::STATUS_KEYS[0] : $contentItem["status"];
 
-                        $styledItem = $this->getStyledItem(
-                            contentItem: $contentItem,
-                            prefixKey: self::STATUS_KEYS[3],
-                            contentKey: 'file1Content',
-                            commentKey: $altDeletedCommentKey
-                        );
+                    $styledArray = $this->getStyledArray(
+                        contentItem: $contentItem,
+                        styledItems: $this->stylish($contentItem["output"]),
+                        prefixKey: $arrayStatusPrefixKey,
+                        commentKey: $altStatusCommentKey,
+                        itemLevelShift: $itemLevelShift
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledArray .
+                                "\n";
+                } elseif ($contentItem["status"] === self::STATUS_KEYS[1]) {
+                    $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
+                        self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
 
-                        $styledArray = $this->getStyledArray(
-                            contentItem: $contentItem,
-                            styledItems: $this->stylish($contentItem["output"]),
-                            prefixKey: self::STATUS_KEYS[2],
-                            commentKey: self::STATUS_KEYS[5],
-                            itemLevelShift: $itemLevelShift
-                        );
+                    $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
+                        self::STATUS_KEYS[4]  : self::STATUS_KEYS[5];
 
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                    $styledItem = $this->getStyledItem(
+                        contentItem: $contentItem,
+                        prefixKey: self::STATUS_KEYS[3],
+                        contentKey: 'file1Content',
+                        commentKey: $altDeletedCommentKey
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledItem .
+                                "\n";
 
-                        $result[] = $itemLevelShift .
-                                    $styledArray .
-                                    "\n";
-                    } else {
-                        $arrayStatusPrefix = (is_array($contentItem["output"]) &&
-                            ($contentItem["status"] === self::STATUS_KEYS[1])) ?
-                            self::STATUS_PREFIXES[self::STATUS_KEYS[0]] : self::STATUS_PREFIXES[$contentItem["status"]];
-
-                        $altStatusComment = ($contentItem["status"] === self::STATUS_KEYS[1]) ?
-                            self::STATUS_COMMENTS[self::STATUS_KEYS[0]] : self::STATUS_COMMENTS[$contentItem["status"]];
-
-                        $result[] = $itemLevelShift .
-                                    $arrayStatusPrefix .
-                                    "{$contentItem['fileKey']}";
-
-                        $result[] = ": " . "{" .
-                                    $altStatusComment .
-                                    "\n" . implode($this->stylish($contentItem["output"])) .
-                                    $itemLevelShift .
-                                    self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
-                                    "}\n";
-                    }
+                    $styledItem = $this->getStyledItem(
+                        contentItem: $contentItem,
+                        prefixKey: self::STATUS_KEYS[2],
+                        contentKey: 'file2Content',
+                        commentKey: $altAddedCommentKey
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledItem .
+                                "\n";
+                } elseif (isset($contentItem['file1Content'])) {
+                    $styledItem = $this->getStyledItem(
+                        contentItem: $contentItem,
+                        prefixKey: $contentItem["status"],
+                        contentKey: 'file1Content',
+                        commentKey: $contentItem["status"]
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledItem .
+                                "\n";
                 } else {
-                    if ($contentItem["status"] === self::STATUS_KEYS[1]) {
-                        $altDeletedCommentKey = ($contentItem['file1Content'] === "") ?
-                            self::STATUS_KEYS[4]  : self::STATUS_KEYS[1];
-
-                        $altAddedCommentKey = ($contentItem['file2Content'] === "") ?
-                            self::STATUS_KEYS[4]  : self::STATUS_KEYS[5];
-
-                        $styledItem = $this->getStyledItem(
-                            contentItem: $contentItem,
-                            prefixKey: self::STATUS_KEYS[3],
-                            contentKey: 'file1Content',
-                            commentKey: $altDeletedCommentKey
-                        );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
-
-                        $styledItem = $this->getStyledItem(
-                            contentItem: $contentItem,
-                            prefixKey: self::STATUS_KEYS[2],
-                            contentKey: 'file2Content',
-                            commentKey: $altAddedCommentKey
-                        );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
-                    } elseif (isset($contentItem['file1Content'])) {
-                        $styledItem = $this->getStyledItem(
-                            contentItem: $contentItem,
-                            prefixKey: $contentItem["status"],
-                            contentKey: 'file1Content',
-                            commentKey: $contentItem["status"]
-                        );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
-                    } else {
-                        $styledItem = $this->getStyledItem(
-                            contentItem: $contentItem,
-                            prefixKey: $contentItem["status"],
-                            contentKey: 'file2Content',
-                            commentKey: $contentItem["status"]
-                        );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
-                    }
+                    $styledItem = $this->getStyledItem(
+                        contentItem: $contentItem,
+                        prefixKey: $contentItem["status"],
+                        contentKey: 'file2Content',
+                        commentKey: $contentItem["status"]
+                    );
+                    $result[] = $itemLevelShift .
+                                $styledItem .
+                                "\n";
                 }
 
                 return $result;
