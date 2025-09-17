@@ -223,12 +223,10 @@ class FilesDiffCommand implements CommandInterface
         $currentCommentKey = ($currentContent === "") ?
             $commentKey  : $altCommentKey;
 
-        $embeddedItem = self::STATUS_PREFIXES[$prefixKey] .
+        return self::STATUS_PREFIXES[$prefixKey] .
             "{$contentItem['fileKey']}: " .
             "{$currentContent}" .
             self::STATUS_COMMENTS[$currentCommentKey];
-
-        return $embeddedItem;
     }
 
     private function getStyledList(
@@ -247,13 +245,11 @@ class FilesDiffCommand implements CommandInterface
         $currentCommentKey = ($contentItem["status"] === self::STATUS_KEYS[1]) ?
             $commentKey : $altCommentKey;
 
-        $embeddedItem = self::STATUS_PREFIXES[$currentPrefixKey] .
+        return self::STATUS_PREFIXES[$currentPrefixKey] .
             "{$contentItem['fileKey']}: {" . self::STATUS_COMMENTS[$currentCommentKey] . "\n" .
             implode($currentItemList) .
             $itemLevelShift . self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
             "}";
-
-        return $embeddedItem;
     }
 
     private function stylish(array $content): array
