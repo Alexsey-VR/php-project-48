@@ -12,10 +12,6 @@ class StylishCommand implements CommandInterface
     private array $statusPrefixes;
     private array $statusComments;
 
-    public function __construct()
-    {
-    }
-
     private function stylishContent(array $content): array
     {
         return array_reduce(

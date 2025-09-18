@@ -7,9 +7,6 @@ class FilesDiffCommand implements CommandInterface
     private FileReaderInterface $fileReader;
     private array $filesPaths;
     private array $filesDataItems;
-    private array $filesDiffs;
-    private array $files1Content;
-    private array $files2Content;
     private array $content1Descriptor;
     private array $content2Descriptor;
     private array $differenceDescriptor;
