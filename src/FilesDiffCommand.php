@@ -8,29 +8,19 @@ class FilesDiffCommand implements CommandInterface
     private array $filesPaths;
     private array $filesDataItems;
     private array $filesDiffs;
-    private string $filesDiffsString;
     private array $files1Content;
-    private string $files1ContentString;
     private array $files2Content;
-    private string $files2ContentString;
-    private string $filesContentString;
+    private array $content1Descriptor;
+    private array $content2Descriptor;
+    private array $differenceDescriptor;
     private const array STATUS_KEYS = [
         "not changed", "changed", "added", "deleted", "empty", "new value"
     ];
-    private const array STATUS_PREFIXES = [
-        self::STATUS_KEYS[0] => "    ",
-        self::STATUS_KEYS[1] => " -+ ",
-        self::STATUS_KEYS[2] => "  + ",
-        self::STATUS_KEYS[3] => "  - "
-    ];
-    private const array STATUS_COMMENTS = [
-        self::STATUS_KEYS[0] => "",
-        self::STATUS_KEYS[1] => " # Старое значение",
-        self::STATUS_KEYS[2] => " # Добавлена",
-        self::STATUS_KEYS[3] => " # Удалена",
-        self::STATUS_KEYS[4] => "# значения нет, но пробел после : есть",
-        self::STATUS_KEYS[5] => " # Новое значение"
-    ];
+
+    public function __construct()
+    {
+        $this->filesDataItems = [];
+    }
 
     private function normalizeData($data)
     {
@@ -140,6 +130,11 @@ class FilesDiffCommand implements CommandInterface
         return $initDifferenceDescriptor;
     }
 
+    public function getStatusKeys()
+    {
+        return self::STATUS_KEYS;
+    }
+
     private function getDifference(
         $fileContentKeys,
         $initDifferenceDescriptor
@@ -186,203 +181,6 @@ class FilesDiffCommand implements CommandInterface
         );
     }
 
-    private function stylishContent(array $content): array
-    {
-        return array_reduce(
-            $content,
-            function ($result, $contentItem) {
-                $itemLevelShift = str_repeat(self::STATUS_PREFIXES[self::STATUS_KEYS[0]], $contentItem["level"]);
-
-                if (isset($contentItem["output"])) {
-                    $result[] = $itemLevelShift .
-                                "{$contentItem['fileKey']}: ";
-                    $result[] = "{" .
-                                "\n" . implode($this->stylishContent($contentItem["output"])) .
-                                $itemLevelShift .
-                                "}\n";
-                } else {
-                    $result[] = $itemLevelShift .
-                                "{$contentItem['fileKey']}: " .
-                                $contentItem["fileContent"] .
-                                "\n";
-                }
-
-                return $result;
-            },
-            []
-        );
-    }
-
-    private function getStyledItem(
-        $contentItem,
-        $prefixKey,
-        $currentContent,
-        $commentKey,
-        $altCommentKey
-    ): string {
-        $currentCommentKey = ($currentContent === "") ?
-            $commentKey  : $altCommentKey;
-
-        return self::STATUS_PREFIXES[$prefixKey] .
-            "{$contentItem['fileKey']}: " .
-            "{$currentContent}" .
-            self::STATUS_COMMENTS[$currentCommentKey];
-    }
-
-    private function getStyledList(
-        $contentItem,
-        $currentItemList,
-        $prefixKey,
-        $altPrefixKey,
-        $commentKey,
-        $altCommentKey,
-        $itemLevelShift
-    ): string {
-        $currentPrefixKey = (is_array($contentItem["output"]) &&
-            ($contentItem["status"] === self::STATUS_KEYS[1])) ?
-            $prefixKey : $altPrefixKey;
-
-        $currentCommentKey = ($contentItem["status"] === self::STATUS_KEYS[1]) ?
-            $commentKey : $altCommentKey;
-
-        return self::STATUS_PREFIXES[$currentPrefixKey] .
-            "{$contentItem['fileKey']}: {" . self::STATUS_COMMENTS[$currentCommentKey] . "\n" .
-            implode($currentItemList) .
-            $itemLevelShift . self::STATUS_PREFIXES[self::STATUS_KEYS[0]] .
-            "}";
-    }
-
-    private function stylish(array $content): array
-    {
-        return array_reduce(
-            $content,
-            function ($result, $contentItem) {
-                $itemLevelShift = str_repeat(self::STATUS_PREFIXES[self::STATUS_KEYS[0]], $contentItem["level"] - 1);
-
-                $firstContent = $contentItem["file1Content"];
-                $secondContent = $contentItem["file2Content"];
-                $firstContentIsArray = is_array($firstContent) && !is_array($secondContent);
-                $secondContentIsArray = !is_array($firstContent) && is_array($secondContent);
-                $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
-
-                if ($firstContentIsArray) {
-                    $styledArray = $this->getStyledList(
-                        contentItem: $contentItem,
-                        currentItemList: $this->stylish($contentItem["output"]),
-                        prefixKey: self::STATUS_KEYS[3],
-                        altPrefixKey: self::STATUS_KEYS[3],
-                        commentKey: self::STATUS_KEYS[1],
-                        altCommentKey: self::STATUS_KEYS[1],
-                        itemLevelShift: $itemLevelShift
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledArray .
-                                "\n";
-
-                    $styledItem = $this->getStyledItem(
-                        contentItem: $contentItem,
-                        prefixKey: self::STATUS_KEYS[2],
-                        currentContent: $secondContent,
-                        commentKey: self::STATUS_KEYS[4],
-                        altCommentKey: self::STATUS_KEYS[5]
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledItem .
-                                "\n";
-                } elseif ($secondContentIsArray) {
-                    $styledItem = $this->getStyledItem(
-                        contentItem: $contentItem,
-                        prefixKey: self::STATUS_KEYS[3],
-                        currentContent: $firstContent,
-                        commentKey: self::STATUS_KEYS[4],
-                        altCommentKey: self::STATUS_KEYS[1]
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledItem .
-                                "\n";
-
-                    $styledArray = $this->getStyledList(
-                        contentItem: $contentItem,
-                        currentItemList: $this->stylish($contentItem["output"]),
-                        prefixKey: self::STATUS_KEYS[2],
-                        altPrefixKey: self::STATUS_KEYS[2],
-                        commentKey: self::STATUS_KEYS[5],
-                        altCommentKey: self::STATUS_KEYS[5],
-                        itemLevelShift: $itemLevelShift
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledArray .
-                                "\n";
-                } elseif ($bothContentIsArray) {
-                    $styledArray = $this->getStyledList(
-                        contentItem: $contentItem,
-                        currentItemList: $this->stylish($contentItem["output"]),
-                        prefixKey: self::STATUS_KEYS[0],
-                        altPrefixKey: $contentItem["status"],
-                        commentKey: self::STATUS_KEYS[0],
-                        altCommentKey: $contentItem["status"],
-                        itemLevelShift: $itemLevelShift
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledArray .
-                                "\n";
-                } elseif ($contentItem["status"] === self::STATUS_KEYS[1]) {
-                    $styledItem = $this->getStyledItem(
-                        contentItem: $contentItem,
-                        prefixKey: self::STATUS_KEYS[3],
-                        currentContent: $firstContent,
-                        commentKey: self::STATUS_KEYS[4],
-                        altCommentKey: self::STATUS_KEYS[1]
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledItem .
-                                "\n";
-
-                    $styledItem = $this->getStyledItem(
-                        contentItem: $contentItem,
-                        prefixKey: self::STATUS_KEYS[2],
-                        currentContent: $secondContent,
-                        commentKey: self::STATUS_KEYS[4],
-                        altCommentKey: self::STATUS_KEYS[5]
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledItem .
-                                "\n";
-                } elseif (isset($firstContent)) {
-                    $styledItem = $this->getStyledItem(
-                        contentItem: $contentItem,
-                        prefixKey: $contentItem["status"],
-                        currentContent: $firstContent,
-                        commentKey: $contentItem["status"],
-                        altCommentKey: $contentItem["status"]
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledItem .
-                                "\n";
-                } else {
-                    $styledItem = $this->getStyledItem(
-                        contentItem: $contentItem,
-                        prefixKey: $contentItem["status"],
-                        currentContent: $secondContent,
-                        commentKey: $contentItem["status"],
-                        altCommentKey: $contentItem["status"]
-                    );
-                    $result[] = $itemLevelShift .
-                                $styledItem .
-                                "\n";
-                }
-
-                return $result;
-            },
-            []
-        );
-    }
-
-    public function __construct()
-    {
-        $this->filesDataItems = [];
-    }
-
     public function setFileReader(FileReaderInterface $fileReader): CommandInterface
     {
         $this->fileReader = $fileReader;
@@ -418,7 +216,7 @@ class FilesDiffCommand implements CommandInterface
                 "fileKey" => "initKey",
                 "fileContent" => $file1Content
             ];
-            $content1Descriptor = $this->getContent(
+            $this->content1Descriptor = $this->getContent(
                 $fileKeys,
                 $initContent1Descriptor
             );
@@ -429,26 +227,10 @@ class FilesDiffCommand implements CommandInterface
                 "fileKey" => "initKey",
                 "fileContent" => $file2Content
             ];
-            $content2Descriptor = $this->getContent(
+            $this->content2Descriptor = $this->getContent(
                 $fileKeys,
                 $initContent2Descriptor
             );
-
-            $filename1Path = explode("/", $this->filesPaths[0]);
-            $filename2Path = explode("/", $this->filesPaths[1]);
-            $file1Name = end($filename1Path);
-            $file2Name = end($filename2Path);
-
-            $this->files1Content = $this->stylishContent($content1Descriptor["output"]);
-            $this->files1ContentString = "File {$file1Name} content:\n" .
-                "{\n" . implode("", $this->files1Content) . "}\n";
-
-            $this->files2Content = $this->stylishContent($content2Descriptor["output"]);
-            $this->files2ContentString = "File {$file2Name} content:\n" .
-                "{\n" . implode("", $this->files2Content) . "}\n";
-
-            $this->filesContentString = $this->files1ContentString .
-                $this->files2ContentString;
 
             $mergedFileKeys = array_keys(array_merge($file1Content, $file2Content));
             $initDifferenceDescriptor = [
@@ -458,25 +240,39 @@ class FilesDiffCommand implements CommandInterface
                 "file1Content" => $file1Content,
                 "file2Content" => $file2Content,
             ];
-            $differenceDescriptor = $this->getDifference(
+            $this->differenceDescriptor = $this->getDifference(
                 $mergedFileKeys,
                 $initDifferenceDescriptor
             );
-
-            $this->filesDiffs = $this->stylish($differenceDescriptor["output"]);
-            $this->filesDiffsString = "{\n" . implode("", $this->filesDiffs) . "}\n";
         }
 
         return $this;
     }
 
-    public function getFilesContent(): string
+    public function getFile1Name(): string
     {
-        return $this->filesContentString;
+        $filename1Path = explode("/", $this->filesPaths[0]);
+        return end($filename1Path);
     }
 
-    public function getFilesDiffs(): string
+    public function getFile2Name(): string
     {
-        return $this->filesDiffsString;
+        $filename2Path = explode("/", $this->filesPaths[1]);
+        return end($filename2Path);
+    }
+
+    public function getContent1Descriptor(): array
+    {
+        return $this->content1Descriptor;
+    }
+
+    public function getContent2Descriptor(): array
+    {
+        return $this->content2Descriptor;
+    }
+
+    public function getDifferenceDescriptor(): array
+    {
+        return $this->differenceDescriptor;
     }
 }

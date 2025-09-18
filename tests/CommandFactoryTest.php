@@ -12,6 +12,7 @@ use Differ\DisplayCommand;
 use Differ\FileReader;
 use Differ\DocoptDouble;
 use Differ\DifferException;
+use Differ\StylishCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -20,6 +21,7 @@ use Differ\DifferException;
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FileReader::class)]
 #[CoversClass(DifferException::class)]
+#[CoversClass(StylishCommand::class)]
 class CommandFactoryTest extends TestCase
 {
     private $commandFactory;
@@ -28,7 +30,8 @@ class CommandFactoryTest extends TestCase
     {
         $this->commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new StylishCommand()
         );
     }
 

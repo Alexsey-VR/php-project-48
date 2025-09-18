@@ -6,11 +6,16 @@ class CommandFactory implements CommandFactoryInterface
 {
     private $parser;
     private $fileReader;
+    private $stylishCommand;
 
-    public function __construct($parser, $fileReader)
-    {
+    public function __construct(
+        $parser,
+        $fileReader,
+        $stylishCommand
+    ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
+        $this->stylishCommand = $stylishCommand;
     }
 
     public function getCommand(string $commandType): ?CommandInterface
@@ -22,6 +27,9 @@ class CommandFactory implements CommandFactoryInterface
             case "difference":
                 $requestedCommand = (new FilesDiffCommand())
                                         ->setFileReader($this->fileReader);
+                break;
+            case "stylish":
+                $requestedCommand = $this->stylishCommand;
                 break;
             case "show":
                 $requestedCommand = new DisplayCommand();

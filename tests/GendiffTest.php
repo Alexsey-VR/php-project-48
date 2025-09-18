@@ -14,7 +14,8 @@ class GendiffTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new StylishCommand()
         );
 
         ob_start();

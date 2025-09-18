@@ -24,6 +24,10 @@ class ConsoleApp
         $this->nextCommand = $this->currentCommand
                                   ->execute($this->nextCommand);
 
+        $this->currentCommand = $this->commandFactory->getCommand("stylish");
+        $this->nextCommand = $this->currentCommand
+                                  ->execute($this->nextCommand);
+
         $this->currentCommand = $this->commandFactory->getCommand("show");
         $this->currentCommand
              ->execute($this->nextCommand);

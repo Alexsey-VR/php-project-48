@@ -41,7 +41,7 @@ class DisplayCommandTest extends TestCase
             "}\n";
 
         $this->filesDiffCmd = $this->createConfiguredStub(
-            FilesDiffCommand::class,
+            StylishCommand::class,
             [
                 'getFilesContent' => $this->filesContent,
                 'getFilesDiffs' => $this->filesDiffs,

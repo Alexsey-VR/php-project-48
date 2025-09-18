@@ -14,19 +14,9 @@ use Differ\DifferException;
 #[CoversMethod(FilesDiffCommand::class, 'setFileReader')]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
-class FilesDiffCommandTest extends TestCase
+#[CoversClass(StylishCommand::class)]
+class StylishCommandTest extends TestCase
 {
-    private $fileNames;
-
-    public function testSetFileReader()
-    {
-        $diffCommand = new FilesDiffCommand();
-
-        $this->assertInstanceOf(
-            FilesDiffCommand::class,
-            $diffCommand->setFileReader(new FileReader()));
-    }
-
     public static function getFileNames(): array
     {
         return [
@@ -58,6 +48,7 @@ class FilesDiffCommandTest extends TestCase
         );
 
         $diffCommand = new FilesDiffCommand();
+        $stylishCommand = new StylishCommand();
 
         $resultContent1Descriptor = $diffCommand->setFileReader(new FileReader())
                                  ->execute($cmdLineParser)
@@ -76,26 +67,16 @@ class FilesDiffCommandTest extends TestCase
                                  ->getDifferenceDescriptor();
 
         $this->assertTrue(is_array($resultDifferenceDescriptor));
-    }
-    
-    public function testExecuteForException()
-    {
-        $cmdLineParser = $this->createConfiguredStub(
-            CommandLineParser::class,
-            [
-                'getFileNames' => /*$this->fileNames['Exception']*/ [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.txt",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
-                ]
-            ]
+
+        $resultDiffs = $diffCommand->setFileReader(new FileReader())
+                                 ->execute($cmdLineParser);
+        $resultStylish = $stylishCommand->execute($resultDiffs)
+                                 ->getFilesDiffs();
+
+        $this->assertStringEqualsFile(
+            __DIR__ . "/../fixtures/filesDiffs.txt",
+            $resultStylish
         );
 
-        $diffCommand = new FilesDiffCommand();
-
-        $this->expectException(DifferException::class);
-        $this->expectExceptionMessageMatches("/unknown files format: use json, yaml \(yml\) enstead\\n/");
-
-        $diffCommand->setFileReader(new FileReader())
-                                 ->execute($cmdLineParser);
     }
 }

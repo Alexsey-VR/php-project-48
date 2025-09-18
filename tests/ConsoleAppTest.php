@@ -18,13 +18,15 @@ use Differ\FileReader;
 #[CoversMethod(ConsoleApp::class, 'run')]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(CommandLineParser::class)]
+#[CoversClass(StylishCommand::class)]
 class ConsoleAppTest extends TestCase
 {
     public function testConsoleAppRunning()
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new StylishCommand()
         );
 
         $consoleApp = new ConsoleApp($commandFactory);

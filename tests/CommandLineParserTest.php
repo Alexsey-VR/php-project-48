@@ -17,12 +17,7 @@ class CommandLineParserTest extends TestCase
 {
     public static function getFiles(): array
     {
-        $fileNamesData = [
-            /*
-            [
-                "FILE1" => __DIR__ . "/../fixtures/file1.json",
-                "FILE2" => __DIR__ . "/../fixtures/file2.json"
-            ],*/
+        return [
             [
                 "fileNames" => [
                     "FILE1" => __DIR__ . "/../fixtures/file1Entry.json",
@@ -36,8 +31,6 @@ class CommandLineParserTest extends TestCase
                 ]
             ]
         ];
-
-        return $fileNamesData;
     }
 
     #[DataProvider('getFiles')]

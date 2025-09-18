@@ -5,7 +5,8 @@ namespace Differ;
 function runGendiff(
     $commandFactory = new CommandFactory(
         new \Docopt(),
-        new FileReader()
+        new FileReader(),
+        new StylishCommand()
     )
 ): void {
     $consoleApp = new ConsoleApp($commandFactory);
