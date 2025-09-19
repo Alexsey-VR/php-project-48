@@ -6,7 +6,7 @@ use Differ\CommandFactory;
 use Differ\CommandLineParser;
 use Differ\FilesDiffCommand;
 use Differ\FileReader;
-use Differ\StylishCommand;
+use Differ\Formatters\StylishCommand;
 use Differ\DisplayCommand;
 
 function genDiff(string $pathToFile1, string $pathToFile2)

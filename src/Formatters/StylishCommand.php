@@ -1,6 +1,8 @@
 <?php
 
-namespace Differ;
+namespace Differ\Formatters;
+
+use \Differ\CommandInterface;
 
 class StylishCommand implements CommandInterface
 {

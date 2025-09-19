@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\FileReader;
 use Differ\DifferException;
+use Differ\Formatters\StylishCommand;
 
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]

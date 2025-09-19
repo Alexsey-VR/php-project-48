@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use function Differ\runGendiff;
 use Differ\DocoptDouble;
+use Differ\Formatters\StylishCommand;
 
 #[CoversNothing]
 class GendiffTest extends TestCase

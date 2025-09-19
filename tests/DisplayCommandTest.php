@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\DisplayCommand;
 use Differ\DifferException;
+use Differ\Formatters\StylishCommand;
 
 #[CoversClass(DisplayCommand::class)]
 #[CoversMethod(DisplayCommand::class, 'execute')]

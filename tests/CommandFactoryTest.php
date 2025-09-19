@@ -12,7 +12,7 @@ use Differ\DisplayCommand;
 use Differ\FileReader;
 use Differ\DocoptDouble;
 use Differ\DifferException;
-use Differ\StylishCommand;
+use Differ\Formatters\StylishCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]

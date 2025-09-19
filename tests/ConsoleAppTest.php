@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\CommandFactory;
 use Differ\DisplayCommand;
 use Differ\FilesDiffCommand;
+use Differ\Formatters\StylishCommand;
 use Differ\FileReader;
 
 #[CoversClass(ConsoleApp::class)]

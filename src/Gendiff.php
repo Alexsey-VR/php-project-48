@@ -2,6 +2,8 @@
 
 namespace Differ;
 
+use Differ\Formatters\StylishCommand;
+
 function runGendiff(
     $commandFactory = new CommandFactory(
         new \Docopt(),
