@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters;
 
-use \Differ\CommandInterface;
+use Differ\CommandInterface;
 
 class StylishCommand implements CommandInterface
 {
