@@ -58,5 +58,20 @@ class CommandLineParserTest extends TestCase
             $outputBuffer
         );
     }
+
+    public function testPlaneExecute()
+    {
+        $parser = new DocoptDouble("plane");
+        $cmdLineParser = new CommandLineParser($parser);
+
+        ob_start();
+        $cmdLineParser->execute();
+        $outputBuffer = ob_get_clean();
+
+        $this->assertEquals(
+            "",
+            $outputBuffer
+        );
+    }
         
 }

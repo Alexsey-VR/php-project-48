@@ -7,10 +7,12 @@ class CommandLineParser implements CommandInterface
     private string $parserDescriptor;
     private $parser;
     private array $args;
+    private string $defaultFormat;
 
     public function __construct($parser = null)
     {
         $this->parser = $parser;
+        $this->defaultFormat = 'stylish';
 
         $filename = __DIR__ . "/../docopt.txt";
         $handler = @fopen($filename, 'r');
@@ -41,5 +43,17 @@ class CommandLineParser implements CommandInterface
     public function getFileNames(): array
     {
         return $this->args;
+    }
+
+    public function setFormat(string $format): CommandInterface
+    {
+        $this->defaultFormat = $format;
+
+        return $this;
+    }
+
+    public function getFormat(): ?string
+    {
+        return $this->args['--format'] ?? $this->defaultFormat;
     }
 }

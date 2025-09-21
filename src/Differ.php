@@ -6,29 +6,29 @@ use Differ\CommandFactory;
 use Differ\CommandLineParser;
 use Differ\FilesDiffCommand;
 use Differ\FileReader;
-use Differ\Formatters\StylishCommand;
 use Differ\DisplayCommand;
 
-function genDiff(string $pathToFile1, string $pathToFile2)
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish')
 {
     $commandFactory = new CommandFactory(
         new \Docopt(),
-        new FileReader(),
-        new StylishCommand()
+        new FileReader()
     );
-    $parserCommand = $commandFactory->getCommand('parse');
+    $parseCommand = $commandFactory->getCommand('parse');
     $fileNames = [
         "FILE1" => $pathToFile1,
         "FILE2" => $pathToFile2
     ];
-    $nextCommand = $parserCommand->setFileNames($fileNames);
+    $nextCommand = $parseCommand->setFileNames($fileNames)
+                                ->setFormat($format);
 
-    $currentCommand = $commandFactory->getCommand('difference');
-    $nextCommand = $currentCommand->execute($nextCommand);
+    $differenceCommand = $commandFactory->getCommand('difference');
+    $nextCommand = $differenceCommand->execute($nextCommand);
 
-    $currentCommand = $commandFactory->getCommand('stylish');
-    $nextCommand = $currentCommand->execute($nextCommand);
+    $formatCommand = $commandFactory->getCommand('format');
+    $formatter = $formatCommand->execute($parseCommand);
 
-    $currentCommand = $commandFactory->getCommand('show');
-    return $currentCommand->execute($nextCommand);
+    $nextCommand = $formatter->execute($nextCommand);
+
+    return $nextCommand->getFilesDiffs();
 }

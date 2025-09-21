@@ -1,3 +1,4 @@
+<<<DOC
 gendiff -h
 
 Generate diff
@@ -5,9 +6,10 @@ Generate diff
 Usage:
     gendiff (-h|--help)
     gendiff (-v|--version)
-    gendiff [Options]... FILE1 FILE2
+    gendiff [--format <fmt>] FILE1 FILE2
 
 Options:
     -h --help                  Show this screen
     -v --version               Show version
-    --format <fmt>             Report format [default: stylish]
+    -f --format <fmt>          Report format, use plane or stylish [default: stylish]
+DOC

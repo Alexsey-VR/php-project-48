@@ -2,20 +2,20 @@
 
 namespace Differ;
 
+use Differ\Formatters\StylishCommand;
+use Differ\Formatters\PlaneCommand;
+
 class CommandFactory implements CommandFactoryInterface
 {
     private $parser;
     private $fileReader;
-    private $stylishCommand;
 
     public function __construct(
         $parser,
-        $fileReader,
-        $stylishCommand
+        $fileReader
     ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
-        $this->stylishCommand = $stylishCommand;
     }
 
     public function getCommand(string $commandType): ?CommandInterface
@@ -29,7 +29,13 @@ class CommandFactory implements CommandFactoryInterface
                                         ->setFileReader($this->fileReader);
                 break;
             case "stylish":
-                $requestedCommand = $this->stylishCommand;
+                $requestedCommand = new StylishCommand();
+                break;
+            case "plane":
+                $requestedCommand = new PlaneCommand();
+                break;
+            case "format":
+                $requestedCommand = new Formatters();
                 break;
             case "show":
                 $requestedCommand = new DisplayCommand();

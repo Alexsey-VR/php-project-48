@@ -4,7 +4,6 @@ namespace Differ;
 
 class ConsoleApp
 {
-    private CommandInterface $currentCommand;
     private CommandInterface $nextCommand;
     private CommandFactoryInterface $commandFactory;
 
@@ -16,20 +15,20 @@ class ConsoleApp
 
     public function run(): void
     {
-        $this->currentCommand = $this->commandFactory->getCommand("parse");
-        $this->nextCommand = $this->currentCommand
+        $parseCommand = $this->commandFactory->getCommand("parse");
+        $this->nextCommand = $parseCommand
                                   ->execute();
 
-        $this->currentCommand = $this->commandFactory->getCommand("difference");
-        $this->nextCommand = $this->currentCommand
+        $differenceCommand = $this->commandFactory->getCommand("difference");
+        $this->nextCommand = $differenceCommand
                                   ->execute($this->nextCommand);
 
-        $this->currentCommand = $this->commandFactory->getCommand("stylish");
-        $this->nextCommand = $this->currentCommand
-                                  ->execute($this->nextCommand);
+        $formatCommand = $this->commandFactory->getCommand("format");
+        $formatter = $formatCommand->execute($parseCommand);
 
-        $this->currentCommand = $this->commandFactory->getCommand("show");
-        $this->currentCommand
-             ->execute($this->nextCommand);
+        $this->nextCommand = $formatter->execute($this->nextCommand);
+
+        $displayCommand = $this->commandFactory->getCommand("show");
+        $displayCommand->execute($this->nextCommand);
     }
 }

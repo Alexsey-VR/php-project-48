@@ -14,7 +14,7 @@ class StylishCommand implements CommandInterface
     private array $statusPrefixes;
     private array $statusComments;
 
-    private function stylishContent(array $content): array
+    private function stylizeContent(array $content): array
     {
         return array_reduce(
             $content,
@@ -25,7 +25,7 @@ class StylishCommand implements CommandInterface
                     $result[] = $itemLevelShift .
                                 "{$contentItem['fileKey']}: ";
                     $result[] = "{" .
-                                "\n" . implode($this->stylishContent($contentItem["output"])) .
+                                "\n" . implode($this->stylizeContent($contentItem["output"])) .
                                 $itemLevelShift .
                                 "}\n";
                 } else {
@@ -80,7 +80,7 @@ class StylishCommand implements CommandInterface
             "}";
     }
 
-    private function stylishDifference(array $content): array
+    private function stylizeDifference(array $content): array
     {
         return array_reduce(
             $content,
@@ -96,7 +96,7 @@ class StylishCommand implements CommandInterface
                 if ($firstContentIsArray) {
                     $styledArray = $this->getStyledList(
                         contentItem: $contentItem,
-                        currentItemList: $this->stylishDifference($contentItem["output"]),
+                        currentItemList: $this->stylizeDifference($contentItem["output"]),
                         prefixKey: $this->statusKeys[3],
                         altPrefixKey: $this->statusKeys[3],
                         commentKey: $this->statusKeys[1],
@@ -131,7 +131,7 @@ class StylishCommand implements CommandInterface
 
                     $styledArray = $this->getStyledList(
                         contentItem: $contentItem,
-                        currentItemList: $this->stylishDifference($contentItem["output"]),
+                        currentItemList: $this->stylizeDifference($contentItem["output"]),
                         prefixKey: $this->statusKeys[2],
                         altPrefixKey: $this->statusKeys[2],
                         commentKey: $this->statusKeys[5],
@@ -144,7 +144,7 @@ class StylishCommand implements CommandInterface
                 } elseif ($bothContentIsArray) {
                     $styledArray = $this->getStyledList(
                         contentItem: $contentItem,
-                        currentItemList: $this->stylishDifference($contentItem["output"]),
+                        currentItemList: $this->stylizeDifference($contentItem["output"]),
                         prefixKey: $this->statusKeys[0],
                         altPrefixKey: $contentItem["status"],
                         commentKey: $this->statusKeys[0],
@@ -231,18 +231,18 @@ class StylishCommand implements CommandInterface
                 $this->statusKeys[5] => " # Новое значение"
             ];
 
-            $files1Content = $this->stylishContent($content1Descriptor["output"]);
+            $files1Content = $this->stylizeContent($content1Descriptor["output"]);
             $this->files1ContentString = "File {$file1Name} content:\n" .
                 "{\n" . implode("", $files1Content) . "}\n";
 
-            $files2Content = $this->stylishContent($content2Descriptor["output"]);
+            $files2Content = $this->stylizeContent($content2Descriptor["output"]);
             $this->files2ContentString = "File {$file2Name} content:\n" .
                 "{\n" . implode("", $files2Content) . "}\n";
 
             $this->filesContentString = $this->files1ContentString .
                     $this->files2ContentString;
 
-            $filesDiffs = $this->stylishDifference($differenceDescriptor["output"]);
+            $filesDiffs = $this->stylizeDifference($differenceDescriptor["output"]);
                 $this->filesDiffsString = "{\n" . implode("", $filesDiffs) . "}\n";
         }
 

@@ -52,11 +52,13 @@ class FilesDiffCommand implements CommandInterface
                 $fileContent = $fileItem[$fileKey];
 
                 $level = $contentDescriptor["level"] + 1;
+                $history = $contentDescriptor["history"] . "." . $fileKey;
                 $fileContentKeys = array_keys(
                     is_array($fileContent) ? $fileContent : []
                 );
                 $initContentDescriptor = [
                     "level" => $level,
+                    "history" => $history,
                     "fileKey" => $fileKey,
                     "fileContent" => $fileContent
                 ];
@@ -101,6 +103,7 @@ class FilesDiffCommand implements CommandInterface
         $status,
         $level,
         $fileKey,
+        $history,
         $file1Content,
         $file2Content
     ): array {
@@ -123,6 +126,7 @@ class FilesDiffCommand implements CommandInterface
         $initDifferenceDescriptor["level"] = $level;
         $initDifferenceDescriptor["status"] = $status;
         $initDifferenceDescriptor["fileKey"] = $fileKey;
+        $initDifferenceDescriptor["history"] = $history;
 
         return $initDifferenceDescriptor;
     }
@@ -155,6 +159,8 @@ class FilesDiffCommand implements CommandInterface
                 );
 
                 $level = $differenceDescriptor["level"] + 1;
+                $history = ($differenceDescriptor["history"] === "") ?
+                    $fileKey : $differenceDescriptor["history"] . "." . $fileKey;
                 $contentKeys = array_keys(array_merge(
                     is_array($file1Content) ? $file1Content : [],
                     is_array($file2Content) ? $file2Content : []
@@ -164,6 +170,7 @@ class FilesDiffCommand implements CommandInterface
                     $status,
                     $level,
                     $fileKey,
+                    $history,
                     $file1Content,
                     $file2Content
                 );
@@ -211,6 +218,7 @@ class FilesDiffCommand implements CommandInterface
             $initContent1Descriptor = [
                 "level" => 0,
                 "fileKey" => "initKey",
+                "history" => "",
                 "fileContent" => $file1Content
             ];
             $this->content1Descriptor = $this->getContent(
@@ -222,6 +230,7 @@ class FilesDiffCommand implements CommandInterface
             $initContent2Descriptor = [
                 "level" => 0,
                 "fileKey" => "initKey",
+                "history" => "",
                 "fileContent" => $file2Content
             ];
             $this->content2Descriptor = $this->getContent(
@@ -234,6 +243,7 @@ class FilesDiffCommand implements CommandInterface
                 "level" => 0,
                 "status" => "init",
                 "fileKey" => "initKey",
+                "history" => "",
                 "file1Content" => $file1Content,
                 "file2Content" => $file2Content,
             ];

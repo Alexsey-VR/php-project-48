@@ -7,8 +7,7 @@ use Differ\Formatters\StylishCommand;
 function runGendiff(
     $commandFactory = new CommandFactory(
         new \Docopt(),
-        new FileReader(),
-        new StylishCommand()
+        new FileReader()
     )
 ): void {
     $consoleApp = new ConsoleApp($commandFactory);

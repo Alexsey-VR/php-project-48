@@ -10,7 +10,7 @@ use Differ\CommandFactory;
 use Differ\FileReader;
 use Differ\DifferException;
 use Differ\DocoptDouble;
-use Differ\Formatters\StylishCommand;
+use Differ\Formatters\PlaneCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(DocoptDouble::class)]
@@ -19,27 +19,27 @@ use Differ\Formatters\StylishCommand;
 #[CoversMethod(FilesDiffCommand::class, 'setFileReader')]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
-#[CoversClass(StylishCommand::class)]
-class StylishCommandTest extends TestCase
+#[CoversClass(PlaneCommand::class)]
+class PlaneCommandTest extends TestCase
 {
     public static function getParserArguments(): array
     {
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.json",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.json"
+                    "FILE1" => __DIR__ . "/../fixtures/file1.json",
+                    "FILE2" => __DIR__ . "/../fixtures/file2.json"
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesJSONContent.txt",
-                'outputFormat' => 'stylish'
+                'outputFormat' => 'plane'
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.yaml",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
+                    "FILE1" => __DIR__ . "/../fixtures/file1.yaml",
+                    "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesYAMLContent.txt",
-                'outputFormat' => 'stylish'
+                'outputFormat' => 'plane'
             ]
         ];
     }
@@ -50,7 +50,7 @@ class StylishCommandTest extends TestCase
         $cmdLineParser = $this->createConfiguredStub(
             CommandLineParser::class,
             [
-                'getFileNames' => $fileNamesInput
+                'getFileNames' => $fileNamesInput,
             ]
         );
 
@@ -59,7 +59,7 @@ class StylishCommandTest extends TestCase
             new FileReader()
         );
         $diffCommand = new FilesDiffCommand();
-        $stylishCommand = $commandFactory->getCommand($outputFormat);
+        $planeCommand = $commandFactory->getCommand($outputFormat);
 
         $resultContent1Descriptor = $diffCommand->setFileReader(new FileReader())
                                  ->execute($cmdLineParser)
@@ -81,11 +81,11 @@ class StylishCommandTest extends TestCase
 
         $resultDiffs = $diffCommand->setFileReader(new FileReader())
                                  ->execute($cmdLineParser);
-        $resultStylish = $stylishCommand->execute($resultDiffs)
+        $resultStylish = $planeCommand->execute($resultDiffs)
                                  ->getFilesDiffs();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesDiffs.txt",
+            __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt",
             $resultStylish
         );
 
