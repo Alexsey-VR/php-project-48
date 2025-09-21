@@ -44,30 +44,29 @@ class PlaneCommand implements CommandInterface
         );
     }
 
+    private function normalizeValue($value): string
+    {
+        $firstNormalizedValue = is_array($value) ?
+            self::NORMALIZED_VALUES[3] : $value;
+
+        $secondNormalizedValue = (
+            ($firstNormalizedValue === self::NORMALIZED_VALUES[0]) ||
+            ($firstNormalizedValue === self::NORMALIZED_VALUES[1]) ||
+            ($firstNormalizedValue === self::NORMALIZED_VALUES[2]) ||
+            ($firstNormalizedValue === self::NORMALIZED_VALUES[3])
+        ) ? $firstNormalizedValue : "'" . $firstNormalizedValue . "'";
+
+        return $secondNormalizedValue;
+    }
+
     private function getPlaneItem(
         $contentItem,
         $prefixKey,
         $firstContent,
         $secondContent,
     ): string {
-        $firstContentValue = is_array($firstContent) ?
-            self::NORMALIZED_VALUES[3] : $firstContent;
-        $secondContentValue = is_array($secondContent) ?
-            self::NORMALIZED_VALUES[3] : $secondContent;
-
-        $firstContentValue = (
-            ($firstContentValue === self::NORMALIZED_VALUES[0]) ||
-            ($firstContentValue === self::NORMALIZED_VALUES[1]) ||
-            ($firstContentValue === self::NORMALIZED_VALUES[2]) ||
-            ($firstContentValue === self::NORMALIZED_VALUES[3])
-        ) ? $firstContentValue : "'" . $firstContentValue . "'";
-
-        $secondContentValue = (
-            ($secondContentValue === self::NORMALIZED_VALUES[0]) ||
-            ($secondContentValue === self::NORMALIZED_VALUES[1]) ||
-            ($secondContentValue === self::NORMALIZED_VALUES[2]) ||
-            ($secondContentValue === self::NORMALIZED_VALUES[3])
-        ) ? $secondContentValue : "'" . $secondContentValue . "'";
+        $firstContentValue = $this->normalizeValue($firstContent);
+        $secondContentValue = $this->normalizeValue($secondContent);
 
         $altComment = "";
         if ($prefixKey === $this->statusKeys[1]) {
