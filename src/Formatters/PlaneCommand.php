@@ -13,6 +13,9 @@ class PlaneCommand implements CommandInterface
     private array $statusKeys;
     private array $statusPrefixes;
     private array $statusComments;
+    private const array NORMALIZED_VALUES = [
+        'false', 'true', 'null', '[complex value]'
+    ];
 
     private function stylizeContent(array $content): array
     {
@@ -49,22 +52,22 @@ class PlaneCommand implements CommandInterface
         $secondContent,
     ): string {
         $firstContentValue = is_array($firstContent) ?
-            "[complex value]" : $firstContent;
+            self::NORMALIZED_VALUES[3] : $firstContent;
         $secondContentValue = is_array($secondContent) ?
-            "[complex value]" : $secondContent;
+            self::NORMALIZED_VALUES[3] : $secondContent;
 
         $firstContentValue = (
-            ($firstContentValue === 'false') ||
-            ($firstContentValue === 'true') ||
-            ($firstContentValue === 'null') ||
-            ($firstContentValue === '[complex value]')
+            ($firstContentValue === self::NORMALIZED_VALUES[0]) ||
+            ($firstContentValue === self::NORMALIZED_VALUES[1]) ||
+            ($firstContentValue === self::NORMALIZED_VALUES[2]) ||
+            ($firstContentValue === self::NORMALIZED_VALUES[3])
         ) ? $firstContentValue : "'" . $firstContentValue . "'";
 
         $secondContentValue = (
-            ($secondContentValue === 'false') ||
-            ($secondContentValue === 'true') ||
-            ($secondContentValue === 'null') ||
-            ($secondContentValue === '[complex value]')
+            ($secondContentValue === self::NORMALIZED_VALUES[0]) ||
+            ($secondContentValue === self::NORMALIZED_VALUES[1]) ||
+            ($secondContentValue === self::NORMALIZED_VALUES[2]) ||
+            ($secondContentValue === self::NORMALIZED_VALUES[3])
         ) ? $secondContentValue : "'" . $secondContentValue . "'";
 
         $altComment = "";
