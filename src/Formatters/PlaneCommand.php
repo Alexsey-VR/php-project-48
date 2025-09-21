@@ -47,7 +47,6 @@ class PlaneCommand implements CommandInterface
     private function getPlaneItem(
         $contentItem,
         $prefixKey,
-        $history,
         $firstContent,
         $secondContent,
     ): string {
@@ -117,8 +116,6 @@ class PlaneCommand implements CommandInterface
             function ($result, $contentItem) {
                 $firstContent = $contentItem["file1Content"];
                 $secondContent = $contentItem["file2Content"];
-                $firstContentIsArray = is_array($firstContent) && !is_array($secondContent);
-                $secondContentIsArray = !is_array($firstContent) && is_array($secondContent);
                 $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
 
                 if ($bothContentIsArray) {
@@ -136,7 +133,6 @@ class PlaneCommand implements CommandInterface
                     $styledItem = $this->getPlaneItem(
                         contentItem: $contentItem,
                         prefixKey: $contentItem["status"],
-                        history: $contentItem["history"],
                         firstContent: $firstContent,
                         secondContent: $secondContent
                     );
