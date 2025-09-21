@@ -49,14 +49,12 @@ class PlaneCommand implements CommandInterface
         $firstNormalizedValue = is_array($value) ?
             self::NORMALIZED_VALUES[3] : $value;
 
-        $secondNormalizedValue = (
+        return (
             ($firstNormalizedValue === self::NORMALIZED_VALUES[0]) ||
             ($firstNormalizedValue === self::NORMALIZED_VALUES[1]) ||
             ($firstNormalizedValue === self::NORMALIZED_VALUES[2]) ||
             ($firstNormalizedValue === self::NORMALIZED_VALUES[3])
         ) ? $firstNormalizedValue : "'" . $firstNormalizedValue . "'";
-
-        return $secondNormalizedValue;
     }
 
     private function getPlaneItem(
