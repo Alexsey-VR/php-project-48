@@ -1,4 +1,3 @@
-<<<DOC
 gendiff -h
 
 Generate diff
@@ -12,4 +11,3 @@ Options:
     -h --help                  Show this screen
     -v --version               Show version
     -f --format <fmt>          Report format, use plane or stylish [default: stylish]
-DOC
