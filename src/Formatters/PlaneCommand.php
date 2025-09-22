@@ -100,7 +100,7 @@ class PlaneCommand implements CommandInterface
                 "{$this->statusPrefixes[$this->statusKeys[2]]} with value: " .
                 self::NORMALIZED_VALUES[3];
         } elseif (
-            ($this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys[3]])
+            $this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys[3]]
         ) {
             return "Property '{$contentItem['history']}' was {$this->statusPrefixes[$this->statusKeys[3]]}";
         }
