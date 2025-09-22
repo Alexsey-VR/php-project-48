@@ -52,7 +52,8 @@ class FilesDiffCommand implements CommandInterface
                 $fileContent = $fileItem[$fileKey];
 
                 $level = $contentDescriptor["level"] + 1;
-                $history = $contentDescriptor["history"] . "." . $fileKey;
+                $history = ($contentDescriptor["history"] === "") ?
+                    $fileKey : $contentDescriptor["history"] . "." . $fileKey;
                 $fileContentKeys = array_keys(
                     is_array($fileContent) ? $fileContent : []
                 );
