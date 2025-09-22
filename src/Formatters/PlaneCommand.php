@@ -75,8 +75,7 @@ class PlaneCommand implements CommandInterface
         }
 
         return ($this->statusPrefixes[$prefixKey] !== $this->statusPrefixes[$this->statusKeys[0]]) ?
-            "Property '{$contentItem['history']}' was " . $this->statusPrefixes[$prefixKey] .
-            $altComment
+            "Property '{$contentItem['history']}' was {$this->statusPrefixes[$prefixKey]}{$altComment}"
         :
         "";
     }
@@ -97,12 +96,13 @@ class PlaneCommand implements CommandInterface
             $commentKey : $altCommentKey;
 
         if ($currentCommentKey === $this->statusKeys[2]) {
-            return "Property '{$contentItem['history']}' was added with value: [complex value]";
+            return "Property '{$contentItem['history']}' was " .
+                "{$this->statusPrefixes[$this->statusKeys[2]]} with value: " .
+                self::NORMALIZED_VALUES[3];
         } elseif (
-            ($currentCommentKey === $this->statusKeys[3]) &&
-            ($this->statusPrefixes[$currentPrefixKey] === "removed")
+            ($this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys[3]])
         ) {
-            return "Property '{$contentItem['history']}' was removed";
+            return "Property '{$contentItem['history']}' was {$this->statusPrefixes[$this->statusKeys[3]]}";
         }
         return implode($currentItemList);
     }
