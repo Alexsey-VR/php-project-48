@@ -117,7 +117,7 @@ class PlaneCommand implements CommandInterface
                 $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
 
                 if ($bothContentIsArray) {
-                    $styledArray = $this->getPlaneList(
+                    $styledItem = $this->getPlaneList(
                         contentItem: $contentItem,
                         currentItemList: $this->stylizeDifference($contentItem["output"]),
                         prefixKey: $this->statusKeys[0],
@@ -125,8 +125,6 @@ class PlaneCommand implements CommandInterface
                         commentKey: $this->statusKeys[0],
                         altCommentKey: $contentItem["status"],
                     );
-
-                    $result[] = "{$styledArray}\n";
                 } else {
                     $styledItem = $this->getPlaneItem(
                         contentItem: $contentItem,
@@ -134,8 +132,8 @@ class PlaneCommand implements CommandInterface
                         firstContent: $firstContent,
                         secondContent: $secondContent
                     );
-                    $result[] = "{$styledItem}\n";
                 }
+                $result[] = "{$styledItem}\n";
 
                 return $result;
             },
