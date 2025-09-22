@@ -12,12 +12,11 @@ class PlaneCommand implements CommandInterface
     private string $filesDiffsString;
     private array $statusKeys;
     private array $statusPrefixes;
-    private array $statusComments;
     private const array NORMALIZED_VALUES = [
         'false', 'true', 'null', '[complex value]'
     ];
 
-    private function stylizeContent(array $content): array
+    private function planeContent(array $content): array
     {
         return array_reduce(
             $content,
@@ -28,7 +27,7 @@ class PlaneCommand implements CommandInterface
                     $result[] = $itemLevelShift .
                                 "{$contentItem['fileKey']}: ";
                     $result[] = "{" .
-                                "\n" . implode($this->stylizeContent($contentItem["output"])) .
+                                "\n" . implode($this->planeContent($contentItem["output"])) .
                                 $itemLevelShift .
                                 "}\n";
                 } else {
@@ -49,12 +48,14 @@ class PlaneCommand implements CommandInterface
         $firstNormalizedValue = is_array($value) ?
             self::NORMALIZED_VALUES[3] : $value;
 
-        return (
-            ($firstNormalizedValue === self::NORMALIZED_VALUES[0]) ||
-            ($firstNormalizedValue === self::NORMALIZED_VALUES[1]) ||
-            ($firstNormalizedValue === self::NORMALIZED_VALUES[2]) ||
-            ($firstNormalizedValue === self::NORMALIZED_VALUES[3])
-        ) ? $firstNormalizedValue : "'" . $firstNormalizedValue . "'";
+        return
+            in_array(true, array_filter(
+                self::NORMALIZED_VALUES,
+                function (string $value) use ($firstNormalizedValue) {
+                    return $value === $firstNormalizedValue;
+                }
+            )) ?
+            $firstNormalizedValue : "'" . $firstNormalizedValue . "'";
     }
 
     private function getPlaneItem(
@@ -158,20 +159,12 @@ class PlaneCommand implements CommandInterface
                 $this->statusKeys[2] => "added",
                 $this->statusKeys[3] => "removed"
             ];
-            $this->statusComments = [
-                $this->statusKeys[0] => "",
-                $this->statusKeys[1] => " from alt ",
-                $this->statusKeys[2] => " added -> [complex value]",
-                $this->statusKeys[3] => " removed -> x ",
-                $this->statusKeys[4] => "''",
-                $this->statusKeys[5] => " to alt "
-            ];
 
-            $files1Content = $this->stylizeContent($content1Descriptor["output"]);
+            $files1Content = $this->planeContent($content1Descriptor["output"]);
             $this->files1ContentString = "File {$file1Name} content:\n" .
                 "{\n" . implode("", $files1Content) . "}\n";
 
-            $files2Content = $this->stylizeContent($content2Descriptor["output"]);
+            $files2Content = $this->planeContent($content2Descriptor["output"]);
             $this->files2ContentString = "File {$file2Name} content:\n" .
                 "{\n" . implode("", $files2Content) . "}\n";
 
