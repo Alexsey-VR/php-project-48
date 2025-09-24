@@ -12,9 +12,15 @@ class Formatters implements CommandInterface
             new \Docopt(),
             new FileReader()
         );
-        $this->formatCommand = $commandFactory->getCommand(
-            $command->getFormat()
-        );
+        $currentFormat = strtolower($command->getFormat());
+        $formatKeys = $commandFactory->getFormatKeys();
+        if (in_array($currentFormat, $formatKeys)) {
+            $this->formatCommand = $commandFactory->getCommand(
+                $currentFormat
+            );
+        } else {
+            throw new DifferException("input error: unknown output format\nUse gendiff -h\n");
+        }
 
         return $this->formatCommand;
     }

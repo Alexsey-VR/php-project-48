@@ -12,7 +12,7 @@ use Differ\Formatters;
 use Differ\FileReader;
 use Differ\DifferException;
 use Differ\DocoptDouble;
-use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\JSONCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -23,8 +23,8 @@ use Differ\Formatters\PlaneCommand;
 #[CoversMethod(FilesDiffCommand::class, 'setFileReader')]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
-#[CoversClass(PlaneCommand::class)]
-class PlaneCommandTest extends TestCase
+#[CoversClass(JSONCommand::class)]
+class JSONCommandTest extends TestCase
 {
     public static function getParserArguments(): array
     {
@@ -35,7 +35,7 @@ class PlaneCommandTest extends TestCase
                     "FILE2" => __DIR__ . "/../fixtures/file2.json"
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesJSONContent.txt",
-                'outputFormat' => 'PLANE'
+                'outputFormat' => 'json'
             ],
             [
                 'fileNamesInput' => [
@@ -43,7 +43,7 @@ class PlaneCommandTest extends TestCase
                     "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesYAMLContent.txt",
-                'outputFormat' => 'plane'
+                'outputFormat' => 'json'
             ]
         ];
     }
@@ -67,7 +67,7 @@ class PlaneCommandTest extends TestCase
         $parseCommand->setFormat($outputFormat);
 
         $formatCommand = $commandFactory->getCommand("format");
-        $planeCommand = $formatCommand->execute($parseCommand);
+        $jsonCommand = $formatCommand->execute($parseCommand);
 
         $resultContent1Descriptor = $diffCommand->setFileReader(new FileReader())
                                  ->execute($cmdLineParser)
@@ -89,12 +89,12 @@ class PlaneCommandTest extends TestCase
 
         $resultDiffs = $diffCommand->setFileReader(new FileReader())
                                  ->execute($cmdLineParser);
-        $resultPlane = $planeCommand->execute($resultDiffs)
+        $resultJSON = $jsonCommand->execute($resultDiffs)
                                  ->getFilesDiffs();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt",
-            $resultPlane
+            __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.txt",
+            $resultJSON
         );
 
     }

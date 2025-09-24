@@ -4,11 +4,15 @@ namespace Differ;
 
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\JSONCommand;
 
 class CommandFactory implements CommandFactoryInterface
 {
     private $parser;
     private $fileReader;
+    private const array FORMAT_KEYS = [
+        "stylish", "plane", "json"
+    ];
 
     public function __construct(
         $parser,
@@ -16,6 +20,11 @@ class CommandFactory implements CommandFactoryInterface
     ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
+    }
+
+    public function getFormatKeys(): array
+    {
+        return self::FORMAT_KEYS;
     }
 
     public function getCommand(string $commandType): ?CommandInterface
@@ -28,11 +37,14 @@ class CommandFactory implements CommandFactoryInterface
                 $requestedCommand = (new FilesDiffCommand())
                                         ->setFileReader($this->fileReader);
                 break;
-            case "stylish":
+            case self::FORMAT_KEYS[0]:
                 $requestedCommand = new StylishCommand();
                 break;
-            case "plane":
+            case self::FORMAT_KEYS[1]:
                 $requestedCommand = new PlaneCommand();
+                break;
+            case self::FORMAT_KEYS[2]:
+                $requestedCommand = new JSONCommand();
                 break;
             case "format":
                 $requestedCommand = new Formatters();

@@ -7,12 +7,16 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\CommandFactory;
+use Differ\CommandLineParser;
+use Differ\Formatters;
 use Differ\FileReader;
 use Differ\DifferException;
 use Differ\DocoptDouble;
 use Differ\Formatters\StylishCommand;
 
 #[CoversClass(CommandFactory::class)]
+#[CoversClass(CommandLineParser::class)]
+#[CoversClass(Formatters::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
@@ -31,7 +35,7 @@ class StylishCommandTest extends TestCase
                     "FILE2" => __DIR__ . "/../fixtures/file2Entry.json"
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesJSONContent.txt",
-                'outputFormat' => 'stylish'
+                'outputFormat' => 'STYLISH'
             ],
             [
                 'fileNamesInput' => [
@@ -59,7 +63,11 @@ class StylishCommandTest extends TestCase
             new FileReader()
         );
         $diffCommand = new FilesDiffCommand();
-        $stylishCommand = $commandFactory->getCommand($outputFormat);
+        $parseCommand = $commandFactory->getCommand("parse");
+        $parseCommand->setFormat($outputFormat);
+
+        $formatCommand = $commandFactory->getCommand("format");
+        $stylishCommand = $formatCommand->execute($parseCommand);
 
         $resultContent1Descriptor = $diffCommand->setFileReader(new FileReader())
                                  ->execute($cmdLineParser)
