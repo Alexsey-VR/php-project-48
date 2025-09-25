@@ -11,9 +11,11 @@ To getting start for this application use several steps:
 2. install required packages:
 $ make install
 3. run application:
+
 $ bin/gendiff fixtures/file1.json fixtures/file2.json
 
 To print help to the console use command:
+
 $ bin/gendiff -h
 
 For developers may be used function, that return string result in selected format: 
