@@ -24,7 +24,7 @@ class GendiffTest extends TestCase
         $outputBuffer = ob_get_clean();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesRecursiveDiffs.txt",
+            __DIR__ . "/../fixtures/filesRecursiveStylishDiffs.txt",
             $outputBuffer
         );
     }

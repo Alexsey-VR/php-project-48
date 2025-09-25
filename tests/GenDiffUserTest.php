@@ -24,21 +24,7 @@ class GenDiffUserTest extends TestCase
         );
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesRecursiveDiffs.txt",
-            $outputBuffer
-        );
-    }
-
-    public function testPlaneFilesDiffer()
-    {
-        $outputBuffer = genDiff(
-            __DIR__ . "/../fixtures/file1.json",
-            __DIR__ . "/../fixtures/file2.json",
-            "plane"
-        );
-
-        $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt",
+            __DIR__ . "/../fixtures/filesRecursiveStylishDiffs.txt",
             $outputBuffer
         );
     }

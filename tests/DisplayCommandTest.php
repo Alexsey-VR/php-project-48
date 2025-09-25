@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\DisplayCommand;
 use Differ\DifferException;
-use Differ\Formatters\StylishCommand;
+use Differ\Formatters;
 
 #[CoversClass(DisplayCommand::class)]
 #[CoversMethod(DisplayCommand::class, 'execute')]
@@ -42,7 +42,7 @@ class DisplayCommandTest extends TestCase
             "}\n";
 
         $this->filesDiffCmd = $this->createConfiguredStub(
-            StylishCommand::class,
+            Formatters::class,
             [
                 'getFilesContent' => $this->filesContent,
                 'getFilesDiffs' => $this->filesDiffs,

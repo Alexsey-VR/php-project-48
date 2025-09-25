@@ -8,13 +8,13 @@ class PlaneCommand implements CommandInterface
 {
     private string $file1ContentString;
     private string $file2ContentString;
-    private string $filesContentString;
-    private string $filesDiffsString;
     private array $statusKeys;
     private array $statusPrefixes;
     private const array NORMALIZED_VALUES = [
         'false', 'true', 'null', '[complex value]'
     ];
+    public string $filesContentString;
+    public string $filesDiffsString;
 
     private function planeContent(array $content): array
     {
@@ -185,15 +185,5 @@ class PlaneCommand implements CommandInterface
         }
 
         return $this;
-    }
-
-    public function getFilesContent(): string
-    {
-        return $this->filesContentString;
-    }
-
-    public function getFilesDiffs(): string
-    {
-        return $this->filesDiffsString;
     }
 }

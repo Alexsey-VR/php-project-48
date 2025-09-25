@@ -24,9 +24,8 @@ class ConsoleApp
                                   ->execute($this->nextCommand);
 
         $formatCommand = $this->commandFactory->getCommand("format");
-        $formatter = $formatCommand->execute($parseCommand);
-
-        $this->nextCommand = $formatter->execute($this->nextCommand);
+        $this->nextCommand = $formatCommand->selectFormat($parseCommand)
+                                        ->execute($this->nextCommand);
 
         $displayCommand = $this->commandFactory->getCommand("show");
         $displayCommand->execute($this->nextCommand);

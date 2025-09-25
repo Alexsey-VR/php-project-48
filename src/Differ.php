@@ -26,9 +26,8 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     $nextCommand = $differenceCommand->execute($nextCommand);
 
     $formatCommand = $commandFactory->getCommand('format');
-    $formatter = $formatCommand->execute($parseCommand);
-
-    $nextCommand = $formatter->execute($nextCommand);
+    $nextCommand = $formatCommand->selectFormat($parseCommand)
+                                ->execute($nextCommand);
 
     return $nextCommand->getFilesDiffs();
 }

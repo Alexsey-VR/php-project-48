@@ -73,5 +73,18 @@ class CommandLineParserTest extends TestCase
             $outputBuffer
         );
     }
-        
+
+    public function testSetFormat()
+    {
+        $parser = new DocoptDouble("plane");
+        $cmdLineParser = new CommandLineParser($parser);
+
+        $outputFormat = $cmdLineParser->setFormat("stylish")
+                                    ->getFormat();
+
+        $this->assertEquals(
+            "stylish",
+            $outputFormat
+        );
+    }
 }

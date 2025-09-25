@@ -8,11 +8,11 @@ class StylishCommand implements CommandInterface
 {
     private string $files1ContentString;
     private string $files2ContentString;
-    private string $filesContentString;
-    private string $filesDiffsString;
     private array $statusKeys;
     private array $statusPrefixes;
     private array $statusComments;
+    public string $filesContentString;
+    public string $filesDiffsString;
 
     private function stylizeContent(array $content): array
     {
@@ -247,15 +247,5 @@ class StylishCommand implements CommandInterface
         }
 
         return $this;
-    }
-
-    public function getFilesContent(): string
-    {
-        return $this->filesContentString;
-    }
-
-    public function getFilesDiffs(): string
-    {
-        return $this->filesDiffsString;
     }
 }

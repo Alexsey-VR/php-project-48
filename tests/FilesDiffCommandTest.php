@@ -83,7 +83,7 @@ class FilesDiffCommandTest extends TestCase
         $cmdLineParser = $this->createConfiguredStub(
             CommandLineParser::class,
             [
-                'getFileNames' => /*$this->fileNames['Exception']*/ [
+                'getFileNames' => [
                     "FILE1" => __DIR__ . "/../fixtures/file1.txt",
                     "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
                 ]
