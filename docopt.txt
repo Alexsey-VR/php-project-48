@@ -10,4 +10,4 @@ Usage:
 Options:
     -h --help                  Show this screen
     -v --version               Show version
-    -f --format <fmt>          Report format, use plane or stylish [default: stylish]
+    -f --format <fmt>          Report format, use stylish, plane or json [default: stylish]
