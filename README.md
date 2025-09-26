@@ -21,5 +21,5 @@ $ bin/gendiff -h
 For developers may be used function, that return string result in selected format: 
 
 ### List of functions:
-* [gendiff(string file1, string file2)](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff.gif)
+* [gendiff(string file1, string file2, string format)](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff.gif)
 
