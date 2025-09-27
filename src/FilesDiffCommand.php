@@ -167,6 +167,8 @@ class FilesDiffCommand implements CommandInterface
                     is_array($file2Content) ? $file2Content : []
                 ));
 
+                asort($contentKeys);
+                
                 $initDifferenceDescriptor = $this->getInitDifferenceDescriptor(
                     $status,
                     $level,

@@ -26,8 +26,11 @@ class FileReader implements FileReaderInterface
             $fileFormat = end($fileNameParts);
             if ($fileFormat === 'json') {
                 $handle = fopen($filename, "r");
-                $jsonVariables = json_decode(fread($handle, self::MAX_FILE_SIZE), $isArray);
-                fclose($handle);
+                $jsonVariables = json_decode(
+                    fread($handle, self::MAX_FILE_SIZE),
+                    $isArray
+                );
+                fclose($handle);                
                 $type = gettype($jsonVariables);
                 if ($type === 'object') {
                     $fileContentArray = get_object_vars($jsonVariables);
