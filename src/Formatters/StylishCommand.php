@@ -11,8 +11,14 @@ class StylishCommand implements CommandInterface
     private array $statusKeys;
     private array $statusPrefixes;
     private array $statusComments;
+    private bool $useVerboseComments;
     public string $filesContentString;
     public string $filesDiffsString;
+
+    public function __construct(bool $useVerboseComments = false)
+    {
+        $this->useVerboseComments = $useVerboseComments;
+    }
 
     private function stylizeContent(array $content): array
     {
@@ -222,14 +228,21 @@ class StylishCommand implements CommandInterface
                 $this->statusKeys[2] => "  + ",
                 $this->statusKeys[3] => "  - "
             ];
-            $this->statusComments = [
+            $altStatusComments = [];
+            foreach($this->statusKeys as $key) {
+                $altStatusComments[$key] = "";
+            }
+            $this->statusComments = $this->useVerboseComments ? 
+            [
                 $this->statusKeys[0] => "",
                 $this->statusKeys[1] => " # Старое значение",
                 $this->statusKeys[2] => " # Добавлена",
                 $this->statusKeys[3] => " # Удалена",
                 $this->statusKeys[4] => "# значения нет, но пробел после : есть",
                 $this->statusKeys[5] => " # Новое значение"
-            ];
+            ]
+            :
+            $altStatusComments;
 
             $files1Content = $this->stylizeContent($content1Descriptor["output"]);
             $this->files1ContentString = "File {$file1Name} content:\n" .

@@ -1,43 +1,43 @@
 {
     common: {
         setting1: Value 1
-      - setting2: 200 # Удалена
-      - setting3: true # Старое значение
-      + setting3: null # Новое значение
+      - setting2: 200
+      - setting3: true
+      + setting3: null
         setting6: {
             key: value
             doge: {
-              - wow: # значения нет, но пробел после : есть
-              + wow: so much # Новое значение
+              - wow: 
+              + wow: so much
             }
-          + ops: vops # Добавлена
+          + ops: vops
         }
-      + follow: false # Добавлена
-      + setting4: blah blah # Добавлена
-      + setting5: { # Добавлена
+      + follow: false
+      + setting4: blah blah
+      + setting5: {
             key5: value5
         }
     }
     group1: {
-      - baz: bas # Старое значение
-      + baz: bars # Новое значение
+      - baz: bas
+      + baz: bars
         foo: bar
-      - nest: { # Старое значение
+      - nest: {
             key: value
         }
-      + nest: str # Новое значение
-      - best: str # Старое значение
-      + best: { # Новое значение
+      + nest: str
+      - best: str
+      + best: {
             key: value
         }
     }
-  - group2: { # Удалена
+  - group2: {
         abc: 12345
         deep: {
             id: 45
         }
     }
-  + group3: { # Добавлена
+  + group3: {
         deep: {
             id: {
                 number: 45
