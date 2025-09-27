@@ -229,10 +229,10 @@ class StylishCommand implements CommandInterface
                 $this->statusKeys[3] => "  - "
             ];
             $altStatusComments = [];
-            foreach($this->statusKeys as $key) {
+            foreach ($this->statusKeys as $key) {
                 $altStatusComments[$key] = "";
             }
-            $this->statusComments = $this->useVerboseComments ? 
+            $this->statusComments = $this->useVerboseComments ?
             [
                 $this->statusKeys[0] => "",
                 $this->statusKeys[1] => " # Старое значение",

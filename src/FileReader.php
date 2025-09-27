@@ -30,7 +30,7 @@ class FileReader implements FileReaderInterface
                     fread($handle, self::MAX_FILE_SIZE),
                     $isArray
                 );
-                fclose($handle);                
+                fclose($handle);
                 $type = gettype($jsonVariables);
                 if ($type === 'object') {
                     $fileContentArray = get_object_vars($jsonVariables);
