@@ -5,6 +5,7 @@ namespace Differ;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\Formatters\JSONCommand;
+use Differ\CommandLineParser;
 
 class CommandFactory implements CommandFactoryInterface
 {
