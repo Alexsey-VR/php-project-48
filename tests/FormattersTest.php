@@ -28,6 +28,7 @@ use Differ\Formatters\JSONCommand;
 #[CoversClass(StylishCommand::class)]
 #[CoversClass(PlainCommand::class)]
 #[CoversClass(JSONCommand::class)]
+
 class FormattersTest extends TestCase
 {
     public static function getParserArguments(): array

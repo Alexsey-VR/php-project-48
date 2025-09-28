@@ -2,9 +2,32 @@
 
 namespace Differ;
 
+use Differ\Formatters\StylishCommand;
+use Differ\Formatters\PlainCommand;
+use Differ\Formatters\JSONCommand;
+
 class Formatters implements CommandInterface
 {
     private CommandInterface $formatCommand;
+    private const array FORMAT_KEYS = [
+        "stylish" => "stylish",
+        "plain" => "plain",
+        "json" => "json"
+    ];
+
+    private function createCommand(string $commandKey): CommandInterface
+    {
+        switch ($commandKey) {
+            case self::FORMAT_KEYS["stylish"]:
+                return new StylishCommand();
+            case self::FORMAT_KEYS["plain"]:
+                return new PlainCommand();
+            case self::FORMAT_KEYS["json"]:
+                return new JSONCommand();
+            default:
+                return throw new DifferException("input error: unknown output format\nUse gendiff -h\n");
+        }
+    }
 
     public function selectFormat(CommandInterface $command = null): CommandInterface
     {
@@ -13,14 +36,11 @@ class Formatters implements CommandInterface
             new FileReader()
         );
         $currentFormat = strtolower($command->getFormat());
-        $formatKeys = $commandFactory->getFormatKeys();
-        if (in_array($currentFormat, $formatKeys)) {
-            $this->formatCommand = $commandFactory->getCommand(
-                $currentFormat
-            );
-        } else {
-            throw new DifferException("input error: unknown output format\nUse gendiff -h\n");
-        }
+        //$formatKeys = $commandFactory->getFormatKeys();
+
+        $this->formatCommand = $this->createCommand(
+            $currentFormat
+        );
 
         return $this;
     }
