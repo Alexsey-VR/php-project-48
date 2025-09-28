@@ -239,11 +239,11 @@ class StylishCommand implements CommandInterface
             $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES[1]) ?
             [
                 $this->statusKeys[0] => "",
-                $this->statusKeys[1] => " # Старое значение",
-                $this->statusKeys[2] => " # Добавлена",
-                $this->statusKeys[3] => " # Удалена",
-                $this->statusKeys[4] => "# значения нет, но пробел после : есть",
-                $this->statusKeys[5] => " # Новое значение"
+                $this->statusKeys[1] => " # Old value",
+                $this->statusKeys[2] => " # Added",
+                $this->statusKeys[3] => " # Removed",
+                $this->statusKeys[4] => "# There are no values, but a space exists after the colon",
+                $this->statusKeys[5] => " # New value"
             ]
             :
             $altStatusComments;
