@@ -37,7 +37,8 @@ class FileReaderTest extends TestCase
 
         $this->assertJsonStringEqualsJsonFile(
             self::JSON_FILE_FOR_ARRAY,
-            json_encode($fileContent));
+            json_encode($fileContent)
+        );
     }
 
     public function testReadFileNotJson()
