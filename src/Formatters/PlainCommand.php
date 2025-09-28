@@ -11,7 +11,7 @@ class PlainCommand implements CommandInterface
     private array $statusKeys;
     private array $statusPrefixes;
     private const array NORMALIZED_VALUES = [
-        'false', 'true', 'null', '[complex value]'
+        'false', 'true', 'null', '[complex value]', '0'
     ];
     public string $filesContentString;
     public string $filesDiffsString;
