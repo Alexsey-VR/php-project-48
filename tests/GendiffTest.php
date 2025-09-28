@@ -4,10 +4,11 @@ namespace Differ;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
-use function Differ\runGendiff;
 use Differ\DocoptDouble;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
+
+use function Differ\runGendiff;
 
 #[CoversNothing]
 class GendiffTest extends TestCase

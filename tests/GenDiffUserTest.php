@@ -5,13 +5,14 @@ namespace Differ;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\CoversClass;
-use function Differ\Differ\genDiff as genDiff;
 use Differ\CommandLineParser;
 use Differ\FilesDiffCommand;
 use Differ\FileReader;
 use Differ\DisplayCommand;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
+
+use function Differ\Differ\genDiff;
 
 #[CoversNothing]
 class GenDiffUserTest extends TestCase

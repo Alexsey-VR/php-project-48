@@ -24,7 +24,8 @@ class FilesDiffCommandTest extends TestCase
 
         $this->assertInstanceOf(
             FilesDiffCommand::class,
-            $diffCommand->setFileReader(new FileReader()));
+            $diffCommand->setFileReader(new FileReader())
+        );
     }
 
     public static function getFileNames(): array
@@ -77,7 +78,7 @@ class FilesDiffCommandTest extends TestCase
 
         $this->assertTrue(is_array($resultDifferenceDescriptor));
     }
-    
+
     public function testExecuteForException()
     {
         $cmdLineParser = $this->createConfiguredStub(

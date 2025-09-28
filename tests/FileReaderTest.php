@@ -17,11 +17,13 @@ class FileReaderTest extends TestCase
         $fileReader = new FileReader();
 
         $fileContent = $fileReader->readFile(
-            self::JSON_FILE_FOR_ARRAY);
-        
+            self::JSON_FILE_FOR_ARRAY
+        );
+
         $this->assertJsonStringEqualsJsonFile(
             self::JSON_FILE_FOR_ARRAY,
-            json_encode($fileContent));
+            json_encode($fileContent)
+        );
     }
 
     public function testReadFileAsArray()
@@ -32,7 +34,7 @@ class FileReaderTest extends TestCase
             self::JSON_FILE_FOR_ARRAY,
             true
         );
-        
+
         $this->assertJsonStringEqualsJsonFile(
             self::JSON_FILE_FOR_ARRAY,
             json_encode($fileContent));
@@ -45,7 +47,7 @@ class FileReaderTest extends TestCase
         $fileContent = $fileReader->readFile(
             __DIR__ . "/../fixtures/fileNotJson.json"
         );
-        
+
         $this->assertNull($fileContent);
     }
 }
