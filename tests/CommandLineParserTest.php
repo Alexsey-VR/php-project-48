@@ -59,9 +59,9 @@ class CommandLineParserTest extends TestCase
         );
     }
 
-    public function testPlaneExecute()
+    public function testPlainExecute()
     {
-        $parser = new DocoptDouble("plane");
+        $parser = new DocoptDouble("plain");
         $cmdLineParser = new CommandLineParser($parser);
 
         ob_start();
@@ -76,7 +76,7 @@ class CommandLineParserTest extends TestCase
 
     public function testSetFormat()
     {
-        $parser = new DocoptDouble("plane");
+        $parser = new DocoptDouble("plain");
         $cmdLineParser = new CommandLineParser($parser);
 
         $outputFormat = $cmdLineParser->setFormat("stylish")

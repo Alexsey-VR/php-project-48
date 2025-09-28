@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use function Differ\runGendiff;
 use Differ\DocoptDouble;
 use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\PlainCommand;
 
 #[CoversNothing]
 class GendiffTest extends TestCase
@@ -29,10 +29,10 @@ class GendiffTest extends TestCase
         );
     }
 
-    public function testRunPlaneGendiff()
+    public function testRunPlainGendiff()
     {
         $commandFactory = new CommandFactory(
-            new DocoptDouble("plane"),
+            new DocoptDouble("plain"),
             new FileReader()
         );
 
@@ -41,7 +41,7 @@ class GendiffTest extends TestCase
         $outputBuffer = ob_get_clean();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt",
+            __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt",
             $outputBuffer
         );
     }

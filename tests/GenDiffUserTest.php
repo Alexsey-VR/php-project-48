@@ -11,7 +11,7 @@ use Differ\FilesDiffCommand;
 use Differ\FileReader;
 use Differ\DisplayCommand;
 use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\PlainCommand;
 
 #[CoversNothing]
 class GenDiffUserTest extends TestCase

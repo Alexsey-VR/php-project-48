@@ -13,7 +13,7 @@ use Differ\FileReader;
 use Differ\DifferException;
 use Differ\DocoptDouble;
 use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\PlainCommand;
 use Differ\Formatters\JSONCommand;
 
 #[CoversClass(CommandFactory::class)]
@@ -26,7 +26,7 @@ use Differ\Formatters\JSONCommand;
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
 #[CoversClass(StylishCommand::class)]
-#[CoversClass(PlaneCommand::class)]
+#[CoversClass(PlainCommand::class)]
 #[CoversClass(JSONCommand::class)]
 class FormattersTest extends TestCase
 {
@@ -56,18 +56,18 @@ class FormattersTest extends TestCase
                     "FILE1" => __DIR__ . "/../fixtures/file1.json",
                     "FILE2" => __DIR__ . "/../fixtures/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesPlaneRecursiveJSONContent.txt",
-                'outputFormat' => 'plane',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt"
+                'contentFilePath' => __DIR__ . "/../fixtures/filesPlainRecursiveJSONContent.txt",
+                'outputFormat' => 'plain',
+                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
                     "FILE1" => __DIR__ . "/../fixtures/file1.yaml",
                     "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesPlaneRecursiveYAMLContent.txt",
-                'outputFormat' => 'plane',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt"
+                'contentFilePath' => __DIR__ . "/../fixtures/filesPlainRecursiveYAMLContent.txt",
+                'outputFormat' => 'plain',
+                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [

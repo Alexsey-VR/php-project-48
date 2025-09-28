@@ -13,7 +13,7 @@ use Differ\FileReader;
 use Differ\DocoptDouble;
 use Differ\DifferException;
 use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\PlainCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -23,7 +23,7 @@ use Differ\Formatters\PlaneCommand;
 #[CoversClass(FileReader::class)]
 #[CoversClass(DifferException::class)]
 #[CoversClass(StylishCommand::class)]
-#[CoversClass(PlaneCommand::class)]
+#[CoversClass(PlainCommand::class)]
 class CommandFactoryTest extends TestCase
 {
     private $commandFactory;
@@ -49,7 +49,7 @@ class CommandFactoryTest extends TestCase
         $this->assertInstanceOf(StylishCommand::class, $this->commandFactory->getCommand('stylish'));
 
         // Test for FilesDiffCommand
-        $this->assertInstanceOf(PlaneCommand::class, $this->commandFactory->getCommand('plane'));
+        $this->assertInstanceOf(PlainCommand::class, $this->commandFactory->getCommand('plain'));
 
         // Test for DisplayCommand
         $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->getCommand('show'));

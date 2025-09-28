@@ -10,7 +10,7 @@ use Differ\DisplayCommand;
 use Differ\FilesDiffCommand;
 use Differ\Formatters;
 use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlaneCommand;
+use Differ\Formatters\PlainCommand;
 use Differ\FileReader;
 
 #[CoversClass(ConsoleApp::class)]
@@ -23,7 +23,7 @@ use Differ\FileReader;
 #[CoversClass(CommandLineParser::class)]
 #[CoversClass(Formatters::class)]
 #[CoversClass(StylishCommand::class)]
-#[CoversClass(PlaneCommand::class)]
+#[CoversClass(PlainCommand::class)]
 class ConsoleAppTest extends TestCase
 {
     public function testStylishConsoleAppRunning()
@@ -45,10 +45,10 @@ class ConsoleAppTest extends TestCase
         );
     }
 
-    public function testPlaneConsoleAppRunning()
+    public function testPlainConsoleAppRunning()
     {
         $commandFactory = new CommandFactory(
-            new DocoptDouble("plane"),
+            new DocoptDouble("plain"),
             new FileReader()
         );
 
@@ -59,7 +59,7 @@ class ConsoleAppTest extends TestCase
         $outputBuffer = ob_get_clean();
 
         $this->assertStringEqualsFile(
-            __DIR__ . "/../fixtures/filesRecursivePlaneDiffs.txt",
+            __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt",
             $outputBuffer
         );
     }

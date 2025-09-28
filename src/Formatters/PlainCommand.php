@@ -4,7 +4,7 @@ namespace Differ\Formatters;
 
 use Differ\CommandInterface;
 
-class PlaneCommand implements CommandInterface
+class PlainCommand implements CommandInterface
 {
     private string $file1ContentString;
     private string $file2ContentString;
@@ -16,13 +16,13 @@ class PlaneCommand implements CommandInterface
     public string $filesContentString;
     public string $filesDiffsString;
 
-    private function planeContent(array $content): array
+    private function plainContent(array $content): array
     {
         return array_reduce(
             $content,
             function ($result, $contentItem) {
                 if (isset($contentItem["output"])) {
-                    $result[] = implode($this->planeContent($contentItem["output"])) .
+                    $result[] = implode($this->plainContent($contentItem["output"])) .
                                 "\n";
                 } else {
                     $result[] = "Property '{$contentItem['history']}' has value " .
@@ -50,7 +50,7 @@ class PlaneCommand implements CommandInterface
             $firstNormalizedValue : "'" . $firstNormalizedValue . "'";
     }
 
-    private function getPlaneItem(
+    private function getPlainItem(
         $contentItem,
         $prefixKey,
         $firstContent,
@@ -72,7 +72,7 @@ class PlaneCommand implements CommandInterface
         "";
     }
 
-    private function getPlaneList(
+    private function getPlainList(
         $contentItem,
         $currentItemList,
         $prefixKey,
@@ -99,7 +99,7 @@ class PlaneCommand implements CommandInterface
         return implode($currentItemList);
     }
 
-    private function planeDifference(array $content): array
+    private function plainDifference(array $content): array
     {
         return array_reduce(
             $content,
@@ -109,16 +109,16 @@ class PlaneCommand implements CommandInterface
                 $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
 
                 if ($bothContentIsArray) {
-                    $styledItem = $this->getPlaneList(
+                    $styledItem = $this->getPlainList(
                         contentItem: $contentItem,
-                        currentItemList: $this->planeDifference($contentItem["output"]),
+                        currentItemList: $this->plainDifference($contentItem["output"]),
                         prefixKey: $this->statusKeys[0],
                         altPrefixKey: $contentItem["status"],
                         commentKey: $this->statusKeys[0],
                         altCommentKey: $contentItem["status"],
                     );
                 } else {
-                    $styledItem = $this->getPlaneItem(
+                    $styledItem = $this->getPlainItem(
                         contentItem: $contentItem,
                         prefixKey: $contentItem["status"],
                         firstContent: $firstContent,
@@ -150,38 +150,38 @@ class PlaneCommand implements CommandInterface
                 $this->statusKeys[3] => "removed"
             ];
 
-            $file1Content = $this->planeContent($content1Descriptor["output"]);
-            $file2Content = $this->planeContent($content2Descriptor["output"]);
+            $file1Content = $this->plainContent($content1Descriptor["output"]);
+            $file2Content = $this->plainContent($content2Descriptor["output"]);
 
             $file1ContentList = explode("\n", implode("", $file1Content));
             $file2ContentList = explode("\n", implode("", $file2Content));
 
-            $file1PlaneContent = array_filter(
+            $file1PlainContent = array_filter(
                 $file1ContentList,
                 fn($item) => $item !== ""
             );
-            $file2PlaneContent = array_filter(
+            $file2PlainContent = array_filter(
                 $file2ContentList,
                 fn($item) => $item !== ""
             );
 
             $this->file1ContentString = "File {$file1Name} content:\n" .
-                implode("\n", $file1PlaneContent) . "\n";
+                implode("\n", $file1PlainContent) . "\n";
             $this->file2ContentString = "File {$file2Name} content:\n" .
-                implode("\n", $file2PlaneContent) . "\n";
+                implode("\n", $file2PlainContent) . "\n";
 
             $this->filesContentString = $this->file1ContentString . $this->file2ContentString;
 
-            $filesDiffs = $this->planeDifference($differenceDescriptor["output"]);
+            $filesDiffs = $this->plainDifference($differenceDescriptor["output"]);
 
             $filesDiffsList = explode("\n", implode("", $filesDiffs));
 
-            $filesPlaneDiffs = array_filter(
+            $filesPlainDiffs = array_filter(
                 $filesDiffsList,
                 fn($item) => $item !== ""
             );
 
-            $this->filesDiffsString = implode("\n", $filesPlaneDiffs) . "\n";
+            $this->filesDiffsString = implode("\n", $filesPlainDiffs) . "\n";
         }
 
         return $this;
