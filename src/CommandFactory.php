@@ -11,7 +11,9 @@ class CommandFactory implements CommandFactoryInterface
     private mixed $parser;
     private FileReaderInterface $fileReader;
     private const array FORMAT_KEYS = [
-        "stylish", "plain", "json"
+        "stylish" => "stylish",
+        "plain" => "plain",
+        "json" => "json"
     ];
 
     public function __construct(
@@ -37,13 +39,13 @@ class CommandFactory implements CommandFactoryInterface
                 $requestedCommand = (new FilesDiffCommand())
                                         ->setFileReader($this->fileReader);
                 break;
-            case self::FORMAT_KEYS[0]:
+            case self::FORMAT_KEYS["stylish"]:
                 $requestedCommand = new StylishCommand();
                 break;
-            case self::FORMAT_KEYS[1]:
+            case self::FORMAT_KEYS["plain"]:
                 $requestedCommand = new PlainCommand();
                 break;
-            case self::FORMAT_KEYS[2]:
+            case self::FORMAT_KEYS["json"]:
                 $requestedCommand = new JSONCommand();
                 break;
             case "format":
