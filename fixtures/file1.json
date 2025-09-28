@@ -23,5 +23,9 @@
     "deep": {
       "id": 45
     }
+  },
+  "group4": {
+    "default": null,
+    "type": "bas"
   }
 }

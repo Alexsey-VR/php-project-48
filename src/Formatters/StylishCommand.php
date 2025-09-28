@@ -11,13 +11,17 @@ class StylishCommand implements CommandInterface
     private array $statusKeys;
     private array $statusPrefixes;
     private array $statusComments;
-    private bool $useVerboseComments;
+    private string $commentType;
     public string $filesContentString;
     public string $filesDiffsString;
+    private const AVAILABLE_COMMENT_TYPES = [
+        "short",
+        "verbose"
+    ];
 
-    public function __construct(bool $useVerboseComments = false)
+    public function __construct(string $commentType = self::AVAILABLE_COMMENT_TYPES[0])
     {
-        $this->useVerboseComments = $useVerboseComments;
+        $this->commentType = $commentType;
     }
 
     private function stylizeContent(array $content): array
@@ -232,7 +236,7 @@ class StylishCommand implements CommandInterface
             foreach ($this->statusKeys as $key) {
                 $altStatusComments[$key] = "";
             }
-            $this->statusComments = $this->useVerboseComments ?
+            $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES[1]) ?
             [
                 $this->statusKeys[0] => "",
                 $this->statusKeys[1] => " # Старое значение",

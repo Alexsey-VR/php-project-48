@@ -28,6 +28,10 @@ File file1.yaml content:
             "deep": {
                 "id": 45
             }
+        },
+        "group4": {
+            "default": "null",
+            "type": "bas"
         }
     },
     "output": [
@@ -78,12 +82,6 @@ File file1.yaml content:
                     "output": [
                         {
                             "level": 3,
-                            "history": "common.setting6.key",
-                            "fileKey": "key",
-                            "fileContent": "value"
-                        },
-                        {
-                            "level": 3,
                             "history": "common.setting6.doge",
                             "fileKey": "doge",
                             "fileContent": {
@@ -97,6 +95,12 @@ File file1.yaml content:
                                     "fileContent": ""
                                 }
                             ]
+                        },
+                        {
+                            "level": 3,
+                            "history": "common.setting6.key",
+                            "fileKey": "key",
+                            "fileContent": "value"
                         }
                     ]
                 }
@@ -123,6 +127,12 @@ File file1.yaml content:
                 },
                 {
                     "level": 2,
+                    "history": "group1.best",
+                    "fileKey": "best",
+                    "fileContent": "str"
+                },
+                {
+                    "level": 2,
                     "history": "group1.foo",
                     "fileKey": "foo",
                     "fileContent": "bar"
@@ -142,12 +152,6 @@ File file1.yaml content:
                             "fileContent": "value"
                         }
                     ]
-                },
-                {
-                    "level": 2,
-                    "history": "group1.best",
-                    "fileKey": "best",
-                    "fileContent": "str"
                 }
             ]
         },
@@ -183,6 +187,29 @@ File file1.yaml content:
                             "fileContent": 45
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "level": 1,
+            "history": "group4",
+            "fileKey": "group4",
+            "fileContent": {
+                "default": "null",
+                "type": "bas"
+            },
+            "output": [
+                {
+                    "level": 2,
+                    "history": "group4.default",
+                    "fileKey": "default",
+                    "fileContent": "null"
+                },
+                {
+                    "level": 2,
+                    "history": "group4.type",
+                    "fileKey": "type",
+                    "fileContent": "bas"
                 }
             ]
         }
@@ -225,6 +252,11 @@ File file2.yaml content:
                 }
             },
             "fee": 100500
+        },
+        "group4": {
+            "default": "",
+            "someKey": "true",
+            "type": "bar"
         }
     },
     "output": [
@@ -303,18 +335,6 @@ File file2.yaml content:
                     "output": [
                         {
                             "level": 3,
-                            "history": "common.setting6.key",
-                            "fileKey": "key",
-                            "fileContent": "value"
-                        },
-                        {
-                            "level": 3,
-                            "history": "common.setting6.ops",
-                            "fileKey": "ops",
-                            "fileContent": "vops"
-                        },
-                        {
-                            "level": 3,
                             "history": "common.setting6.doge",
                             "fileKey": "doge",
                             "fileContent": {
@@ -328,6 +348,18 @@ File file2.yaml content:
                                     "fileContent": "so much"
                                 }
                             ]
+                        },
+                        {
+                            "level": 3,
+                            "history": "common.setting6.key",
+                            "fileKey": "key",
+                            "fileContent": "value"
+                        },
+                        {
+                            "level": 3,
+                            "history": "common.setting6.ops",
+                            "fileKey": "ops",
+                            "fileContent": "vops"
                         }
                     ]
                 }
@@ -348,21 +380,9 @@ File file2.yaml content:
             "output": [
                 {
                     "level": 2,
-                    "history": "group1.foo",
-                    "fileKey": "foo",
-                    "fileContent": "bar"
-                },
-                {
-                    "level": 2,
                     "history": "group1.baz",
                     "fileKey": "baz",
                     "fileContent": "bars"
-                },
-                {
-                    "level": 2,
-                    "history": "group1.nest",
-                    "fileKey": "nest",
-                    "fileContent": "str"
                 },
                 {
                     "level": 2,
@@ -379,6 +399,18 @@ File file2.yaml content:
                             "fileContent": "value"
                         }
                     ]
+                },
+                {
+                    "level": 2,
+                    "history": "group1.foo",
+                    "fileKey": "foo",
+                    "fileContent": "bar"
+                },
+                {
+                    "level": 2,
+                    "history": "group1.nest",
+                    "fileKey": "nest",
+                    "fileContent": "str"
                 }
             ]
         },
@@ -428,6 +460,36 @@ File file2.yaml content:
                     "history": "group3.fee",
                     "fileKey": "fee",
                     "fileContent": 100500
+                }
+            ]
+        },
+        {
+            "level": 1,
+            "history": "group4",
+            "fileKey": "group4",
+            "fileContent": {
+                "default": "",
+                "someKey": "true",
+                "type": "bar"
+            },
+            "output": [
+                {
+                    "level": 2,
+                    "history": "group4.default",
+                    "fileKey": "default",
+                    "fileContent": ""
+                },
+                {
+                    "level": 2,
+                    "history": "group4.someKey",
+                    "fileKey": "someKey",
+                    "fileContent": "true"
+                },
+                {
+                    "level": 2,
+                    "history": "group4.type",
+                    "fileKey": "type",
+                    "fileContent": "bar"
                 }
             ]
         }

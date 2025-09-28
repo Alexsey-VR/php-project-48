@@ -356,5 +356,46 @@
                 "history": "group3.fee"
             }
         ]
+    },
+    {
+        "file1Content": {
+            "default": "null",
+            "type": "bas"
+        },
+        "file2Content": {
+            "default": "",
+            "someKey": "true",
+            "type": "bar"
+        },
+        "level": 1,
+        "status": "changed",
+        "fileKey": "group4",
+        "history": "group4",
+        "output": [
+            {
+                "file1Content": "null",
+                "file2Content": "",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "default",
+                "history": "group4.default"
+            },
+            {
+                "file1Content": "true",
+                "file2Content": "true",
+                "level": 2,
+                "status": "added",
+                "fileKey": "someKey",
+                "history": "group4.someKey"
+            },
+            {
+                "file1Content": "bas",
+                "file2Content": "bar",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "type",
+                "history": "group4.type"
+            }
+        ]
     }
 ]

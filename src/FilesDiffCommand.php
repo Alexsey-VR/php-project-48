@@ -57,6 +57,7 @@ class FilesDiffCommand implements CommandInterface
                 $fileContentKeys = array_keys(
                     is_array($fileContent) ? $fileContent : []
                 );
+                asort($fileContentKeys);
                 $initContentDescriptor = [
                     "level" => $level,
                     "history" => $history,
@@ -166,7 +167,6 @@ class FilesDiffCommand implements CommandInterface
                     is_array($file1Content) ? $file1Content : [],
                     is_array($file2Content) ? $file2Content : []
                 ));
-
                 asort($contentKeys);
 
                 $initDifferenceDescriptor = $this->getInitDifferenceDescriptor(
@@ -218,30 +218,35 @@ class FilesDiffCommand implements CommandInterface
             );
 
             $fileKeys = array_keys($file1Content);
+            asort($fileKeys);
             $initContent1Descriptor = [
                 "level" => 0,
                 "fileKey" => "initKey",
                 "history" => "",
                 "fileContent" => $file1Content
             ];
+
             $this->content1Descriptor = $this->getContent(
                 $fileKeys,
                 $initContent1Descriptor
             );
 
             $fileKeys = array_keys($file2Content);
+            asort($fileKeys);
             $initContent2Descriptor = [
                 "level" => 0,
                 "fileKey" => "initKey",
                 "history" => "",
                 "fileContent" => $file2Content
             ];
+
             $this->content2Descriptor = $this->getContent(
                 $fileKeys,
                 $initContent2Descriptor
             );
 
             $mergedFileKeys = array_keys(array_merge($file1Content, $file2Content));
+            asort($mergedFileKeys);
             $initDifferenceDescriptor = [
                 "level" => 0,
                 "status" => "init",
