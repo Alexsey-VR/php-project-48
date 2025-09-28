@@ -19,3 +19,5 @@ group2:
 group4:
   default: null
   type: bas
+  nest:
+    bar: ''

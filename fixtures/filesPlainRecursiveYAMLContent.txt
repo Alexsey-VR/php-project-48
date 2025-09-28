@@ -1,6 +1,6 @@
 File file1.yaml content:
 Property 'common.setting1' has value 'Value 1'
-Property 'common.setting2' has value '200'
+Property 'common.setting2' has value 200
 Property 'common.setting3' has value true
 Property 'common.setting6.doge.wow' has value ''
 Property 'common.setting6.key' has value 'value'
@@ -8,9 +8,10 @@ Property 'group1.baz' has value 'bas'
 Property 'group1.best' has value 'str'
 Property 'group1.foo' has value 'bar'
 Property 'group1.nest.key' has value 'value'
-Property 'group2.abc' has value '12345'
-Property 'group2.deep.id' has value '45'
+Property 'group2.abc' has value 12345
+Property 'group2.deep.id' has value 45
 Property 'group4.default' has value null
+Property 'group4.nest.bar' has value ''
 Property 'group4.type' has value 'bas'
 File file2.yaml content:
 Property 'common.follow' has value false
@@ -25,8 +26,9 @@ Property 'group1.baz' has value 'bars'
 Property 'group1.best.key' has value 'value'
 Property 'group1.foo' has value 'bar'
 Property 'group1.nest' has value 'str'
-Property 'group3.deep.id.number' has value '45'
-Property 'group3.fee' has value '100500'
+Property 'group3.deep.id.number' has value 45
+Property 'group3.fee' has value 100500
 Property 'group4.default' has value ''
+Property 'group4.nest.bar' has value 0
 Property 'group4.someKey' has value true
 Property 'group4.type' has value 'bar'

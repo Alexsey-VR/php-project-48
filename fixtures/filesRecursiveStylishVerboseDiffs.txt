@@ -48,6 +48,10 @@
     group4: {
       - default: null # Old value
       + default: # There are no values, but a space exists after the colon
+        nest: {
+          - bar: # There are no values, but a space exists after the colon
+          + bar: 0 # New value
+        }
       + someKey: true # Added
       - type: bas # Old value
       + type: bar # New value

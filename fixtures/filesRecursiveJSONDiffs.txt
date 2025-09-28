@@ -360,12 +360,18 @@
     {
         "file1Content": {
             "default": "null",
-            "type": "bas"
+            "type": "bas",
+            "nest": {
+                "bar": ""
+            }
         },
         "file2Content": {
             "default": "",
             "someKey": "true",
-            "type": "bar"
+            "type": "bar",
+            "nest": {
+                "bar": 0
+            }
         },
         "level": 1,
         "status": "changed",
@@ -379,6 +385,28 @@
                 "status": "changed",
                 "fileKey": "default",
                 "history": "group4.default"
+            },
+            {
+                "file1Content": {
+                    "bar": ""
+                },
+                "file2Content": {
+                    "bar": 0
+                },
+                "level": 2,
+                "status": "changed",
+                "fileKey": "nest",
+                "history": "group4.nest",
+                "output": [
+                    {
+                        "file1Content": "",
+                        "file2Content": 0,
+                        "level": 3,
+                        "status": "changed",
+                        "fileKey": "bar",
+                        "history": "group4.nest.bar"
+                    }
+                ]
             },
             {
                 "file1Content": "true",

@@ -25,3 +25,5 @@ group4:
   default: ''
   someKey: true
   type: bar
+  nest:
+    bar: 0

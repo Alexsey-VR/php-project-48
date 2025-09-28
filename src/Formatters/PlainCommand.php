@@ -11,7 +11,7 @@ class PlainCommand implements CommandInterface
     private array $statusKeys;
     private array $statusPrefixes;
     private const array NORMALIZED_VALUES = [
-        'false', 'true', 'null', '[complex value]', '0'
+        'false', 'true', 'null', '[complex value]'
     ];
     public string $filesContentString;
     public string $filesDiffsString;
@@ -44,7 +44,9 @@ class PlainCommand implements CommandInterface
             in_array(true, array_filter(
                 self::NORMALIZED_VALUES,
                 function (string $value) use ($firstNormalizedValue) {
-                    return $value === $firstNormalizedValue;
+                    return strcmp($value, $firstNormalizedValue) === 0 ||
+                        is_bool($firstNormalizedValue) ||
+                        is_numeric($firstNormalizedValue);
                 }
             )) ?
             $firstNormalizedValue : "'" . $firstNormalizedValue . "'";

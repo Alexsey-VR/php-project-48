@@ -48,6 +48,10 @@
     group4: {
       - default: null
       + default: 
+        nest: {
+          - bar: 
+          + bar: 0
+        }
       + someKey: true
       - type: bas
       + type: bar

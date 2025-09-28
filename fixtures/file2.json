@@ -34,6 +34,9 @@
   "group4": {
     "default": "",
     "someKey": true,
-    "type": "bar"
+    "type": "bar",
+    "nest": {
+      "bar": 0
+    }
   }
 }
