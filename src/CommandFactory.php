@@ -2,10 +2,16 @@
 
 namespace Differ;
 
+use CommandFactoryInterface;
+use FileReaderInterface;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\Formatters\JSONCommand;
 use Differ\CommandLineParser;
+use Differ\FilesDiffCommand;
+use Differ\Formatters;
+use Differ\DisplayCommand;
+use Differ\DifferException;
 
 class CommandFactory implements CommandFactoryInterface
 {
