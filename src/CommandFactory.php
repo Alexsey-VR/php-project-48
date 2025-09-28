@@ -2,8 +2,8 @@
 
 namespace Differ;
 
-use CommandFactoryInterface;
-use FileReaderInterface;
+use Differ\CommandFactoryInterface;
+use Differ\FileReaderInterface;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\Formatters\JSONCommand;
