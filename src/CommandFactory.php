@@ -8,15 +8,15 @@ use Differ\Formatters\JSONCommand;
 
 class CommandFactory implements CommandFactoryInterface
 {
-    private $parser;
-    private $fileReader;
+    private mixed $parser;
+    private CommandInterface $fileReader;
     private const array FORMAT_KEYS = [
         "stylish", "plain", "json"
     ];
 
     public function __construct(
-        $parser,
-        $fileReader
+        mixed $parser,
+        CommandInterface $fileReader
     ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
