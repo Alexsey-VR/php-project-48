@@ -70,7 +70,7 @@ class DisplayCommandTest extends TestCase
 
             ob_start();
             $this->displayCommand->execute($this->formattersStub);
-            $formattersOutput = ob_get_clean(); 
+            $formattersOutput = ob_get_clean();
             $this->assertEquals($formattersOutput, $this->testStrings[$key]);
         }
     }
