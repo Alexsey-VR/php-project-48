@@ -16,9 +16,9 @@ class CommandLineParser implements CommandInterface
 
         $filename = __DIR__ . "/../docopt.txt";
         if (file_exists($filename)) {
-            $handler = @fopen($filename, 'r');
-            $filesize = filesize($filename);
-            if (($handler !== false) && ($filesize > 0)) {
+            $handler = fopen($filename, 'r') ?? NULL;
+            $filesize = filesize($filename) ?? 0;
+            if (!is_null($handler)) {
                 $this->parserDescriptor = fread($handler, $filesize) ?? "";
                 fclose($handler);
             }
