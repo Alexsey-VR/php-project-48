@@ -17,15 +17,21 @@ class Formatters implements CommandFactoryInterface
 
     public function createCommand(string $commandKey): CommandInterface
     {
+        $requestedCommand = null;
         switch ($commandKey) {
             case self::FORMAT_KEYS["stylish"]:
-                return new StylishCommand();
+                $requestedCommand = new StylishCommand();
+                break;
             case self::FORMAT_KEYS["plain"]:
-                return new PlainCommand();
+                $requestedCommand = new PlainCommand();
+                break;
             case self::FORMAT_KEYS["json"]:
-                return new JSONCommand();
+                $requestedCommand = new JSONCommand();
+                break;
             default:
                 return throw new DifferException("input error: unknown output format\n");
         }
+
+        return $requestedCommand;
     }
 }
