@@ -8,7 +8,7 @@ validate:
 	composer validate
 
 analyze:
-	./vendor/bin/phpstan analyze --level 3 src/ tests/
+	./vendor/bin/phpstan analyze --level 3 --ansi src/ tests/
 
 lint:
 	composer exec --verbose phpcs -- --standard=PSR12 src/ bin/

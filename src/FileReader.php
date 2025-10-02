@@ -21,6 +21,7 @@ class FileReader implements FileReaderInterface
 
     public function readFile(string $filename, bool $isArray = true): ?array
     {
+        $fileContentArray = null;
         if (file_exists($filename)) {
             $fileNameParts = explode(".", $this->normalizeFilename($filename));
             $fileFormat = end($fileNameParts);

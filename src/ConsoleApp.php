@@ -8,30 +8,36 @@ class ConsoleApp
 {
     private CommandInterface $nextCommand;
     private CommandFactoryInterface $commandFactory;
+    private array $flowSteps;
+    private CommandInterface $initCommand;
 
     public function __construct(
         CommandFactoryInterface $commandFactory
     ) {
         $this->commandFactory = $commandFactory;
+
+        $parseCommand = $this->commandFactory->createCommand("parse");
+        $this->initCommand = $parseCommand->execute();
+        $this->flowSteps = [
+            "difference",
+            strtolower($parseCommand->getFormat()),
+            "show"
+        ];
     }
 
     public function run(): void
     {
-        $parseCommand = $this->commandFactory->createCommand("parse");
-        $this->nextCommand = $parseCommand
-                                  ->execute();
+        $commandFactory = $this->commandFactory;
+        array_reduce(
+            $this->flowSteps,
+            function($nextCommand, $item) use ($commandFactory) {
+                $currentCommand = $commandFactory->createCommand($item);
+                $nextCommand = $currentCommand->execute($nextCommand);
 
-        $differenceCommand = $this->commandFactory->createCommand("difference");
-        $this->nextCommand = $differenceCommand
-                                  ->execute($this->nextCommand);
-
-        $formatCommand = $this->commandFactory->createCommand(
-            strtolower($parseCommand->getFormat())
+                return $nextCommand;
+            },
+            $this->initCommand
         );
-        $this->nextCommand = $formatCommand->execute($this->nextCommand);
-
-        $displayCommand = $this->commandFactory->createCommand("show");
-
-        $displayCommand->execute($this->nextCommand);
+        
     }
 }
