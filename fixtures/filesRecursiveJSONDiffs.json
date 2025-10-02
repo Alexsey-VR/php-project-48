@@ -1,0 +1,429 @@
+[
+    {
+        "file1Content": {
+            "setting1": "Value 1",
+            "setting2": 200,
+            "setting3": "true",
+            "setting6": {
+                "key": "value",
+                "doge": {
+                    "wow": ""
+                }
+            }
+        },
+        "file2Content": {
+            "follow": "false",
+            "setting1": "Value 1",
+            "setting3": "null",
+            "setting4": "blah blah",
+            "setting5": {
+                "key5": "value5"
+            },
+            "setting6": {
+                "key": "value",
+                "ops": "vops",
+                "doge": {
+                    "wow": "so much"
+                }
+            }
+        },
+        "level": 1,
+        "status": "changed",
+        "fileKey": "common",
+        "history": "common",
+        "output": [
+            {
+                "file1Content": "false",
+                "file2Content": "false",
+                "level": 2,
+                "status": "added",
+                "fileKey": "follow",
+                "history": "common.follow"
+            },
+            {
+                "file1Content": "Value 1",
+                "file2Content": "Value 1",
+                "level": 2,
+                "status": "not changed",
+                "fileKey": "setting1",
+                "history": "common.setting1"
+            },
+            {
+                "file1Content": 200,
+                "file2Content": 200,
+                "level": 2,
+                "status": "deleted",
+                "fileKey": "setting2",
+                "history": "common.setting2"
+            },
+            {
+                "file1Content": "true",
+                "file2Content": "null",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "setting3",
+                "history": "common.setting3"
+            },
+            {
+                "file1Content": "blah blah",
+                "file2Content": "blah blah",
+                "level": 2,
+                "status": "added",
+                "fileKey": "setting4",
+                "history": "common.setting4"
+            },
+            {
+                "file1Content": {
+                    "key5": "value5"
+                },
+                "file2Content": {
+                    "key5": "value5"
+                },
+                "level": 2,
+                "status": "added",
+                "fileKey": "setting5",
+                "history": "common.setting5",
+                "output": [
+                    {
+                        "file1Content": "value5",
+                        "file2Content": "value5",
+                        "level": 3,
+                        "status": "not changed",
+                        "fileKey": "key5",
+                        "history": "common.setting5.key5"
+                    }
+                ]
+            },
+            {
+                "file1Content": {
+                    "key": "value",
+                    "doge": {
+                        "wow": ""
+                    }
+                },
+                "file2Content": {
+                    "key": "value",
+                    "ops": "vops",
+                    "doge": {
+                        "wow": "so much"
+                    }
+                },
+                "level": 2,
+                "status": "changed",
+                "fileKey": "setting6",
+                "history": "common.setting6",
+                "output": [
+                    {
+                        "file1Content": {
+                            "wow": ""
+                        },
+                        "file2Content": {
+                            "wow": "so much"
+                        },
+                        "level": 3,
+                        "status": "changed",
+                        "fileKey": "doge",
+                        "history": "common.setting6.doge",
+                        "output": [
+                            {
+                                "file1Content": "",
+                                "file2Content": "so much",
+                                "level": 4,
+                                "status": "changed",
+                                "fileKey": "wow",
+                                "history": "common.setting6.doge.wow"
+                            }
+                        ]
+                    },
+                    {
+                        "file1Content": "value",
+                        "file2Content": "value",
+                        "level": 3,
+                        "status": "not changed",
+                        "fileKey": "key",
+                        "history": "common.setting6.key"
+                    },
+                    {
+                        "file1Content": "vops",
+                        "file2Content": "vops",
+                        "level": 3,
+                        "status": "added",
+                        "fileKey": "ops",
+                        "history": "common.setting6.ops"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "file1Content": {
+            "baz": "bas",
+            "foo": "bar",
+            "nest": {
+                "key": "value"
+            },
+            "best": "str"
+        },
+        "file2Content": {
+            "foo": "bar",
+            "baz": "bars",
+            "nest": "str",
+            "best": {
+                "key": "value"
+            }
+        },
+        "level": 1,
+        "status": "changed",
+        "fileKey": "group1",
+        "history": "group1",
+        "output": [
+            {
+                "file1Content": "bas",
+                "file2Content": "bars",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "baz",
+                "history": "group1.baz"
+            },
+            {
+                "file1Content": "str",
+                "file2Content": {
+                    "key": "value"
+                },
+                "level": 2,
+                "status": "changed",
+                "fileKey": "best",
+                "history": "group1.best",
+                "output": [
+                    {
+                        "file1Content": null,
+                        "file2Content": "value",
+                        "level": 3,
+                        "status": "not changed",
+                        "fileKey": "key",
+                        "history": "group1.best.key"
+                    }
+                ]
+            },
+            {
+                "file1Content": "bar",
+                "file2Content": "bar",
+                "level": 2,
+                "status": "not changed",
+                "fileKey": "foo",
+                "history": "group1.foo"
+            },
+            {
+                "file1Content": {
+                    "key": "value"
+                },
+                "file2Content": "str",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "nest",
+                "history": "group1.nest",
+                "output": [
+                    {
+                        "file1Content": "value",
+                        "file2Content": null,
+                        "level": 3,
+                        "status": "not changed",
+                        "fileKey": "key",
+                        "history": "group1.nest.key"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "file1Content": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        },
+        "file2Content": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        },
+        "level": 1,
+        "status": "deleted",
+        "fileKey": "group2",
+        "history": "group2",
+        "output": [
+            {
+                "file1Content": 12345,
+                "file2Content": 12345,
+                "level": 2,
+                "status": "not changed",
+                "fileKey": "abc",
+                "history": "group2.abc"
+            },
+            {
+                "file1Content": {
+                    "id": 45
+                },
+                "file2Content": {
+                    "id": 45
+                },
+                "level": 2,
+                "status": "not changed",
+                "fileKey": "deep",
+                "history": "group2.deep",
+                "output": [
+                    {
+                        "file1Content": 45,
+                        "file2Content": 45,
+                        "level": 3,
+                        "status": "not changed",
+                        "fileKey": "id",
+                        "history": "group2.deep.id"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "file1Content": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        },
+        "file2Content": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        },
+        "level": 1,
+        "status": "added",
+        "fileKey": "group3",
+        "history": "group3",
+        "output": [
+            {
+                "file1Content": {
+                    "id": {
+                        "number": 45
+                    }
+                },
+                "file2Content": {
+                    "id": {
+                        "number": 45
+                    }
+                },
+                "level": 2,
+                "status": "not changed",
+                "fileKey": "deep",
+                "history": "group3.deep",
+                "output": [
+                    {
+                        "file1Content": {
+                            "number": 45
+                        },
+                        "file2Content": {
+                            "number": 45
+                        },
+                        "level": 3,
+                        "status": "not changed",
+                        "fileKey": "id",
+                        "history": "group3.deep.id",
+                        "output": [
+                            {
+                                "file1Content": 45,
+                                "file2Content": 45,
+                                "level": 4,
+                                "status": "not changed",
+                                "fileKey": "number",
+                                "history": "group3.deep.id.number"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "file1Content": 100500,
+                "file2Content": 100500,
+                "level": 2,
+                "status": "not changed",
+                "fileKey": "fee",
+                "history": "group3.fee"
+            }
+        ]
+    },
+    {
+        "file1Content": {
+            "default": "null",
+            "type": "bas",
+            "nest": {
+                "bar": ""
+            }
+        },
+        "file2Content": {
+            "default": "",
+            "someKey": "true",
+            "type": "bar",
+            "nest": {
+                "bar": 0
+            }
+        },
+        "level": 1,
+        "status": "changed",
+        "fileKey": "group4",
+        "history": "group4",
+        "output": [
+            {
+                "file1Content": "null",
+                "file2Content": "",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "default",
+                "history": "group4.default"
+            },
+            {
+                "file1Content": {
+                    "bar": ""
+                },
+                "file2Content": {
+                    "bar": 0
+                },
+                "level": 2,
+                "status": "changed",
+                "fileKey": "nest",
+                "history": "group4.nest",
+                "output": [
+                    {
+                        "file1Content": "",
+                        "file2Content": 0,
+                        "level": 3,
+                        "status": "changed",
+                        "fileKey": "bar",
+                        "history": "group4.nest.bar"
+                    }
+                ]
+            },
+            {
+                "file1Content": "true",
+                "file2Content": "true",
+                "level": 2,
+                "status": "added",
+                "fileKey": "someKey",
+                "history": "group4.someKey"
+            },
+            {
+                "file1Content": "bas",
+                "file2Content": "bar",
+                "level": 2,
+                "status": "changed",
+                "fileKey": "type",
+                "history": "group4.type"
+            }
+        ]
+    }
+]

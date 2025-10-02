@@ -17,49 +17,46 @@ class CommandFactory implements CommandFactoryInterface
 {
     private mixed $parser;
     private FileReaderInterface $fileReader;
-/*
+    private CommandFactoryInterface $formatters;
+
     private const array FORMAT_KEYS = [
         "stylish" => "stylish",
         "plain" => "plain",
         "json" => "json"
     ];
-*/
+
     public function __construct(
         mixed $parser,
-        FileReaderInterface $fileReader
+        FileReaderInterface $fileReader,
+        CommandFactoryInterface $formatters
     ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
+        $this->formatters = $formatters;
     }
-/*
+
     public function getFormatKeys(): array
     {
         return self::FORMAT_KEYS;
     }
-*/
-    public function getCommand(string $commandType): ?CommandInterface
+
+    public function createCommand(string $commandType): ?CommandInterface
     {
         switch ($commandType) {
             case "parse":
                 $requestedCommand = new CommandLineParser($this->parser);
                 break;
             case "difference":
-                $requestedCommand = (new FilesDiffCommand())
-                                        ->setFileReader($this->fileReader);
+                $requestedCommand = new FilesDiffCommand($this->fileReader);
                 break;
-            /*
             case self::FORMAT_KEYS["stylish"]:
-                $requestedCommand = new StylishCommand();
+                $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["stylish"]);
                 break;
             case self::FORMAT_KEYS["plain"]:
-                $requestedCommand = new PlainCommand();
+                $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["plain"]);
                 break;
             case self::FORMAT_KEYS["json"]:
-                $requestedCommand = new JSONCommand();
-                break;
-            */
-            case "format":
-                $requestedCommand = new Formatters();
+                $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["json"]);
                 break;
             case "show":
                 $requestedCommand = new DisplayCommand();

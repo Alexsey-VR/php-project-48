@@ -2,6 +2,8 @@
 
 namespace Differ;
 
+use Differ\CommandLineParser;
+
 class ConsoleApp
 {
     private CommandInterface $nextCommand;
@@ -15,19 +17,21 @@ class ConsoleApp
 
     public function run(): void
     {
-        $parseCommand = $this->commandFactory->getCommand("parse");
+        $parseCommand = $this->commandFactory->createCommand("parse");
         $this->nextCommand = $parseCommand
                                   ->execute();
 
-        $differenceCommand = $this->commandFactory->getCommand("difference");
+        $differenceCommand = $this->commandFactory->createCommand("difference");
         $this->nextCommand = $differenceCommand
                                   ->execute($this->nextCommand);
 
-        $formatCommand = $this->commandFactory->getCommand("format");
-        $this->nextCommand = $formatCommand->selectFormat($parseCommand)
-                                        ->execute($this->nextCommand);
+        $formatCommand = $this->commandFactory->createCommand(
+            strtolower($parseCommand->getFormat()
+        ));
+        $this->nextCommand = $formatCommand->execute($this->nextCommand);
 
-        $displayCommand = $this->commandFactory->getCommand("show");
+        $displayCommand = $this->commandFactory->createCommand("show");
+
         $displayCommand->execute($this->nextCommand);
     }
 }

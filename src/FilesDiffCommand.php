@@ -14,9 +14,11 @@ class FilesDiffCommand implements CommandInterface
         "not changed", "changed", "added", "deleted", "empty", "new value"
     ];
 
-    public function __construct()
+    public function __construct(FileReaderInterface $reader)
     {
         $this->filesDataItems = [];
+
+        $this->fileReader = $reader;
     }
 
     private function normalizeData($data)
@@ -186,13 +188,6 @@ class FilesDiffCommand implements CommandInterface
             },
             $initDifferenceDescriptor
         );
-    }
-
-    public function setFileReader(FileReaderInterface $fileReader): CommandInterface
-    {
-        $this->fileReader = $fileReader;
-
-        return $this;
     }
 
     public function execute(CommandInterface $command = null): CommandInterface

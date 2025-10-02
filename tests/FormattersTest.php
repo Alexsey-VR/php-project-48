@@ -15,6 +15,7 @@ use Differ\DocoptDouble;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\Formatters\JSONCommand;
+use Differ\DisplayCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -22,13 +23,12 @@ use Differ\Formatters\JSONCommand;
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
-#[CoversMethod(FilesDiffCommand::class, 'setFileReader')]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
 #[CoversClass(StylishCommand::class)]
 #[CoversClass(PlainCommand::class)]
 #[CoversClass(JSONCommand::class)]
-
+#[CoversClass(DisplayCommand::class)]
 class FormattersTest extends TestCase
 {
     public static function getParserArguments(): array
@@ -77,7 +77,7 @@ class FormattersTest extends TestCase
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesJSONRecursiveJSONContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.txt"
+                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.json"
             ],
             [
                 'fileNamesInput' => [
@@ -86,7 +86,7 @@ class FormattersTest extends TestCase
                 ],
                 'contentFilePath' => __DIR__ . "/../fixtures/filesJSONRecursiveYAMLContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.txt"
+                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -104,12 +104,13 @@ class FormattersTest extends TestCase
 
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
 
-        $parseCommand = $commandFactory->getCommand("parse");
+        $parseCommand = $commandFactory->createCommand("parse");
 
-        $diffCommand = $commandFactory->getCommand("difference");
+        $diffCommand = $commandFactory->createCommand("difference");
 
         $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
                                  ->getContent1Descriptor();
@@ -128,18 +129,22 @@ class FormattersTest extends TestCase
 
         $resultDiffs = $diffCommand->execute($cmdLineParser);
 
-        $formatCommand = $commandFactory->getCommand("format");
-        $jsonCommand = $formatCommand->selectFormat($cmdLineParser)
-                                    ->execute($resultDiffs);
+        $formatCommand = $commandFactory->createCommand(
+            strtolower($cmdLineParser->getFormat())
+        );
+        $jsonCommand = $formatCommand->execute($resultDiffs);
 
-        $contentJSON = $jsonCommand->getFilesContent();
+        $displayCommand = $commandFactory->createCommand("show");
+        $contentJSON = $displayCommand->setFormatter($jsonCommand)
+                                    ->getFilesContent();
 
         $this->assertStringEqualsFile(
             $contentFilePath,
             $contentJSON
         );
 
-        $resultJSON = $jsonCommand->getFilesDiffs();
+        $resultJSON = $displayCommand->setFormatter($jsonCommand)
+                                    ->getFilesDiffs();
 
         $this->assertStringEqualsFile(
             $outputDiffsPath,
@@ -164,12 +169,13 @@ class FormattersTest extends TestCase
 
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
 
-        $parseCommand = $commandFactory->getCommand("parse");
+        $parseCommand = $commandFactory->createCommand("parse");
 
-        $diffCommand = $commandFactory->getCommand("difference");
+        $diffCommand = $commandFactory->createCommand("difference");
 
         $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
                                  ->getContent1Descriptor();
@@ -188,12 +194,11 @@ class FormattersTest extends TestCase
 
         $resultDiffs = $diffCommand->execute($cmdLineParser);
 
-        $formatCommand = $commandFactory->getCommand("format");
+         $this->expectException(DifferException::class);
+        $this->expectExceptionMessageMatches("/internal error: unknown command factory option/");
 
-        $this->expectException(DifferException::class);
-        $this->expectExceptionMessageMatches("/input error: unknown output format\\nUse gendiff -h\\n/");
-
-        $jsonCommand = $formatCommand->selectFormat($cmdLineParser)
-                                    ->execute($resultDiffs);
+        $formatCommand = $commandFactory->createCommand(
+            strtolower($cmdLineParser->getFormat())
+        );
     }
 }

@@ -5,6 +5,7 @@ namespace Differ;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Differ\DocoptDouble;
+use Differ\Formatters;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 
@@ -17,7 +18,8 @@ class GendiffTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
 
         ob_start();
@@ -34,7 +36,8 @@ class GendiffTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble("plain"),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
 
         ob_start();

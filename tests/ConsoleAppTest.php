@@ -30,7 +30,8 @@ class ConsoleAppTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
 
         $consoleApp = new ConsoleApp($commandFactory);
@@ -49,7 +50,8 @@ class ConsoleAppTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble("plain"),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
 
         $consoleApp = new ConsoleApp($commandFactory);

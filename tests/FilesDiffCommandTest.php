@@ -11,7 +11,6 @@ use Differ\DifferException;
 
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
-#[CoversMethod(FilesDiffCommand::class, 'setFileReader')]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
 class FilesDiffCommandTest extends TestCase
@@ -20,11 +19,11 @@ class FilesDiffCommandTest extends TestCase
 
     public function testSetFileReader()
     {
-        $diffCommand = new FilesDiffCommand();
+        $diffCommand = new FilesDiffCommand(new FileReader());
 
         $this->assertInstanceOf(
             FilesDiffCommand::class,
-            $diffCommand->setFileReader(new FileReader())
+            $diffCommand
         );
     }
 
@@ -58,22 +57,19 @@ class FilesDiffCommandTest extends TestCase
             ]
         );
 
-        $diffCommand = new FilesDiffCommand();
+        $diffCommand = new FilesDiffCommand(new FileReader());
 
-        $resultContent1Descriptor = $diffCommand->setFileReader(new FileReader())
-                                 ->execute($cmdLineParser)
+        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
                                  ->getContent1Descriptor();
 
         $this->assertTrue(is_array($resultContent1Descriptor));
 
-        $resultContent2Descriptor = $diffCommand->setFileReader(new FileReader())
-                                 ->execute($cmdLineParser)
-                                 ->getContent1Descriptor();
+        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser)
+                                 ->getContent2Descriptor();
 
         $this->assertTrue(is_array($resultContent2Descriptor));
 
-        $resultDifferenceDescriptor = $diffCommand->setFileReader(new FileReader())
-                                 ->execute($cmdLineParser)
+        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser)
                                  ->getDifferenceDescriptor();
 
         $this->assertTrue(is_array($resultDifferenceDescriptor));
@@ -91,12 +87,11 @@ class FilesDiffCommandTest extends TestCase
             ]
         );
 
-        $diffCommand = new FilesDiffCommand();
+        $diffCommand = new FilesDiffCommand(new FileReader());
 
         $this->expectException(DifferException::class);
         $this->expectExceptionMessageMatches("/unknown files format: use json, yaml \(yml\) enstead\\n/");
 
-        $diffCommand->setFileReader(new FileReader())
-                                 ->execute($cmdLineParser);
+        $diffCommand->execute($cmdLineParser);
     }
 }

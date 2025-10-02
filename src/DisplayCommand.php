@@ -4,31 +4,48 @@ namespace Differ;
 
 class DisplayCommand implements CommandInterface
 {
-    // Property to store displaying mode for debug
     private string $mode;
+    private CommandInterface $formatCommand;
+    private const string MODE_EXCEPTION_MESSAGE = "internal error: unknown mode for display\n";
     public const AVAILABLE_MODES = [
-        "differents",
-        "content"
+        "differents" => "differents",
+        "content" => "content"
     ];
 
-    public function __construct(string $mode = self::AVAILABLE_MODES[0])
+    public function __construct(string $mode = self::AVAILABLE_MODES["differents"])
     {
         $this->mode = $mode;
     }
 
+    public function setFormatter(CommandInterface $formatter)
+    {
+        $this->formatCommand = $formatter;
+
+        return $this;
+    }
+
+    public function getFilesContent(): string
+    {
+        return $this->formatCommand->getContentString();
+    }
+
+    public function getFilesDiffs(): string
+    {
+        return $this->formatCommand->getDiffsString();
+    }
+
     public function execute(CommandInterface $command = null): CommandInterface
     {
-        if (!is_null($command)) {
-            switch ($this->mode) {
-                case self::AVAILABLE_MODES[0]:
-                    print_r($command->getFilesDiffs());
-                    break;
-                case self::AVAILABLE_MODES[1]:
-                    print_r($command->getFilesContent());
-                    break;
-                default:
-                    throw new DifferException("internal error: unknown mode for display\n");
-            }
+        $this->formatCommand = $command;
+        switch ($this->mode) {
+            case self::AVAILABLE_MODES["differents"]:
+                print_r($this->getFilesDiffs());
+                break;
+            case self::AVAILABLE_MODES["content"]:
+                print_r($this->getFilesContent());
+                break;
+            default:
+                throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
 
         return $this;
@@ -36,8 +53,12 @@ class DisplayCommand implements CommandInterface
 
     public function setMode(string $mode): CommandInterface
     {
-        $this->mode = $mode;
+        if (in_array($mode, array_keys(self::AVAILABLE_MODES))) {
+            $this->mode = $mode;
 
-        return $this;
+            return $this;
+        } else {
+            throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
+        }
     }
 }

@@ -12,8 +12,10 @@ use Differ\DisplayCommand;
 use Differ\FileReader;
 use Differ\DocoptDouble;
 use Differ\DifferException;
+use Differ\Formatters;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
+use Differ\Formatters\JSONCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -24,7 +26,9 @@ use Differ\Formatters\PlainCommand;
 #[CoversClass(DifferException::class)]
 #[CoversClass(StylishCommand::class)]
 #[CoversClass(PlainCommand::class)]
-#[CoversMethod(CommandFactory::class, 'getCommand')]
+#[CoversClass(JSONCommand::class)]
+#[CoversMethod(CommandFactory::class, 'createCommand')]
+#[CoversClass(Formatters::class)]
 class CommandFactoryTest extends TestCase
 {
     private $commandFactory;
@@ -33,32 +37,30 @@ class CommandFactoryTest extends TestCase
     {
         $this->commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new FileReader()
+            new FileReader(),
+            new Formatters()
         );
     }
 
-
-    public function testGetCommand()
+    public function testCreateCommand()
     {
-        // Test for CommandLineParser
-        $this->assertInstanceOf(CommandLineParser::class, $this->commandFactory->getCommand('parse'));
+        $this->assertInstanceOf(CommandLineParser::class, $this->commandFactory->createCommand('parse'));
 
-        // Test for FilesDiffCommand
-        $this->assertInstanceOf(FilesDiffCommand::class, $this->commandFactory->getCommand('difference'));
-/*
-        // Test for FilesDiffCommand
-        $this->assertInstanceOf(StylishCommand::class, $this->commandFactory->getCommand('stylish'));
+        $this->assertInstanceOf(FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
 
-        // Test for FilesDiffCommand
-        $this->assertInstanceOf(PlainCommand::class, $this->commandFactory->getCommand('plain'));
-*/
-        // Test for DisplayCommand
-        $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->getCommand('show'));
+        $this->assertInstanceOf(StylishCommand::class, $this->commandFactory->createCommand('stylish'));
 
-        // Test for undefined command
+        $this->assertInstanceOf(PlainCommand::class, $this->commandFactory->createCommand('plain'));
+
+        $this->assertInstanceOf(JSONCommand::class, $this->commandFactory->createCommand('json'));
+
+        $this->assertInstanceOf(PlainCommand::class, $this->commandFactory->createCommand('plain'));
+
+        $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->createCommand('show'));
+
         $this->expectException(DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown command factory option\\n/");
 
-        $this->commandFactory->getCommand('undefined');
+        $this->commandFactory->createCommand('undefined');
     }
 }

@@ -188,4 +188,14 @@ class PlainCommand implements CommandInterface
 
         return $this;
     }
+
+    public function getContentString()
+    {
+        return $this->filesContentString;
+    }
+
+    public function getDiffsString()
+    {
+        return $this->filesDiffsString;
+    }
 }
