@@ -19,8 +19,7 @@ class CommandLineParser implements CommandInterface
             $handler = @fopen($filename, 'r');
             $filesize = filesize($filename);
             if (($handler !== false) && ($filesize > 0)) {
-                $fileData = fread($handler, $filesize);
-                $this->parserDescriptor = $fileData;
+                $this->parserDescriptor = fread($handler, $filesize) ?? "";
                 fclose($handler);
             }
         }
