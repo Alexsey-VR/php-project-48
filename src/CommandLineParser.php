@@ -15,14 +15,14 @@ class CommandLineParser implements CommandInterface
         $this->defaultFormat = 'stylish';
 
         $filename = __DIR__ . "/../docopt.txt";
-        $handler = @fopen($filename, 'r');
-        $filesize = filesize($filename);
-        if (($handler !== false) && ($filesize > 0)) {
-            $fileData = fread($handler, $filesize);
-            if (is_string($fileData)) {
+        if (file_exists($filename)) {
+            $handler = @fopen($filename, 'r');
+            $filesize = filesize($filename);
+            if (($handler !== false) && ($filesize > 0)) {
+                $fileData = fread($handler, $filesize);
                 $this->parserDescriptor = $fileData;
+                fclose($handler);
             }
-            fclose($handler);
         }
     }
 
