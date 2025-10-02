@@ -22,8 +22,8 @@ class CommandLineParser implements CommandInterface
             if (is_string($fileData)) {
                 $this->parserDescriptor = $fileData;
             }
+            fclose($handler);
         }
-        fclose($handler);
     }
 
     public function execute(CommandInterface $command = null): CommandInterface
@@ -38,10 +38,16 @@ class CommandLineParser implements CommandInterface
 
     public function setFileNames(array $fileNames): CommandInterface
     {
-        $keys = array_keys($fileNames);
-        foreach ($keys as $key) {
-            $this->args[$key] = $fileNames[$key];
-        }
+        $this->args = array_reduce(
+            array_keys($fileNames),
+            function ($args, $key) use ($fileNames) {
+                $args[$key] = $fileNames[$key];
+
+                return $args;
+            },
+            []
+        );
+
         return $this;
     }
 
