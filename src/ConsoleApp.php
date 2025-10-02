@@ -28,15 +28,10 @@ class ConsoleApp
     public function run(): void
     {
         $commandFactory = $this->commandFactory;
-        array_reduce(
-            $this->flowSteps,
-            function ($nextCommand, $item) use ($commandFactory) {
-                $currentCommand = $commandFactory->createCommand($item);
-                $nextCommand = $currentCommand->execute($nextCommand);
-
-                return $nextCommand;
-            },
-            $this->initCommand
-        );
+        foreach ($this->flowSteps as $step) {
+            $currentCommand = $commandFactory->createCommand($step);
+            $nextCommand = $currentCommand->execute($this->initCommand);
+            $this->initCommand = $nextCommand;
+        }
     }
 }

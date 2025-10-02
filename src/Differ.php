@@ -21,18 +21,20 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
         "FILE1" => $pathToFile1,
         "FILE2" => $pathToFile2
     ];
-    $nextCommand = $parseCommand->setFileNames($fileNames)
+
+    $initCommand = $parseCommand->setFileNames($fileNames)
                                 ->setFormat($format);
-
-    $differenceCommand = $commandFactory->createCommand('difference');
-    $nextCommand = $differenceCommand->execute($nextCommand);
-
-    $formatCommand = $commandFactory->createCommand(
+    $flowSteps = [
+        "difference",
         strtolower($parseCommand->getFormat())
-    );
-    $formatter = $formatCommand->execute($nextCommand);
-
+    ];
+    foreach ($flowSteps as $step) {
+        $currentCommand = $commandFactory->createCommand($step);
+        $nextCommand = $currentCommand->execute($initCommand);
+        $initCommand = $nextCommand;
+    }
     $displayCommand = $commandFactory->createCommand("show");
-    return $displayCommand->setFormatter($formatter)
+
+    return $displayCommand->setFormatter($initCommand)
                                     ->getFilesDiffs();
 }
