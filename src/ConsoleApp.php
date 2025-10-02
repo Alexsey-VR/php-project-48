@@ -30,7 +30,7 @@ class ConsoleApp
         $commandFactory = $this->commandFactory;
         array_reduce(
             $this->flowSteps,
-            function($nextCommand, $item) use ($commandFactory) {
+            function ($nextCommand, $item) use ($commandFactory) {
                 $currentCommand = $commandFactory->createCommand($item);
                 $nextCommand = $currentCommand->execute($nextCommand);
 
@@ -38,6 +38,5 @@ class ConsoleApp
             },
             $this->initCommand
         );
-        
     }
 }
