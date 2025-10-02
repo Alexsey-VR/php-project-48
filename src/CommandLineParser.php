@@ -5,11 +5,11 @@ namespace Differ;
 class CommandLineParser implements CommandInterface
 {
     private string $parserDescriptor;
-    private $parser;
+    private mixed $parser;
     private array $args;
     private string $defaultFormat;
 
-    public function __construct($parser = null)
+    public function __construct(mixed $parser = null)
     {
         $this->parser = $parser;
         $this->defaultFormat = 'stylish';
@@ -17,7 +17,12 @@ class CommandLineParser implements CommandInterface
         $filename = __DIR__ . "/../docopt.txt";
         $handler = @fopen($filename, 'r');
         $filesize = filesize($filename);
-        $this->parserDescriptor = fread($handler, $filesize);
+        if (!is_null($handler) && ($filesize > 0)) {
+            $fileData = fread($handler, $filesize);
+            if (is_string($fileData)) {
+                $this->parserDescriptor = $fileData;
+            }
+        }
         fclose($handler);
     }
 
