@@ -30,8 +30,8 @@ class ConsoleApp
         $commandFactory = $this->commandFactory;
         foreach ($this->flowSteps as $step) {
             $currentCommand = $commandFactory->createCommand($step);
-            $nextCommand = $currentCommand->execute($this->initCommand);
-            $this->initCommand = $nextCommand;
+            $this->nextCommand = $currentCommand->execute($this->initCommand);
+            $this->initCommand = $this->nextCommand;
         }
     }
 }

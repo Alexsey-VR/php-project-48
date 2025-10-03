@@ -9,8 +9,11 @@ use Differ\FileReader;
 use Differ\DisplayCommand;
 use Differ\Formatters;
 
-function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish')
-{
+function genDiff(
+    string $pathToFile1,
+    string $pathToFile2,
+    string $format = 'stylish'
+): string {
     $commandFactory = new CommandFactory(
         new \Docopt(),
         new FileReader(),
