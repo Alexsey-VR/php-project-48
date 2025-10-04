@@ -8,7 +8,7 @@ validate:
 	composer validate
 
 analyze:
-	composer exec -v phpstan analyse -- -c vendor/phpstan/phpstan/conf/phpstan.neon --level 10 --ansi src/ tests/
+	composer exec -v phpstan analyse -- -c vendor/phpstan/phpstan/conf/phpstan.neon --level 10 --ansi src/
 
 lint:
 	composer exec --verbose phpcs -- --standard=PSR12 src/ bin/

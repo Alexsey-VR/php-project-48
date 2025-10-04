@@ -35,6 +35,9 @@ class CommandFactory implements CommandFactoryInterface
         $this->formatters = $formatters;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getFormatKeys(): array
     {
         return self::FORMAT_KEYS;
