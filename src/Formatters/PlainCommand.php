@@ -3,8 +3,9 @@
 namespace Differ\Formatters;
 
 use Differ\CommandInterface;
+use Differ\FormattersInterface;
 
-class PlainCommand implements CommandInterface
+class PlainCommand implements FormattersInterface
 {
     private string $file1ContentString;
     private string $file2ContentString;
@@ -135,66 +136,73 @@ class PlainCommand implements CommandInterface
         );
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    /**
+     * @return FormattersInterface
+     */
+    public function execute(CommandInterface $command): FormattersInterface
     {
-        if (!is_null($command)) {
-            $file1Name = $command->getFile1Name();
-            $file2Name = $command->getFile2Name();
-            $content1Descriptor = $command->getContent1Descriptor();
-            $content2Descriptor = $command->getContent2Descriptor();
-            $differenceDescriptor = $command->getDifferenceDescriptor();
+        $file1Name = $command->getFile1Name();
+        $file2Name = $command->getFile2Name();
+        $content1Descriptor = $command->getContent1Descriptor();
+        $content2Descriptor = $command->getContent2Descriptor();
+        $differenceDescriptor = $command->getDifferenceDescriptor();
 
-            $this->statusKeys = $command->getStatusKeys();
-            $this->statusPrefixes = [
-                $this->statusKeys[0] => "",
-                $this->statusKeys[1] => "updated",
-                $this->statusKeys[2] => "added",
-                $this->statusKeys[3] => "removed"
-            ];
+        $this->statusKeys = $command->getStatusKeys();
+        $this->statusPrefixes = [
+            $this->statusKeys[0] => "",
+            $this->statusKeys[1] => "updated",
+            $this->statusKeys[2] => "added",
+            $this->statusKeys[3] => "removed"
+        ];
 
-            $file1Content = $this->plainContent($content1Descriptor["output"]);
-            $file2Content = $this->plainContent($content2Descriptor["output"]);
+        $file1Content = $this->plainContent($content1Descriptor["output"]);
+        $file2Content = $this->plainContent($content2Descriptor["output"]);
 
-            $file1ContentList = explode("\n", implode("", $file1Content));
-            $file2ContentList = explode("\n", implode("", $file2Content));
+        $file1ContentList = explode("\n", implode("", $file1Content));
+        $file2ContentList = explode("\n", implode("", $file2Content));
 
-            $file1PlainContent = array_filter(
-                $file1ContentList,
-                fn($item) => $item !== ""
-            );
-            $file2PlainContent = array_filter(
-                $file2ContentList,
-                fn($item) => $item !== ""
-            );
+        $file1PlainContent = array_filter(
+            $file1ContentList,
+            fn($item) => $item !== ""
+        );
+        $file2PlainContent = array_filter(
+            $file2ContentList,
+            fn($item) => $item !== ""
+        );
 
-            $this->file1ContentString = "File {$file1Name} content:\n" .
-                implode("\n", $file1PlainContent) . "\n";
-            $this->file2ContentString = "File {$file2Name} content:\n" .
-                implode("\n", $file2PlainContent) . "\n";
+        $this->file1ContentString = "File {$file1Name} content:\n" .
+            implode("\n", $file1PlainContent) . "\n";
+        $this->file2ContentString = "File {$file2Name} content:\n" .
+            implode("\n", $file2PlainContent) . "\n";
 
-            $this->filesContentString = $this->file1ContentString . $this->file2ContentString;
+        $this->filesContentString = $this->file1ContentString . $this->file2ContentString;
 
-            $filesDiffs = $this->plainDifference($differenceDescriptor["output"]);
+        $filesDiffs = $this->plainDifference($differenceDescriptor["output"]);
 
-            $filesDiffsList = explode("\n", implode("", $filesDiffs));
+        $filesDiffsList = explode("\n", implode("", $filesDiffs));
 
-            $filesPlainDiffs = array_filter(
-                $filesDiffsList,
-                fn($item) => $item !== ""
-            );
+        $filesPlainDiffs = array_filter(
+            $filesDiffsList,
+            fn($item) => $item !== ""
+        );
 
-            $this->filesDiffsString = implode("\n", $filesPlainDiffs) . "\n";
-        }
+        $this->filesDiffsString = implode("\n", $filesPlainDiffs) . "\n";
 
         return $this;
     }
 
-    public function getContentString()
+    /**
+     * @return string
+     */
+    public function getContentString(): string
     {
         return $this->filesContentString;
     }
 
-    public function getDiffsString()
+    /**
+     * @return string
+     */
+    public function getDiffsString(): string
     {
         return $this->filesDiffsString;
     }

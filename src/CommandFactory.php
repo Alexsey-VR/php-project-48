@@ -43,7 +43,10 @@ class CommandFactory implements CommandFactoryInterface
         return self::FORMAT_KEYS;
     }
 
-    public function createCommand(string $commandType): ?CommandInterface
+    /**
+     * @return mixed
+     */
+    public function createCommand(string $commandType): mixed
     {
         switch ($commandType) {
             case "parse":

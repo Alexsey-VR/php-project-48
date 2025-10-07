@@ -6,10 +6,10 @@ use Differ\CommandLineParser;
 
 class ConsoleApp
 {
-    private CommandInterface $nextCommand;
+    private mixed $nextCommand;
     private CommandFactoryInterface $commandFactory;
     private array $flowSteps;
-    private CommandInterface $initCommand;
+    private mixed $initCommand;
 
     public function __construct(
         CommandFactoryInterface $commandFactory
@@ -17,7 +17,7 @@ class ConsoleApp
         $this->commandFactory = $commandFactory;
 
         $parseCommand = $this->commandFactory->createCommand("parse");
-        $this->initCommand = $parseCommand->execute();
+        $this->initCommand = $parseCommand->execute($parseCommand);
         $this->flowSteps = [
             "difference",
             strtolower($parseCommand->getFormat()),

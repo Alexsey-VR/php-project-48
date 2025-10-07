@@ -3,8 +3,9 @@
 namespace Differ\Formatters;
 
 use Differ\CommandInterface;
+use Differ\FormattersInterface;
 
-class StylishCommand implements CommandInterface
+class StylishCommand implements FormattersInterface
 {
     private string $files1ContentString;
     private string $files2ContentString;
@@ -216,62 +217,69 @@ class StylishCommand implements CommandInterface
         );
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    /**
+     * @return FormattersInterface
+     */
+    public function execute(CommandInterface $command): FormattersInterface
     {
-        if (!is_null($command)) {
-            $file1Name = $command->getFile1Name();
-            $file2Name = $command->getFile2Name();
-            $content1Descriptor = $command->getContent1Descriptor();
-            $content2Descriptor = $command->getContent2Descriptor();
-            $differenceDescriptor = $command->getDifferenceDescriptor();
+        $file1Name = $command->getFile1Name();
+        $file2Name = $command->getFile2Name();
+        $content1Descriptor = $command->getContent1Descriptor();
+        $content2Descriptor = $command->getContent2Descriptor();
+        $differenceDescriptor = $command->getDifferenceDescriptor();
 
-            $this->statusKeys = $command->getStatusKeys();
-            $this->statusPrefixes = [
-                $this->statusKeys[0] => "    ",
-                $this->statusKeys[1] => " -+ ",
-                $this->statusKeys[2] => "  + ",
-                $this->statusKeys[3] => "  - "
-            ];
-            $altStatusComments = [];
-            foreach ($this->statusKeys as $key) {
-                $altStatusComments[$key] = "";
-            }
-            $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES[1]) ?
-            [
-                $this->statusKeys[0] => "",
-                $this->statusKeys[1] => " # Old value",
-                $this->statusKeys[2] => " # Added",
-                $this->statusKeys[3] => " # Removed",
-                $this->statusKeys[4] => "# There are no values, but a space exists after the colon",
-                $this->statusKeys[5] => " # New value"
-            ]
-            :
-            $altStatusComments;
-
-            $files1Content = $this->stylizeContent($content1Descriptor["output"]);
-            $this->files1ContentString = "File {$file1Name} content:\n" .
-                "{\n" . implode("", $files1Content) . "}\n";
-
-            $files2Content = $this->stylizeContent($content2Descriptor["output"]);
-            $this->files2ContentString = "File {$file2Name} content:\n" .
-                "{\n" . implode("", $files2Content) . "}\n";
-
-            $this->filesContentString = $this->files1ContentString .
-                    $this->files2ContentString;
-
-            $filesDiffs = $this->stylizeDifference($differenceDescriptor["output"]);
-                $this->filesDiffsString = "{\n" . implode("", $filesDiffs) . "}\n";
+        $this->statusKeys = $command->getStatusKeys();
+        $this->statusPrefixes = [
+            $this->statusKeys[0] => "    ",
+            $this->statusKeys[1] => " -+ ",
+            $this->statusKeys[2] => "  + ",
+            $this->statusKeys[3] => "  - "
+        ];
+        $altStatusComments = [];
+        foreach ($this->statusKeys as $key) {
+            $altStatusComments[$key] = "";
         }
+        $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES[1]) ?
+        [
+            $this->statusKeys[0] => "",
+            $this->statusKeys[1] => " # Old value",
+            $this->statusKeys[2] => " # Added",
+            $this->statusKeys[3] => " # Removed",
+            $this->statusKeys[4] => "# There are no values, but a space exists after the colon",
+            $this->statusKeys[5] => " # New value"
+        ]
+        :
+        $altStatusComments;
+
+        $files1Content = $this->stylizeContent($content1Descriptor["output"]);
+        $this->files1ContentString = "File {$file1Name} content:\n" .
+            "{\n" . implode("", $files1Content) . "}\n";
+
+        $files2Content = $this->stylizeContent($content2Descriptor["output"]);
+        $this->files2ContentString = "File {$file2Name} content:\n" .
+            "{\n" . implode("", $files2Content) . "}\n";
+
+        $this->filesContentString = $this->files1ContentString .
+                $this->files2ContentString;
+
+        $filesDiffs = $this->stylizeDifference($differenceDescriptor["output"]);
+            $this->filesDiffsString = "{\n" . implode("", $filesDiffs) . "}\n";
 
         return $this;
     }
 
-    public function getContentString()
+    /**
+     * @return string
+     */
+    public function getContentString(): string
     {
         return $this->filesContentString;
     }
 
-    public function getDiffsString()
+    /**
+     * @return string
+     */
+    public function getDiffsString(): string
     {
         return $this->filesDiffsString;
     }

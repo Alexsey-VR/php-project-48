@@ -2,10 +2,10 @@
 
 namespace Differ;
 
-class DisplayCommand implements CommandInterface
+class DisplayCommand implements DisplayCommandInterface
 {
     private string $mode;
-    private CommandInterface $formatCommand;
+    private FormattersInterface $formatCommand;
     private const string MODE_EXCEPTION_MESSAGE = "internal error: unknown mode for display\n";
     public const AVAILABLE_MODES = [
         "differents" => "differents",
@@ -17,24 +17,36 @@ class DisplayCommand implements CommandInterface
         $this->mode = $mode;
     }
 
-    public function setFormatter(CommandInterface $formatter)
+    /**
+     * @return FormattersInterface
+     */
+    public function setFormatter(FormattersInterface $formatter)
     {
         $this->formatCommand = $formatter;
 
-        return $this;
+        return $this->formatCommand;
     }
 
+    /**
+     * @return string
+     */
     public function getFilesContent(): string
     {
         return $this->formatCommand->getContentString();
     }
 
+    /**
+     * @return string
+     */
     public function getFilesDiffs(): string
     {
         return $this->formatCommand->getDiffsString();
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    /**
+     * @return FormattersInterface
+     */
+    public function execute(FormattersInterface $command): FormattersInterface
     {
         $this->formatCommand = $command;
         switch ($this->mode) {
@@ -48,10 +60,13 @@ class DisplayCommand implements CommandInterface
                 throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
 
-        return $this;
+        return $this->formatCommand;
     }
 
-    public function setMode(string $mode): CommandInterface
+    /**
+     * @return DisplayCommandInterface
+     */
+    public function setMode(string $mode): DisplayCommandInterface
     {
         if (in_array($mode, array_keys(self::AVAILABLE_MODES))) {
             $this->mode = $mode;
