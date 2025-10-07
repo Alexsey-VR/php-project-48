@@ -2,7 +2,7 @@
 
 namespace Differ;
 
-class DocoptDouble
+class DocoptDouble implements \Docopt
 {
     /**
      * @var array<string,string>

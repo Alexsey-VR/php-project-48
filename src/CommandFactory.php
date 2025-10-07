@@ -15,7 +15,7 @@ use Differ\DifferException;
 
 class CommandFactory implements CommandFactoryInterface
 {
-    private mixed $parser;
+    private \Docopt $parser;
     private FileReaderInterface $fileReader;
     private CommandFactoryInterface $formatters;
 
@@ -26,7 +26,7 @@ class CommandFactory implements CommandFactoryInterface
     ];
 
     public function __construct(
-        mixed $parser,
+        \Docopt $parser,
         FileReaderInterface $fileReader,
         CommandFactoryInterface $formatters
     ) {
