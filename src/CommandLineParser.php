@@ -5,13 +5,16 @@ namespace Differ;
 class CommandLineParser implements CommandInterface
 {
     private string $parserDescriptor;
-    private mixed $parser;
+    private \Docopt $parser;
+    /**
+     * @var array<string,string> $args
+     */
     private array $args;
     private string $defaultFormat;
 
-    public function __construct(mixed $parser = null)
+    public function __construct(\Docopt $initParser)
     {
-        $this->parser = $parser;
+        $this->parser = $initParser;
         $this->defaultFormat = 'stylish';
 
         $filename = __DIR__ . "/../docopt.txt";
@@ -29,36 +32,57 @@ class CommandLineParser implements CommandInterface
         }
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    /**
+     * @return array<string,string>
+     * @param array<mixed,mixed> $args
+     */
+    private function getDocoptArgs(array $args): array
     {
-        if (is_null($command)) {
-            $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
-            $this->args = $objArgs->args;
+        $result = [];
+        foreach ($args as $key => $arg) {
+            if (is_string($key) && is_string($arg)) {
+                $result[$key] = $arg;
+            }
         }
 
+        return $result;
+    }
+
+    public function execute(CommandInterface $command): CommandInterface
+    {
+        $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
+
+        $this->args = $this->getDocoptArgs($objArgs->args);
+
         return $this;
     }
 
+    /**
+     * @param array<string,string> $fileNames
+     */
     public function setFileNames(array $fileNames): CommandInterface
     {
-        $this->args = array_reduce(
-            array_keys($fileNames),
-            function ($args, $key) use ($fileNames) {
-                $args[$key] = $fileNames[$key];
+        $result = [];
+        foreach ($fileNames as $key => $value) {
+            $result[$key] = $value;
+        }
 
-                return $args;
-            },
-            []
-        );
+        $this->args = $result;
 
         return $this;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getFileNames(): array
     {
         return $this->args;
     }
 
+    /**
+     * @return CommandInterface
+     */
     public function setFormat(string $format): CommandInterface
     {
         $this->defaultFormat = $format;
@@ -66,7 +90,10 @@ class CommandLineParser implements CommandInterface
         return $this;
     }
 
-    public function getFormat(): ?string
+    /**
+     * @return string
+     */
+    public function getFormat(): string
     {
         return $this->args['--format'] ?? $this->defaultFormat;
     }
