@@ -2,7 +2,7 @@
 
 namespace Differ;
 
-class CommandLineParser implements CommandInterface
+class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
     private \Docopt $parser;
@@ -48,7 +48,10 @@ class CommandLineParser implements CommandInterface
         return $result;
     }
 
-    public function execute(CommandInterface $command): CommandInterface
+    /**
+     * @return CommandLineParserInterface
+     */
+    public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
 
@@ -60,7 +63,7 @@ class CommandLineParser implements CommandInterface
     /**
      * @param array<string,string> $fileNames
      */
-    public function setFileNames(array $fileNames): CommandInterface
+    public function setFileNames(array $fileNames): CommandLineParserInterface
     {
         $result = [];
         foreach ($fileNames as $key => $value) {
@@ -81,9 +84,9 @@ class CommandLineParser implements CommandInterface
     }
 
     /**
-     * @return CommandInterface
+     * @return CommandLineParserInterface
      */
-    public function setFormat(string $format): CommandInterface
+    public function setFormat(string $format): CommandLineParserInterface
     {
         $this->defaultFormat = $format;
 
