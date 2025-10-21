@@ -5,14 +5,15 @@ namespace Differ;
 class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
-    private \Docopt $parser;
+    private \Docopt|DocoptDoubleInterface $parser;
+
     /**
-     * @var array<string,string> $args
+     * @var array<string,string>
      */
     private array $args;
     private string $defaultFormat;
 
-    public function __construct(\Docopt $initParser)
+    public function __construct(\Docopt|DocoptDoubleInterface $initParser)
     {
         $this->parser = $initParser;
         $this->defaultFormat = 'stylish';
@@ -34,28 +35,38 @@ class CommandLineParser implements CommandLineParserInterface
 
     /**
      * @return array<string,string>
-     * @param array<mixed,mixed> $args
+     * @param mixed $args
      */
-    private function getDocoptArgs(array $args): array
+    private function getDocoptArgs(mixed $args): array
     {
-        $result = [];
-        foreach ($args as $key => $arg) {
-            if (is_string($key) && is_string($arg)) {
-                $result[$key] = $arg;
-            }
-        }
+        $keys = is_array($args) ? array_keys($args) : ["key" => "value"];
+        $values = is_array($args) ? array_values($args) : ["key" => "value"];
+
+        /**
+         * @var array<string,string>
+         */
+        $result = array_reduce(
+            $keys,
+            function ($accum, $key) use ($keys, $values): array {
+                $id = array_search($key, $keys);
+                if ($id !== false) {
+                    $accum[$keys[$id]] = $values[$id];
+                }
+                return $accum;
+            },
+            [$keys[0] => $values[0]]
+        );
 
         return $result;
     }
 
-    /**
-     * @return CommandLineParserInterface
-     */
     public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
 
-        $this->args = $this->getDocoptArgs($objArgs->args);
+        if (isset($objArgs->args)) {
+            $this->args = $this->getDocoptArgs($objArgs->args);
+        }
 
         return $this;
     }
