@@ -2,10 +2,10 @@
 
 namespace Differ;
 
-class DocoptDouble implements \Docopt
+class DocoptDouble implements DocoptDoubleInterface
 {
     /**
-     * @var array<string,string>
+     * @var array
      */
     public array $args;
 
@@ -20,10 +20,7 @@ class DocoptDouble implements \Docopt
         ];
     }
 
-    /**
-     * @return mixed
-     */
-    public function handle()
+    public function handle(): DocoptDoubleInterface
     {
         return $this;
     }

@@ -108,8 +108,6 @@ class FormattersTest extends TestCase
             new Formatters()
         );
 
-        $parseCommand = $commandFactory->createCommand("parse");
-
         $diffCommand = $commandFactory->createCommand("difference");
 
         $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
@@ -136,7 +134,7 @@ class FormattersTest extends TestCase
 
         $displayCommand = $commandFactory->createCommand("show");
         $contentJSON = $displayCommand->setFormatter($jsonCommand)
-                                    ->getFilesContent();
+                                    ->getContentString();
 
         $this->assertStringEqualsFile(
             $contentFilePath,
@@ -144,7 +142,7 @@ class FormattersTest extends TestCase
         );
 
         $resultJSON = $displayCommand->setFormatter($jsonCommand)
-                                    ->getFilesDiffs();
+                                    ->getDiffsString();
 
         $this->assertStringEqualsFile(
             $outputDiffsPath,

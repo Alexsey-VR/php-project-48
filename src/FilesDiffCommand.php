@@ -72,8 +72,8 @@ class FilesDiffCommand implements FilesDiffCommandInterface
      * @return array<mixed,mixed>
      */
     private function getContent(
-        $fileContentKeys,
-        $initContentDescriptor
+        array $fileContentKeys,
+        array $initContentDescriptor
     ): array {
         $result = array_reduce(
             $fileContentKeys,
@@ -222,12 +222,14 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                 if (is_array($file1Item)) {
                     $file1Content = in_array($fileKey, $file1Item) ? $file1Item[$fileKey] : null;
                 }
+
                 $file2Content = null;
                 if (is_array($file2Item)) {
                     $file2Content = in_array($fileKey, $file2Item) ? $file2Item[$fileKey] : null;
                 }
 
                 $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
+
                 $currentStatus = "not changed";
                 if (is_array($differenceDescriptor)) {
                     $tmpStatus = $differenceDescriptor['status'];
@@ -281,7 +283,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
         );
     }
 
-    public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface
+     public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface
     {
         $fileNames = $command->getFileNames();
         if (is_array($fileNames)) {

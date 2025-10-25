@@ -22,4 +22,9 @@ interface FilesDiffCommandInterface
      * @return array<mixed,mixed>
      */
     public function getDifferenceDescriptor(): array;
+
+    /**
+     * @return array<int,string>
+     */
+    public function getStatusKeys(): array;
 }

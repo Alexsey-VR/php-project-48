@@ -3,6 +3,7 @@
 namespace Differ\Formatters;
 
 use Differ\CommandInterface;
+use Differ\FilesDiffCommandInterface;
 use Differ\FormattersInterface;
 
 class StylishCommand implements FormattersInterface
@@ -220,7 +221,7 @@ class StylishCommand implements FormattersInterface
     /**
      * @return FormattersInterface
      */
-    public function execute(CommandInterface $command): FormattersInterface
+    public function execute(FilesDiffCommandInterface $command): FormattersInterface
     {
         $file1Name = $command->getFile1Name();
         $file2Name = $command->getFile2Name();

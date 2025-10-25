@@ -45,6 +45,7 @@ class CommandLineParser implements CommandLineParserInterface
         /**
          * @var array<string,string>
          */
+
         $result = array_reduce(
             $keys,
             function ($accum, $key) use ($keys, $values): array {

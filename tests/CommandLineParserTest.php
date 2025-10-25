@@ -36,7 +36,8 @@ class CommandLineParserTest extends TestCase
     #[DataProvider('getFiles')]
     public function testFileNames($fileNames)
     {
-        $cmdLineParser = new CommandLineParser();
+        $initParser = new DocoptDouble("plain");
+        $cmdLineParser = new CommandLineParser($initParser);
 
         $this->assertInstanceOf(CommandLineParser::class, $cmdLineParser->setFileNames($fileNames));
 
@@ -50,7 +51,7 @@ class CommandLineParserTest extends TestCase
         $cmdLineParser = new CommandLineParser($parser);
 
         ob_start();
-        $cmdLineParser->execute();
+        $cmdLineParser->execute($cmdLineParser);
         $outputBuffer = ob_get_clean();
 
         $this->assertEquals(
@@ -65,7 +66,7 @@ class CommandLineParserTest extends TestCase
         $cmdLineParser = new CommandLineParser($parser);
 
         ob_start();
-        $cmdLineParser->execute();
+        $cmdLineParser->execute($cmdLineParser);
         $outputBuffer = ob_get_clean();
 
         $this->assertEquals(
