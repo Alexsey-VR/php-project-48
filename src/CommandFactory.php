@@ -26,7 +26,7 @@ class CommandFactory implements CommandFactoryInterface
     ];
 
     public function __construct(
-        mixed $parser,
+        \Docopt|DocoptDoubleInterface $parser,
         FileReaderInterface $fileReader,
         CommandFactoryInterface $formatters
     ) {

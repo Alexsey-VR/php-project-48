@@ -5,11 +5,16 @@ namespace Differ;
 class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
-    private mixed $parser;
+    private \Docopt|DocoptDoubleInterface $parser;
+
+    /**
+     * @var array<string,string> $args
+     */
     private array $args;
+    
     private string $defaultFormat;
 
-    public function __construct(mixed $parser)
+    public function __construct(\Docopt|DocoptDoubleInterface $parser)
     {
         $this->parser = $parser;
         $this->defaultFormat = 'stylish';
@@ -37,6 +42,9 @@ class CommandLineParser implements CommandLineParserInterface
         return $this;
     }
 
+    /**
+     * @param array<string,string> $fileNames
+     */
     public function setFileNames(array $fileNames): CommandLineParserInterface
     {
         $this->args = array_reduce(
@@ -52,6 +60,9 @@ class CommandLineParser implements CommandLineParserInterface
         return $this;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getFileNames(): array
     {
         return $this->args;
