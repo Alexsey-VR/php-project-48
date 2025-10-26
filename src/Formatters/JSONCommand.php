@@ -3,6 +3,7 @@
 namespace Differ\Formatters;
 
 use Differ\CommandInterface;
+use Differ\CommandLineParserInterface;
 
 class JSONCommand implements CommandInterface
 {
@@ -11,7 +12,7 @@ class JSONCommand implements CommandInterface
     public string $filesContentString;
     public string $filesDiffsString;
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
     {
         if (!is_null($command)) {
             $file1Name = $command->getFile1Name();

@@ -2,14 +2,14 @@
 
 namespace Differ;
 
-class CommandLineParser implements CommandInterface
+class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
     private mixed $parser;
     private array $args;
     private string $defaultFormat;
 
-    public function __construct(mixed $parser = null)
+    public function __construct(mixed $parser)
     {
         $this->parser = $parser;
         $this->defaultFormat = 'stylish';
@@ -29,17 +29,15 @@ class CommandLineParser implements CommandInterface
         }
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
-        if (is_null($command)) {
-            $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
-            $this->args = $objArgs->args;
-        }
+        $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
+        $this->args = $objArgs->args;
 
         return $this;
     }
 
-    public function setFileNames(array $fileNames): CommandInterface
+    public function setFileNames(array $fileNames): CommandLineParserInterface
     {
         $this->args = array_reduce(
             array_keys($fileNames),
@@ -59,14 +57,14 @@ class CommandLineParser implements CommandInterface
         return $this->args;
     }
 
-    public function setFormat(string $format): CommandInterface
+    public function setFormat(string $format): CommandLineParserInterface
     {
         $this->defaultFormat = $format;
 
         return $this;
     }
 
-    public function getFormat(): ?string
+    public function getFormat(): string
     {
         return $this->args['--format'] ?? $this->defaultFormat;
     }

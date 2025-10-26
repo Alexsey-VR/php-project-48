@@ -190,7 +190,7 @@ class FilesDiffCommand implements CommandInterface
         );
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
     {
         if (!is_null($command)) {
             $this->filesPaths = [

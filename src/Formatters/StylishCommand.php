@@ -3,6 +3,7 @@
 namespace Differ\Formatters;
 
 use Differ\CommandInterface;
+use Differ\CommandLineParserInterface;
 
 class StylishCommand implements CommandInterface
 {
@@ -216,7 +217,7 @@ class StylishCommand implements CommandInterface
         );
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
     {
         if (!is_null($command)) {
             $file1Name = $command->getFile1Name();

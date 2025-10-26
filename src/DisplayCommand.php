@@ -34,7 +34,7 @@ class DisplayCommand implements CommandInterface
         return $this->formatCommand->getDiffsString();
     }
 
-    public function execute(CommandInterface $command = null): CommandInterface
+    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
     {
         $this->formatCommand = $command;
         switch ($this->mode) {
