@@ -6,12 +6,10 @@ class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
     private \Docopt|DocoptDoubleInterface $parser;
-
     /**
      * @var array<string,string> $args
      */
     private array $args;
-    
     private string $defaultFormat;
 
     public function __construct(\Docopt|DocoptDoubleInterface $parser)
@@ -36,8 +34,21 @@ class CommandLineParser implements CommandLineParserInterface
 
     public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
+        /**
+         * @var \Docopt|DocoptDoubleInterface $objArgs
+         */
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
-        $this->args = $objArgs->args;
+        if (isset($objArgs->args)) {
+            if (is_array($objArgs->args)) {
+                foreach ($objArgs->args as $key => $value) {
+                    if (is_string($key)) {
+                        $this->args[$key] = is_string($value) ? $value : "";
+                    }
+                }
+            }
+        } else {
+            $this->args = [];
+        }
 
         return $this;
     }
@@ -47,15 +58,9 @@ class CommandLineParser implements CommandLineParserInterface
      */
     public function setFileNames(array $fileNames): CommandLineParserInterface
     {
-        $this->args = array_reduce(
-            array_keys($fileNames),
-            function ($args, $key) use ($fileNames) {
-                $args[$key] = $fileNames[$key];
-
-                return $args;
-            },
-            []
-        );
+        foreach($fileNames as $key => $value) {
+            $this->args[$key] = $value;
+        }
 
         return $this;
     }
