@@ -2,17 +2,18 @@
 
 namespace Differ\Formatters;
 
-use Differ\CommandInterface;
-use Differ\CommandLineParserInterface;
+use Differ\CommandLineParserInterface as CLPI;
+use Differ\FilesDiffCommandInterface as FDCI;
+use Differ\CommandInterface as CI;
 
-class JSONCommand implements CommandInterface
+class JSONCommand implements CI
 {
     private string $files1ContentString;
     private string $files2ContentString;
     public string $filesContentString;
     public string $filesDiffsString;
 
-    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
+    public function execute(CI|CLPI|FDCI $command): CI
     {
         if (!is_null($command)) {
             $file1Name = $command->getFile1Name();

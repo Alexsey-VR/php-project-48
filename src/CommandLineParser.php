@@ -58,7 +58,7 @@ class CommandLineParser implements CommandLineParserInterface
      */
     public function setFileNames(array $fileNames): CommandLineParserInterface
     {
-        foreach($fileNames as $key => $value) {
+        foreach ($fileNames as $key => $value) {
             $this->args[$key] = $value;
         }
 

@@ -2,7 +2,7 @@
 
 namespace Differ;
 
-class FilesDiffCommand implements CommandInterface
+class FilesDiffCommand implements FilesDiffCommandInterface
 {
     private FileReaderInterface $fileReader;
     private array $filesPaths;
@@ -135,7 +135,10 @@ class FilesDiffCommand implements CommandInterface
         return $initDifferenceDescriptor;
     }
 
-    public function getStatusKeys()
+    /**
+     * @return array<int,string>
+     */
+    public function getStatusKeys(): array
     {
         return self::STATUS_KEYS;
     }
@@ -190,7 +193,7 @@ class FilesDiffCommand implements CommandInterface
         );
     }
 
-    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
+    public function execute(CommandLineParserInterface $command): CommandInterface | FilesDiffCommandInterface
     {
         if (!is_null($command)) {
             $this->filesPaths = [

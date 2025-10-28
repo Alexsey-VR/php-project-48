@@ -2,6 +2,10 @@
 
 namespace Differ;
 
+use Differ\CommandLineParserInterface as CLP;
+use Differ\FilesDiffCommandInterface as FDCI;
+use Differ\CommandInterface as CI;
+
 class DisplayCommand implements CommandInterface
 {
     private string $mode;
@@ -34,7 +38,7 @@ class DisplayCommand implements CommandInterface
         return $this->formatCommand->getDiffsString();
     }
 
-    public function execute(CommandInterface|CommandLineParserInterface $command): CommandInterface
+    public function execute(CLP|FDCI|CI $command): CommandInterface
     {
         $this->formatCommand = $command;
         switch ($this->mode) {
