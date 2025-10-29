@@ -17,11 +17,11 @@ class StylishCommand implements CI
     public string $filesContentString;
     public string $filesDiffsString;
     private const AVAILABLE_COMMENT_TYPES = [
-        "short",
-        "verbose"
+        "short" => "short",
+        "verbose" => "verbose"
     ];
 
-    public function __construct(string $commentType = self::AVAILABLE_COMMENT_TYPES[0])
+    public function __construct(string $commentType = self::AVAILABLE_COMMENT_TYPES["short"])
     {
         $this->commentType = $commentType;
     }
@@ -33,7 +33,7 @@ class StylishCommand implements CI
             function ($result, $contentItem) {
                 $itemLevelShift = str_repeat($this->statusPrefixes[$this->statusKeys[0]], $contentItem["level"]);
 
-                if (isset($contentItem["output"])) {
+                if (sizeof($contentItem["output"]) > 0) {
                     $result[] = $itemLevelShift .
                                 "{$contentItem['fileKey']}: ";
                     $result[] = "{" .
@@ -238,7 +238,7 @@ class StylishCommand implements CI
             foreach ($this->statusKeys as $key) {
                 $altStatusComments[$key] = "";
             }
-            $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES[1]) ?
+            $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES["verbose"]) ?
             [
                 $this->statusKeys[0] => "",
                 $this->statusKeys[1] => " # Old value",

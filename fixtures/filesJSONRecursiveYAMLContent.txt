@@ -37,8 +37,8 @@ File file1.yaml content:
             }
         }
     },
-    "output": [
-        {
+    "output": {
+        "common": {
             "level": 1,
             "history": "common",
             "fileKey": "common",
@@ -53,26 +53,29 @@ File file1.yaml content:
                     }
                 }
             },
-            "output": [
-                {
+            "output": {
+                "setting1": {
                     "level": 2,
                     "history": "common.setting1",
                     "fileKey": "setting1",
-                    "fileContent": "Value 1"
+                    "fileContent": "Value 1",
+                    "output": []
                 },
-                {
+                "setting2": {
                     "level": 2,
                     "history": "common.setting2",
                     "fileKey": "setting2",
-                    "fileContent": 200
+                    "fileContent": 200,
+                    "output": []
                 },
-                {
+                "setting3": {
                     "level": 2,
                     "history": "common.setting3",
                     "fileKey": "setting3",
-                    "fileContent": "true"
+                    "fileContent": "true",
+                    "output": []
                 },
-                {
+                "setting6": {
                     "level": 2,
                     "history": "common.setting6",
                     "fileKey": "setting6",
@@ -82,34 +85,36 @@ File file1.yaml content:
                             "wow": ""
                         }
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "doge": {
                             "level": 3,
                             "history": "common.setting6.doge",
                             "fileKey": "doge",
                             "fileContent": {
                                 "wow": ""
                             },
-                            "output": [
-                                {
+                            "output": {
+                                "wow": {
                                     "level": 4,
                                     "history": "common.setting6.doge.wow",
                                     "fileKey": "wow",
-                                    "fileContent": ""
+                                    "fileContent": "",
+                                    "output": []
                                 }
-                            ]
+                            }
                         },
-                        {
+                        "key": {
                             "level": 3,
                             "history": "common.setting6.key",
                             "fileKey": "key",
-                            "fileContent": "value"
+                            "fileContent": "value",
+                            "output": []
                         }
-                    ]
+                    }
                 }
-            ]
+            }
         },
-        {
+        "group1": {
             "level": 1,
             "history": "group1",
             "fileKey": "group1",
@@ -121,44 +126,48 @@ File file1.yaml content:
                 },
                 "best": "str"
             },
-            "output": [
-                {
+            "output": {
+                "baz": {
                     "level": 2,
                     "history": "group1.baz",
                     "fileKey": "baz",
-                    "fileContent": "bas"
+                    "fileContent": "bas",
+                    "output": []
                 },
-                {
+                "best": {
                     "level": 2,
                     "history": "group1.best",
                     "fileKey": "best",
-                    "fileContent": "str"
+                    "fileContent": "str",
+                    "output": []
                 },
-                {
+                "foo": {
                     "level": 2,
                     "history": "group1.foo",
                     "fileKey": "foo",
-                    "fileContent": "bar"
+                    "fileContent": "bar",
+                    "output": []
                 },
-                {
+                "nest": {
                     "level": 2,
                     "history": "group1.nest",
                     "fileKey": "nest",
                     "fileContent": {
                         "key": "value"
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "key": {
                             "level": 3,
                             "history": "group1.nest.key",
                             "fileKey": "key",
-                            "fileContent": "value"
+                            "fileContent": "value",
+                            "output": []
                         }
-                    ]
+                    }
                 }
-            ]
+            }
         },
-        {
+        "group2": {
             "level": 1,
             "history": "group2",
             "fileKey": "group2",
@@ -168,32 +177,34 @@ File file1.yaml content:
                     "id": 45
                 }
             },
-            "output": [
-                {
+            "output": {
+                "abc": {
                     "level": 2,
                     "history": "group2.abc",
                     "fileKey": "abc",
-                    "fileContent": 12345
+                    "fileContent": 12345,
+                    "output": []
                 },
-                {
+                "deep": {
                     "level": 2,
                     "history": "group2.deep",
                     "fileKey": "deep",
                     "fileContent": {
                         "id": 45
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "id": {
                             "level": 3,
                             "history": "group2.deep.id",
                             "fileKey": "id",
-                            "fileContent": 45
+                            "fileContent": 45,
+                            "output": []
                         }
-                    ]
+                    }
                 }
-            ]
+            }
         },
-        {
+        "group4": {
             "level": 1,
             "history": "group4",
             "fileKey": "group4",
@@ -204,38 +215,41 @@ File file1.yaml content:
                     "bar": ""
                 }
             },
-            "output": [
-                {
+            "output": {
+                "default": {
                     "level": 2,
                     "history": "group4.default",
                     "fileKey": "default",
-                    "fileContent": "null"
+                    "fileContent": "null",
+                    "output": []
                 },
-                {
+                "nest": {
                     "level": 2,
                     "history": "group4.nest",
                     "fileKey": "nest",
                     "fileContent": {
                         "bar": ""
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "bar": {
                             "level": 3,
                             "history": "group4.nest.bar",
                             "fileKey": "bar",
-                            "fileContent": ""
+                            "fileContent": "",
+                            "output": []
                         }
-                    ]
+                    }
                 },
-                {
+                "type": {
                     "level": 2,
                     "history": "group4.type",
                     "fileKey": "type",
-                    "fileContent": "bas"
+                    "fileContent": "bas",
+                    "output": []
                 }
-            ]
+            }
         }
-    ]
+    }
 }
 File file2.yaml content:
 {
@@ -284,8 +298,8 @@ File file2.yaml content:
             }
         }
     },
-    "output": [
-        {
+    "output": {
+        "common": {
             "level": 1,
             "history": "common",
             "fileKey": "common",
@@ -305,48 +319,53 @@ File file2.yaml content:
                     }
                 }
             },
-            "output": [
-                {
+            "output": {
+                "follow": {
                     "level": 2,
                     "history": "common.follow",
                     "fileKey": "follow",
-                    "fileContent": "false"
+                    "fileContent": "false",
+                    "output": []
                 },
-                {
+                "setting1": {
                     "level": 2,
                     "history": "common.setting1",
                     "fileKey": "setting1",
-                    "fileContent": "Value 1"
+                    "fileContent": "Value 1",
+                    "output": []
                 },
-                {
+                "setting3": {
                     "level": 2,
                     "history": "common.setting3",
                     "fileKey": "setting3",
-                    "fileContent": "null"
+                    "fileContent": "null",
+                    "output": []
                 },
-                {
+                "setting4": {
                     "level": 2,
                     "history": "common.setting4",
                     "fileKey": "setting4",
-                    "fileContent": "blah blah"
+                    "fileContent": "blah blah",
+                    "output": []
                 },
-                {
+                "setting5": {
                     "level": 2,
                     "history": "common.setting5",
                     "fileKey": "setting5",
                     "fileContent": {
                         "key5": "value5"
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "key5": {
                             "level": 3,
                             "history": "common.setting5.key5",
                             "fileKey": "key5",
-                            "fileContent": "value5"
+                            "fileContent": "value5",
+                            "output": []
                         }
-                    ]
+                    }
                 },
-                {
+                "setting6": {
                     "level": 2,
                     "history": "common.setting6",
                     "fileKey": "setting6",
@@ -357,40 +376,43 @@ File file2.yaml content:
                             "wow": "so much"
                         }
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "doge": {
                             "level": 3,
                             "history": "common.setting6.doge",
                             "fileKey": "doge",
                             "fileContent": {
                                 "wow": "so much"
                             },
-                            "output": [
-                                {
+                            "output": {
+                                "wow": {
                                     "level": 4,
                                     "history": "common.setting6.doge.wow",
                                     "fileKey": "wow",
-                                    "fileContent": "so much"
+                                    "fileContent": "so much",
+                                    "output": []
                                 }
-                            ]
+                            }
                         },
-                        {
+                        "key": {
                             "level": 3,
                             "history": "common.setting6.key",
                             "fileKey": "key",
-                            "fileContent": "value"
+                            "fileContent": "value",
+                            "output": []
                         },
-                        {
+                        "ops": {
                             "level": 3,
                             "history": "common.setting6.ops",
                             "fileKey": "ops",
-                            "fileContent": "vops"
+                            "fileContent": "vops",
+                            "output": []
                         }
-                    ]
+                    }
                 }
-            ]
+            }
         },
-        {
+        "group1": {
             "level": 1,
             "history": "group1",
             "fileKey": "group1",
@@ -402,44 +424,48 @@ File file2.yaml content:
                     "key": "value"
                 }
             },
-            "output": [
-                {
+            "output": {
+                "baz": {
                     "level": 2,
                     "history": "group1.baz",
                     "fileKey": "baz",
-                    "fileContent": "bars"
+                    "fileContent": "bars",
+                    "output": []
                 },
-                {
+                "best": {
                     "level": 2,
                     "history": "group1.best",
                     "fileKey": "best",
                     "fileContent": {
                         "key": "value"
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "key": {
                             "level": 3,
                             "history": "group1.best.key",
                             "fileKey": "key",
-                            "fileContent": "value"
+                            "fileContent": "value",
+                            "output": []
                         }
-                    ]
+                    }
                 },
-                {
+                "foo": {
                     "level": 2,
                     "history": "group1.foo",
                     "fileKey": "foo",
-                    "fileContent": "bar"
+                    "fileContent": "bar",
+                    "output": []
                 },
-                {
+                "nest": {
                     "level": 2,
                     "history": "group1.nest",
                     "fileKey": "nest",
-                    "fileContent": "str"
+                    "fileContent": "str",
+                    "output": []
                 }
-            ]
+            }
         },
-        {
+        "group3": {
             "level": 1,
             "history": "group3",
             "fileKey": "group3",
@@ -451,8 +477,8 @@ File file2.yaml content:
                 },
                 "fee": 100500
             },
-            "output": [
-                {
+            "output": {
+                "deep": {
                     "level": 2,
                     "history": "group3.deep",
                     "fileKey": "deep",
@@ -461,34 +487,36 @@ File file2.yaml content:
                             "number": 45
                         }
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "id": {
                             "level": 3,
                             "history": "group3.deep.id",
                             "fileKey": "id",
                             "fileContent": {
                                 "number": 45
                             },
-                            "output": [
-                                {
+                            "output": {
+                                "number": {
                                     "level": 4,
                                     "history": "group3.deep.id.number",
                                     "fileKey": "number",
-                                    "fileContent": 45
+                                    "fileContent": 45,
+                                    "output": []
                                 }
-                            ]
+                            }
                         }
-                    ]
+                    }
                 },
-                {
+                "fee": {
                     "level": 2,
                     "history": "group3.fee",
                     "fileKey": "fee",
-                    "fileContent": 100500
+                    "fileContent": 100500,
+                    "output": []
                 }
-            ]
+            }
         },
-        {
+        "group4": {
             "level": 1,
             "history": "group4",
             "fileKey": "group4",
@@ -500,42 +528,46 @@ File file2.yaml content:
                     "bar": 0
                 }
             },
-            "output": [
-                {
+            "output": {
+                "default": {
                     "level": 2,
                     "history": "group4.default",
                     "fileKey": "default",
-                    "fileContent": ""
+                    "fileContent": "",
+                    "output": []
                 },
-                {
+                "nest": {
                     "level": 2,
                     "history": "group4.nest",
                     "fileKey": "nest",
                     "fileContent": {
                         "bar": 0
                     },
-                    "output": [
-                        {
+                    "output": {
+                        "bar": {
                             "level": 3,
                             "history": "group4.nest.bar",
                             "fileKey": "bar",
-                            "fileContent": 0
+                            "fileContent": 0,
+                            "output": []
                         }
-                    ]
+                    }
                 },
-                {
+                "someKey": {
                     "level": 2,
                     "history": "group4.someKey",
                     "fileKey": "someKey",
-                    "fileContent": "true"
+                    "fileContent": "true",
+                    "output": []
                 },
-                {
+                "type": {
                     "level": 2,
                     "history": "group4.type",
                     "fileKey": "type",
-                    "fileContent": "bar"
+                    "fileContent": "bar",
+                    "output": []
                 }
-            ]
+            }
         }
-    ]
+    }
 }

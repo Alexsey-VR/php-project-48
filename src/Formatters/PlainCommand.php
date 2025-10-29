@@ -23,7 +23,7 @@ class PlainCommand implements CI
         return array_reduce(
             $content,
             function ($result, $contentItem) {
-                if (isset($contentItem["output"])) {
+                if (sizeof($contentItem["output"]) > 0) {
                     $result[] = implode($this->plainContent($contentItem["output"])) .
                                 "\n";
                 } else {
