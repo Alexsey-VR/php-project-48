@@ -8,14 +8,14 @@ use Differ\Formatters\JSONCommand;
 
 class Formatters implements CommandFactoryInterface
 {
-    private CommandInterface $formatCommand;
+    private FormattersInterface $formatCommand;
     private const array FORMAT_KEYS = [
         "stylish" => "stylish",
         "plain" => "plain",
         "json" => "json"
     ];
 
-    public function createCommand(string $commandKey): CommandInterface
+    public function createCommand(string $commandKey): FormattersInterface
     {
         switch ($commandKey) {
             case self::FORMAT_KEYS["stylish"]:

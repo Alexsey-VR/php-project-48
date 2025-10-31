@@ -5,60 +5,103 @@ namespace Differ\Formatters;
 use Differ\CommandLineParserInterface as CLPI;
 use Differ\FilesDiffCommandInterface as FDCI;
 use Differ\CommandInterface as CI;
+use Differ\FormattersInterface as FI;
 
-class PlainCommand implements CI
+class PlainCommand implements FI
 {
     private string $file1ContentString;
     private string $file2ContentString;
+
+    /**
+     * @var array<int,string> $statusKeys
+     */
     private array $statusKeys;
+
+    /**
+     * @var array<string,string> $statusPrefixes
+     */
     private array $statusPrefixes;
+
     private const array NORMALIZED_VALUES = [
         'false', 'true', 'null', '[complex value]'
     ];
     public string $filesContentString;
     public string $filesDiffsString;
 
+    /**
+     * @param array<mixed,mixed> $content
+     * @return array<mixed,mixed>
+     */
     private function plainContent(array $content): array
     {
-        return array_reduce(
+        $result = array_reduce(
             $content,
             function ($result, $contentItem) {
-                if (sizeof($contentItem["output"]) > 0) {
-                    $result[] = implode($this->plainContent($contentItem["output"])) .
-                                "\n";
-                } else {
-                    $result[] = "Property '{$contentItem['history']}' has value " .
-                                "{$this->normalizeValue($contentItem["fileContent"])}\n";
+                if (is_array($contentItem)) {
+                    if (is_array($contentItem["output"])) {
+                        if (sizeof($contentItem["output"]) > 0) {
+                            if (is_array($result)) {
+                                $result[] = implode($this->plainContent($contentItem["output"])) .
+                                        "\n";
+                            }
+                        } else {
+                            if (is_array($result)) {
+                                $strHistory = is_string($contentItem['history']) ? $contentItem['history'] : "";
+                                $strFileContent = $this->normalizeValue($contentItem["fileContent"]);
+                                $result[] = "Property '{$strHistory}' has value " .
+                                        "{$strFileContent}\n";
+                            }
+                        }
+                    }
                 }
 
                 return $result;
             },
             []
         );
+
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return [];
+        }
     }
 
-    private function normalizeValue($value): string
+    private function normalizeValue(mixed $value): string
     {
-        $firstNormalizedValue = is_array($value) ?
-            self::NORMALIZED_VALUES[3] : $value;
+        $firstNormalizedValue = is_array($value) ? self::NORMALIZED_VALUES[3] : $value;
 
-        return
-            in_array(true, array_filter(
-                self::NORMALIZED_VALUES,
-                function (string $value) use ($firstNormalizedValue) {
-                    return strcmp($value, $firstNormalizedValue) === 0 ||
-                        is_bool($firstNormalizedValue) ||
-                        is_numeric($firstNormalizedValue);
-                }
-            )) ?
-            $firstNormalizedValue : "'" . $firstNormalizedValue . "'";
+        $strNormalValue = $firstNormalizedValue;
+        if (is_numeric($firstNormalizedValue)) {
+            $strNormalValue = strval($firstNormalizedValue);
+        }
+
+        $specialValues = [];
+        $specialValues = array_filter(
+            self::NORMALIZED_VALUES,
+            function (string $item) use ($firstNormalizedValue) {
+                $strValue = is_string($firstNormalizedValue) ? $firstNormalizedValue : "";
+                return (strcmp($item, $strValue) === 0) ||
+                    is_bool($firstNormalizedValue) ||
+                    is_numeric($firstNormalizedValue);
+            }
+        );
+
+        if (is_string($strNormalValue)) {
+            $result = sizeof($specialValues) > 0 ?
+                $strNormalValue : "'{$strNormalValue}'";
+        } else {
+            $result = "";
+        }
+
+        return $result;
     }
 
     private function getPlainItem(
-        $contentItem,
-        $prefixKey,
-        $firstContent,
-        $secondContent,
+        mixed $contentItem,
+        string $prefixKey,
+        mixed $firstContent,
+        mixed $secondContent,
     ): string {
         $firstContentValue = $this->normalizeValue($firstContent);
         $secondContentValue = $this->normalizeValue($secondContent);
@@ -70,95 +113,136 @@ class PlainCommand implements CI
             $altComment = " with value: {$secondContentValue}";
         }
 
+        $historyItem = is_array($contentItem) ? $contentItem['history'] : "";
+        $strHistory = is_string($historyItem) ? $historyItem : "";
         return ($this->statusPrefixes[$prefixKey] !== $this->statusPrefixes[$this->statusKeys[0]]) ?
-            "Property '{$contentItem['history']}' was {$this->statusPrefixes[$prefixKey]}{$altComment}"
+            "Property '{$strHistory}' was {$this->statusPrefixes[$prefixKey]}{$altComment}"
         :
         "";
     }
 
+    /**
+     * @param array<mixed,mixed> $currentItemList
+     */
     private function getPlainList(
-        $contentItem,
-        $currentItemList,
-        $prefixKey,
-        $altPrefixKey,
-        $commentKey,
-        $altCommentKey
+        mixed $contentItem,
+        array $currentItemList,
+        string $prefixKey,
+        string $altPrefixKey,
+        string $commentKey,
+        string $altCommentKey
     ): string {
-        $currentPrefixKey = (is_array($contentItem["output"]) &&
-            ($contentItem["status"] === $this->statusKeys[1])) ?
-            $prefixKey : $altPrefixKey;
+        $currentPrefixKey = "";
+        if (is_array($contentItem)) {
+            $currentPrefixKey = (is_array($contentItem["output"]) &&
+                ($contentItem["status"] === $this->statusKeys[1])) ?
+                $prefixKey : $altPrefixKey;
+        }
 
-        $currentCommentKey = ($contentItem["status"] === $this->statusKeys[1]) ?
-            $commentKey : $altCommentKey;
+        $currentCommentKey = "";
+        if (is_array($contentItem)) {
+            $currentCommentKey = ($contentItem["status"] === $this->statusKeys[1]) ?
+                $commentKey : $altCommentKey;
+        }
+
+        $historyItem = is_array($contentItem) ? $contentItem['history'] : "";
+        $strHistory = "";
+        if (is_array($contentItem)) {
+            $strHistory = is_string($historyItem) ? $historyItem : "";
+        }
 
         if ($currentCommentKey === $this->statusKeys[2]) {
-            return "Property '{$contentItem['history']}' was " .
+            return "Property '{$strHistory}' was " .
                 "{$this->statusPrefixes[$this->statusKeys[2]]} with value: " .
                 self::NORMALIZED_VALUES[3];
         } elseif (
             $this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys[3]]
         ) {
-            return "Property '{$contentItem['history']}' was {$this->statusPrefixes[$this->statusKeys[3]]}";
+            return "Property '{$strHistory}' was {$this->statusPrefixes[$this->statusKeys[3]]}";
         }
         return implode($currentItemList);
     }
 
+    /**
+     * @param array<mixed,mixed> $content
+     * @return array<mixed,mixed>
+     */
     private function plainDifference(array $content): array
     {
-        return array_reduce(
+        $output = array_reduce(
             $content,
             function ($result, $contentItem) {
-                $firstContent = $contentItem["file1Content"];
-                $secondContent = $contentItem["file2Content"];
+                $firstContent = [];
+                $secondContent = [];
+                $statusContent = "";
+                if (is_array($contentItem)) {
+                    $firstContent = $contentItem["file1Content"];
+                    $secondContent = $contentItem["file2Content"];
+                    $statusContent = is_string($contentItem["status"]) ? $contentItem["status"] : "";
+                }
                 $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
 
+                $outputItem = is_array($contentItem) ? $contentItem["output"] : [];
+                $outputData = is_array($outputItem) ? $outputItem : [];
                 if ($bothContentIsArray) {
                     $styledItem = $this->getPlainList(
                         contentItem: $contentItem,
-                        currentItemList: $this->plainDifference($contentItem["output"]),
+                        currentItemList: $this->plainDifference($outputData),
                         prefixKey: $this->statusKeys[0],
-                        altPrefixKey: $contentItem["status"],
+                        altPrefixKey: $statusContent,
                         commentKey: $this->statusKeys[0],
-                        altCommentKey: $contentItem["status"],
+                        altCommentKey: $statusContent,
                     );
                 } else {
                     $styledItem = $this->getPlainItem(
                         contentItem: $contentItem,
-                        prefixKey: $contentItem["status"],
+                        prefixKey: $statusContent,
                         firstContent: $firstContent,
                         secondContent: $secondContent
                     );
                 }
-                $result[] = "{$styledItem}\n";
+                if (is_array($result)) {
+                    $result[] = "{$styledItem}\n";
+                } else {
+                    $result = "";
+                }
 
                 return $result;
             },
             []
         );
+
+        if (is_array($output)) {
+            return $output;
+        } else {
+            return [];
+        }
     }
 
-    public function execute(CLPI|FDCI|CI $command): CI
+    public function execute(FDCI $command): FI
     {
-        if (!is_null($command)) {
-            $file1Name = $command->getFile1Name();
-            $file2Name = $command->getFile2Name();
-            $content1Descriptor = $command->getContent1Descriptor();
-            $content2Descriptor = $command->getContent2Descriptor();
-            $differenceDescriptor = $command->getDifferenceDescriptor();
+        $file1Name = $command->getFile1Name();
+        $file2Name = $command->getFile2Name();
+        $content1Descriptor = $command->getContent1Descriptor();
+        $content2Descriptor = $command->getContent2Descriptor();
+        $differenceDescriptor = $command->getDifferenceDescriptor();
 
-            $this->statusKeys = $command->getStatusKeys();
-            $this->statusPrefixes = [
-                $this->statusKeys[0] => "",
-                $this->statusKeys[1] => "updated",
-                $this->statusKeys[2] => "added",
-                $this->statusKeys[3] => "removed"
-            ];
+        $this->statusKeys = $command->getStatusKeys();
 
-            $file1Content = $this->plainContent($content1Descriptor["output"]);
-            $file2Content = $this->plainContent($content2Descriptor["output"]);
+        $this->statusPrefixes = [
+            $this->statusKeys[0] => "",
+            $this->statusKeys[1] => "updated",
+            $this->statusKeys[2] => "added",
+            $this->statusKeys[3] => "removed"
+        ];
 
-            $file1ContentList = explode("\n", implode("", $file1Content));
-            $file2ContentList = explode("\n", implode("", $file2Content));
+        $output1Content = is_array($content1Descriptor["output"]) ? $content1Descriptor["output"] : [];
+        $output2Content = is_array($content2Descriptor["output"]) ? $content2Descriptor["output"] : [];
+        $file1Content = $this->plainContent($output1Content);
+        $file2Content = $this->plainContent($output2Content);
+
+        $file1ContentList = explode("\n", implode("", $file1Content));
+        $file2ContentList = explode("\n", implode("", $file2Content));
 
             $file1PlainContent = array_filter(
                 $file1ContentList,
@@ -176,7 +260,8 @@ class PlainCommand implements CI
 
             $this->filesContentString = $this->file1ContentString . $this->file2ContentString;
 
-            $filesDiffs = $this->plainDifference($differenceDescriptor["output"]);
+            $outputDifference = is_array($differenceDescriptor["output"]) ? $differenceDescriptor["output"] : [];
+            $filesDiffs = $this->plainDifference($outputDifference);
 
             $filesDiffsList = explode("\n", implode("", $filesDiffs));
 
@@ -186,17 +271,16 @@ class PlainCommand implements CI
             );
 
             $this->filesDiffsString = implode("\n", $filesPlainDiffs) . "\n";
-        }
 
         return $this;
     }
 
-    public function getContentString()
+    public function getContentString(): string
     {
         return $this->filesContentString;
     }
 
-    public function getDiffsString()
+    public function getDiffsString(): string
     {
         return $this->filesDiffsString;
     }

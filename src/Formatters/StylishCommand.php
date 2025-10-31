@@ -5,8 +5,9 @@ namespace Differ\Formatters;
 use Differ\CommandLineParserInterface as CLPI;
 use Differ\FilesDiffCommandInterface as FDCI;
 use Differ\CommandInterface as CI;
+use Differ\FormattersInterface as FI;
 
-class StylishCommand implements CI
+class StylishCommand implements FI
 {
     private string $files1ContentString;
     private string $files2ContentString;
@@ -218,7 +219,7 @@ class StylishCommand implements CI
         );
     }
 
-    public function execute(CLPI|FDCI|CI $command): CI
+    public function execute(FDCI $command): FI
     {
         if (!is_null($command)) {
             $file1Name = $command->getFile1Name();
@@ -268,12 +269,12 @@ class StylishCommand implements CI
         return $this;
     }
 
-    public function getContentString()
+    public function getContentString(): string
     {
         return $this->filesContentString;
     }
 
-    public function getDiffsString()
+    public function getDiffsString(): string
     {
         return $this->filesDiffsString;
     }
