@@ -6,10 +6,10 @@ use Differ\CommandLineParser;
 
 class ConsoleApp
 {
-    private CommandInterface|FilesDiffCommandInterface|FormattersInterface $nextCommand;
+    private CommandInterface|FilesDiffCommandInterface|FormattersInterface|DisplayCommandInterface $nextCommand;
     private CommandFactoryInterface $commandFactory;
     private array $flowSteps;
-    private CommandInterface|CommandLineParserInterface|FilesDiffCommandInterface|FormattersInterface $initCommand;
+    private CommandInterface|CommandLineParserInterface|FilesDiffCommandInterface|FormattersInterface|DisplayCommandInterface $initCommand;
 
     public function __construct(
         CommandFactoryInterface $commandFactory
