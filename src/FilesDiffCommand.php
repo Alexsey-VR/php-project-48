@@ -220,15 +220,15 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                 $file1Item = is_array($differenceDescriptor) ? $differenceDescriptor["file1Content"] : [];
                 $file2Item = is_array($differenceDescriptor) ? $differenceDescriptor["file2Content"] : [];
 
-                $file1Content = null; 
+                $file1Content = null;
                 if (is_array($file1Item)) {
                     $file1Content = $file1Item[$fileKey] ?? null;
-                } 
+                }
 
-                $file2Content = null; 
+                $file2Content = null;
                 if (is_array($file2Item)) {
                     $file2Content = $file2Item[$fileKey] ?? null;
-                } 
+                }
 
                 $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
 
@@ -238,7 +238,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                 $status = $this->getNextItemStatus(
                     $file1Content,
                     $file2Content,
-                    $statusData ,
+                    $statusData,
                     $nextItemIsNotArray
                 );
 
@@ -283,7 +283,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
         );
     }
 
-    public function execute(CommandLineParserInterface $command): CommandInterface | FilesDiffCommandInterface
+    public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface
     {
         $fileNames = $command->getFileNames();
         $this->filesPaths = [
@@ -303,7 +303,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                 $filesDataItems
             );
         }
-        
+
         $filesDataItems = $this->filesDataItems[1];
         $file2Content = [];
         if (is_array($filesDataItems)) {
@@ -312,7 +312,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                 $filesDataItems
             );
         }
-        
+
 
         $fileKeys = array_keys($file1Content);
         asort($fileKeys);

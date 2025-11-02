@@ -4,7 +4,6 @@ namespace Differ\Formatters;
 
 use Differ\CommandLineParserInterface as CLPI;
 use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\CommandInterface as CI;
 use Differ\FormattersInterface as FI;
 
 class PlainCommand implements FI

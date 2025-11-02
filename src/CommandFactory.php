@@ -14,7 +14,6 @@ use Differ\DisplayCommand;
 use Differ\DifferException;
 use Differ\CommandLineParserInterface as CLP;
 use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\CommandInterface as CI;
 use Differ\FormattersInterface as FI;
 use Differ\DisplayCommandInterface as DCI;
 
@@ -48,7 +47,7 @@ class CommandFactory implements CommandFactoryInterface
         return self::FORMAT_KEYS;
     }
 
-    public function createCommand(string $commandType): CLP|FDCI|CI|FI|DCI
+    public function createCommand(string $commandType): CLP|FDCI|FI|DCI
     {
         switch ($commandType) {
             case "parse":

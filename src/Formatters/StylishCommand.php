@@ -4,7 +4,6 @@ namespace Differ\Formatters;
 
 use Differ\CommandLineParserInterface as CLPI;
 use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\CommandInterface as CI;
 use Differ\FormattersInterface as FI;
 
 class StylishCommand implements FI
@@ -55,7 +54,7 @@ class StylishCommand implements FI
 
                     $outputValue = is_array($contentItem["output"]) ? $contentItem["output"] : [];
                     $fileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
-                    $fileContentItem = is_string($contentItem["fileContent"]) ? $contentItem["fileContent"] : ""; 
+                    $fileContentItem = is_string($contentItem["fileContent"]) ? $contentItem["fileContent"] : "";
                     if (sizeof($outputValue) > 0) {
                         $result[] = $itemLevelShift .
                                     "{$fileKeyItem}: ";
@@ -224,7 +223,6 @@ class StylishCommand implements FI
                                     $styledArray .
                                     "\n";
                     } elseif ($bothContentIsArray) {
-                        
                         $styledArray = $this->getStyledList(
                             contentItem: $contentItem,
                             currentItemList: $this->stylizeDifference($outputItem),
@@ -293,7 +291,7 @@ class StylishCommand implements FI
         if (is_array($output)) {
             return $output;
         } else {
-            return [];  
+            return [];
         }
     }
 

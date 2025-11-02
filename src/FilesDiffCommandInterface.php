@@ -4,7 +4,7 @@ namespace Differ;
 
 interface FilesDiffCommandInterface
 {
-    public function execute(CommandLineParserInterface $command): CommandInterface | FilesDiffCommandInterface;
+    public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface;
     public function getFile1Name(): string;
     public function getFile2Name(): string;
 
