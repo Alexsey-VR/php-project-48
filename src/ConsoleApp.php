@@ -3,24 +3,34 @@
 namespace Differ;
 
 use Differ\CommandLineParser;
+use Differ\CommandInterface as CI;
+use Differ\CommandLineParserInterface as CLPI;
+use Differ\FilesDiffCommandInterface as FDCI;
+use Differ\FormattersInterface as FI;
+use Differ\DisplayCommandInterface as DCI;
 
 class ConsoleApp
 {
-    private CommandInterface|FilesDiffCommandInterface|FormattersInterface|DisplayCommandInterface $nextCommand;
+    private CLPI $parseCommand; 
+    private CI|CLPI|FDCI|FI|DCI $nextCommand;
     private CommandFactoryInterface $commandFactory;
+
+    /** 
+     * @var array<string> $flowSteps
+     */
     private array $flowSteps;
-    private CommandInterface|CommandLineParserInterface|FilesDiffCommandInterface|FormattersInterface|DisplayCommandInterface $initCommand;
+    private CI|CLPI|FDCI|FI|DCI $initCommand;
 
     public function __construct(
         CommandFactoryInterface $commandFactory
     ) {
         $this->commandFactory = $commandFactory;
 
-        $parseCommand = $this->commandFactory->createCommand("parse");
-        $this->initCommand = $parseCommand->execute($parseCommand);
+        $this->parseCommand = $this->commandFactory->createCommand("parse");
+        $this->initCommand = $this->parseCommand->execute($this->parseCommand);
         $this->flowSteps = [
             "difference",
-            strtolower($parseCommand->getFormat()),
+            strtolower($this->parseCommand->getFormat()),
             "show"
         ];
     }
