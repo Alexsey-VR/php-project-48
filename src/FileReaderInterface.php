@@ -5,7 +5,7 @@ namespace Differ;
 interface FileReaderInterface
 {
     /**
-    * @return array<string,string>
+    * @return array<mixed,mixed>
     */
     public function readFile(string $filename): array;
 }
