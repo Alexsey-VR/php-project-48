@@ -14,7 +14,7 @@
         "file2Content": {
             "follow": "false",
             "setting1": "Value 1",
-            "setting3": null,
+            "setting3": "null",
             "setting4": "blah blah",
             "setting5": {
                 "key5": "value5"
@@ -61,7 +61,7 @@
             },
             "setting3": {
                 "file1Content": "true",
-                "file2Content": null,
+                "file2Content": "null",
                 "level": 2,
                 "status": "changed",
                 "fileKey": "setting3",
@@ -376,10 +376,11 @@
     },
     "group4": {
         "file1Content": {
-            "default": null,
+            "default": "null",
             "type": "bas",
             "nest": {
-                "bar": ""
+                "bar": "",
+                "foo": 0
             }
         },
         "file2Content": {
@@ -387,7 +388,8 @@
             "someKey": "true",
             "type": "bar",
             "nest": {
-                "bar": 0
+                "bar": 0,
+                "foo": "null"
             }
         },
         "level": 1,
@@ -396,7 +398,7 @@
         "history": "group4",
         "output": {
             "default": {
-                "file1Content": null,
+                "file1Content": "null",
                 "file2Content": "",
                 "level": 2,
                 "status": "changed",
@@ -411,7 +413,7 @@
                 },
                 "file2Content": {
                     "bar": 0,
-                    "foo": null
+                    "foo": "null"
                 },
                 "level": 2,
                 "status": "changed",
@@ -429,7 +431,7 @@
                     },
                     "foo": {
                         "file1Content": 0,
-                        "file2Content": null,
+                        "file2Content": "null",
                         "level": 3,
                         "status": "changed",
                         "fileKey": "foo",

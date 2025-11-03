@@ -54,7 +54,15 @@ class StylishCommand implements FI
 
                     $outputValue = is_array($contentItem["output"]) ? $contentItem["output"] : [];
                     $fileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
-                    $fileContentItem = is_string($contentItem["fileContent"]) ? $contentItem["fileContent"] : "";
+                    //$fileContentItem = is_string($contentItem["fileContent"]) ? $contentItem["fileContent"] : "";
+                    if (is_string($contentItem["fileContent"])) {
+                        $fileContentItem = $contentItem["fileContent"];
+                    } elseif (is_numeric($contentItem["fileContent"])) {
+                        $fileContentItem = strval($contentItem["fileContent"]);
+                    } else {
+                        $fileContentItem = "";
+                    }
+
                     if (sizeof($outputValue) > 0) {
                         $result[] = $itemLevelShift .
                                     "{$fileKeyItem}: ";
@@ -125,6 +133,7 @@ class StylishCommand implements FI
                 $commentKey : $altCommentKey;
 
             $strFileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
+
             $output = $this->statusPrefixes[$currentPrefixKey] .
                 "{$strFileKeyItem}: {" . $this->statusComments[$currentCommentKey] . "\n" .
                 implode($currentItemList) .
@@ -186,11 +195,10 @@ class StylishCommand implements FI
                                     $styledArray .
                                     "\n";
 
-                        $strSecondContent = is_string($secondContent) ? $secondContent : "";
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
                             prefixKey: $this->statusKeys[2],
-                            currentContent: $strSecondContent,
+                            currentContent: $this->normalizeContent($secondContent),
                             commentKey: $this->statusKeys[4],
                             altCommentKey: $this->statusKeys[5]
                         );
@@ -198,11 +206,10 @@ class StylishCommand implements FI
                                     $styledItem .
                                     "\n";
                     } elseif ($secondContentIsArray) {
-                        $strFirstContent = is_string($firstContent) ? $firstContent : "";
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
                             prefixKey: $this->statusKeys[3],
-                            currentContent: $strFirstContent,
+                            currentContent: $this->normalizeContent($firstContent),
                             commentKey: $this->statusKeys[4],
                             altCommentKey: $this->statusKeys[1]
                         );
@@ -236,11 +243,10 @@ class StylishCommand implements FI
                                     $styledArray .
                                     "\n";
                     } elseif ($contentItem["status"] === $this->statusKeys[1]) {
-                        $strFirstContent = is_string($firstContent) ? $firstContent : "";
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
                             prefixKey: $this->statusKeys[3],
-                            currentContent: $strFirstContent,
+                            currentContent: $this->normalizeContent($firstContent),
                             commentKey: $this->statusKeys[4],
                             altCommentKey: $this->statusKeys[1]
                         );
