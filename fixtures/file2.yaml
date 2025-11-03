@@ -27,3 +27,4 @@ group4:
   type: bar
   nest:
     bar: 0
+    foo: null

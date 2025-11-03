@@ -21,3 +21,4 @@ group4:
   type: bas
   nest:
     bar: ''
+    foo: 0

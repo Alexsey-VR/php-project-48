@@ -28,7 +28,8 @@
     "default": null,
     "type": "bas",
     "nest": {
-      "bar": ""
+      "bar": "",
+      "foo": 0
     }
   }
 }

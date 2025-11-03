@@ -51,6 +51,8 @@
         nest: {
           - bar: # There are no values, but a space exists after the colon
           + bar: 0 # New value
+          - foo: 0 # Old value
+          + foo: null # New value
         }
       + someKey: true # Added
       - type: bas # Old value

@@ -12,6 +12,7 @@ Property 'group2.abc' has value 12345
 Property 'group2.deep.id' has value 45
 Property 'group4.default' has value null
 Property 'group4.nest.bar' has value ''
+Property 'group4.nest.foo' has value 0
 Property 'group4.type' has value 'bas'
 File file2.json content:
 Property 'common.follow' has value false
@@ -30,5 +31,6 @@ Property 'group3.deep.id.number' has value 45
 Property 'group3.fee' has value 100500
 Property 'group4.default' has value ''
 Property 'group4.nest.bar' has value 0
+Property 'group4.nest.foo' has value null
 Property 'group4.someKey' has value true
 Property 'group4.type' has value 'bar'

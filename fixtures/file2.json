@@ -36,7 +36,8 @@
     "someKey": true,
     "type": "bar",
     "nest": {
-      "bar": 0
+      "bar": 0,
+      "foo": null
     }
   }
 }

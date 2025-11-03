@@ -30,10 +30,11 @@ File file1.json content:
             }
         },
         "group4": {
-            "default": "null",
+            "default": null,
             "type": "bas",
             "nest": {
-                "bar": ""
+                "bar": "",
+                "foo": 0
             }
         }
     },
@@ -209,10 +210,11 @@ File file1.json content:
             "history": "group4",
             "fileKey": "group4",
             "fileContent": {
-                "default": "null",
+                "default": null,
                 "type": "bas",
                 "nest": {
-                    "bar": ""
+                    "bar": "",
+                    "foo": 0
                 }
             },
             "output": {
@@ -220,7 +222,7 @@ File file1.json content:
                     "level": 2,
                     "history": "group4.default",
                     "fileKey": "default",
-                    "fileContent": "null",
+                    "fileContent": null,
                     "output": []
                 },
                 "nest": {
@@ -228,7 +230,8 @@ File file1.json content:
                     "history": "group4.nest",
                     "fileKey": "nest",
                     "fileContent": {
-                        "bar": ""
+                        "bar": "",
+                        "foo": 0
                     },
                     "output": {
                         "bar": {
@@ -236,6 +239,13 @@ File file1.json content:
                             "history": "group4.nest.bar",
                             "fileKey": "bar",
                             "fileContent": "",
+                            "output": []
+                        },
+                        "foo": {
+                            "level": 3,
+                            "history": "group4.nest.foo",
+                            "fileKey": "foo",
+                            "fileContent": 0,
                             "output": []
                         }
                     }
@@ -260,7 +270,7 @@ File file2.json content:
         "common": {
             "follow": "false",
             "setting1": "Value 1",
-            "setting3": "null",
+            "setting3": null,
             "setting4": "blah blah",
             "setting5": {
                 "key5": "value5"
@@ -294,7 +304,8 @@ File file2.json content:
             "someKey": "true",
             "type": "bar",
             "nest": {
-                "bar": 0
+                "bar": 0,
+                "foo": null
             }
         }
     },
@@ -306,7 +317,7 @@ File file2.json content:
             "fileContent": {
                 "follow": "false",
                 "setting1": "Value 1",
-                "setting3": "null",
+                "setting3": null,
                 "setting4": "blah blah",
                 "setting5": {
                     "key5": "value5"
@@ -338,7 +349,7 @@ File file2.json content:
                     "level": 2,
                     "history": "common.setting3",
                     "fileKey": "setting3",
-                    "fileContent": "null",
+                    "fileContent": null,
                     "output": []
                 },
                 "setting4": {
@@ -525,7 +536,8 @@ File file2.json content:
                 "someKey": "true",
                 "type": "bar",
                 "nest": {
-                    "bar": 0
+                    "bar": 0,
+                    "foo": null
                 }
             },
             "output": {
@@ -541,7 +553,8 @@ File file2.json content:
                     "history": "group4.nest",
                     "fileKey": "nest",
                     "fileContent": {
-                        "bar": 0
+                        "bar": 0,
+                        "foo": null
                     },
                     "output": {
                         "bar": {
@@ -549,6 +562,13 @@ File file2.json content:
                             "history": "group4.nest.bar",
                             "fileKey": "bar",
                             "fileContent": 0,
+                            "output": []
+                        },
+                        "foo": {
+                            "level": 3,
+                            "history": "group4.nest.foo",
+                            "fileKey": "foo",
+                            "fileContent": null,
                             "output": []
                         }
                     }

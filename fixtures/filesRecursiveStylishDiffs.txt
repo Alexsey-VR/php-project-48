@@ -51,6 +51,8 @@
         nest: {
           - bar: 
           + bar: 0
+          - foo: 0
+          + foo: null
         }
       + someKey: true
       - type: bas
