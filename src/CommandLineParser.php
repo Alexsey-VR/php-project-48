@@ -35,7 +35,7 @@ class CommandLineParser implements CommandLineParserInterface
     public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
         /**
-         * @var \Docopt|DocoptDoubleInterface $objArgs
+         * @var \Docopt\Response|DocoptDoubleInterface $objArgs
          */
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
         if (isset($objArgs->args)) {
