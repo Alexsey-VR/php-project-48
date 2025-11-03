@@ -134,7 +134,7 @@ class FormattersTest extends TestCase
 
         $displayCommand = $commandFactory->createCommand("show");
         $contentJSON = $displayCommand->setFormatter($jsonCommand)
-                                    ->getContentString();
+                                    ->getFilesContent();
 
         $this->assertStringEqualsFile(
             $contentFilePath,
@@ -142,7 +142,7 @@ class FormattersTest extends TestCase
         );
 
         $resultJSON = $displayCommand->setFormatter($jsonCommand)
-                                    ->getDiffsString();
+                                    ->getFilesDiffs();
 
         $this->assertStringEqualsFile(
             $outputDiffsPath,

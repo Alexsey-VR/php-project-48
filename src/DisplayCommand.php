@@ -2,7 +2,12 @@
 
 namespace Differ;
 
-class DisplayCommand implements DisplayCommandInterface
+use Differ\CommandLineParserInterface as CLP;
+use Differ\FilesDiffCommandInterface as FDCI;
+use Differ\FormattersInterface as FI;
+use Differ\DisplayCommandInterface as DCI;
+
+class DisplayCommand implements DCI
 {
     private string $mode;
     private FormattersInterface $formatCommand;
@@ -17,36 +22,24 @@ class DisplayCommand implements DisplayCommandInterface
         $this->mode = $mode;
     }
 
-    /**
-     * @return FormattersInterface
-     */
-    public function setFormatter(FormattersInterface $formatter)
+    public function setFormatter(FI $formatter): DCI
     {
         $this->formatCommand = $formatter;
 
-        return $this->formatCommand;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFilesContent(): string
     {
         return $this->formatCommand->getContentString();
     }
 
-    /**
-     * @return string
-     */
     public function getFilesDiffs(): string
     {
         return $this->formatCommand->getDiffsString();
     }
 
-    /**
-     * @return FormattersInterface
-     */
-    public function execute(FormattersInterface $command): FormattersInterface
+    public function execute(FI $command): DCI
     {
         $this->formatCommand = $command;
         switch ($this->mode) {
@@ -60,13 +53,10 @@ class DisplayCommand implements DisplayCommandInterface
                 throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
 
-        return $this->formatCommand;
+        return $this;
     }
 
-    /**
-     * @return DisplayCommandInterface
-     */
-    public function setMode(string $mode): DisplayCommandInterface
+    public function setMode(string $mode): DCI
     {
         if (in_array($mode, array_keys(self::AVAILABLE_MODES))) {
             $this->mode = $mode;

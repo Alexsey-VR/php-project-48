@@ -6,16 +6,15 @@ class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
     private \Docopt|DocoptDoubleInterface $parser;
-
     /**
-     * @var array<string,string>
+     * @var array<string,string> $args
      */
     private array $args;
     private string $defaultFormat;
 
-    public function __construct(\Docopt|DocoptDoubleInterface $initParser)
+    public function __construct(\Docopt|DocoptDoubleInterface $parser)
     {
-        $this->parser = $initParser;
+        $this->parser = $parser;
         $this->defaultFormat = 'stylish';
 
         $filename = __DIR__ . "/../docopt.txt";
@@ -33,40 +32,22 @@ class CommandLineParser implements CommandLineParserInterface
         }
     }
 
-    /**
-     * @return array<string,string>
-     * @param mixed $args
-     */
-    private function getDocoptArgs(mixed $args): array
-    {
-        $keys = is_array($args) ? array_keys($args) : ["key" => "value"];
-        $values = is_array($args) ? array_values($args) : ["key" => "value"];
-
-        /**
-         * @var array<string,string>
-         */
-
-        $result = array_reduce(
-            $keys,
-            function ($accum, $key) use ($keys, $values): array {
-                $id = array_search($key, $keys);
-                if ($id !== false) {
-                    $accum[$keys[$id]] = $values[$id];
-                }
-                return $accum;
-            },
-            [$keys[0] => $values[0]]
-        );
-
-        return $result;
-    }
-
     public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
+        /**
+         * @var \Docopt|DocoptDoubleInterface $objArgs
+         */
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
-
         if (isset($objArgs->args)) {
-            $this->args = $this->getDocoptArgs($objArgs->args);
+            if (is_array($objArgs->args)) {
+                foreach ($objArgs->args as $key => $value) {
+                    if (is_string($key)) {
+                        $this->args[$key] = is_string($value) ? $value : "";
+                    }
+                }
+            }
+        } else {
+            $this->args = [];
         }
 
         return $this;
@@ -77,12 +58,9 @@ class CommandLineParser implements CommandLineParserInterface
      */
     public function setFileNames(array $fileNames): CommandLineParserInterface
     {
-        $result = [];
         foreach ($fileNames as $key => $value) {
-            $result[$key] = $value;
+            $this->args[$key] = $value;
         }
-
-        $this->args = $result;
 
         return $this;
     }
@@ -95,9 +73,6 @@ class CommandLineParser implements CommandLineParserInterface
         return $this->args;
     }
 
-    /**
-     * @return CommandLineParserInterface
-     */
     public function setFormat(string $format): CommandLineParserInterface
     {
         $this->defaultFormat = $format;
@@ -105,9 +80,6 @@ class CommandLineParser implements CommandLineParserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFormat(): string
     {
         return $this->args['--format'] ?? $this->defaultFormat;

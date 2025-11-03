@@ -80,7 +80,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
             function ($contentDescriptor, $fileKey) {
                 $fileItem = is_array($contentDescriptor) ? $contentDescriptor['fileContent'] : "";
 
-                $fileContent = is_array($fileItem) ? $fileItem[$fileKey] : $fileItem;//"";
+                $fileContent = is_array($fileItem) ? $fileItem[$fileKey] : $fileItem;
 
                 $levelNum = is_array($contentDescriptor) ? $contentDescriptor["level"] : 0;
                 $level = is_numeric($levelNum) ?
@@ -103,9 +103,9 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                     "output" => []
                 ];
 
-                if (is_array($contentDescriptor) && isset($contentDescriptor['output'])) {
+                if (is_array($contentDescriptor)) {
                     if (is_array($contentDescriptor['output'])) {
-                        $contentDescriptor['output'][] = $this->getContent(
+                        $contentDescriptor['output'][$fileKey] = $this->getContent(
                             $fileContentKeys,
                             $initContentDescriptor
                         );
@@ -116,6 +116,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
             },
             $initContentDescriptor
         );
+
         if (is_array($result)) {
             return $result;
         } else {
@@ -191,6 +192,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
         $initDifferenceDescriptor["status"] = $status;
         $initDifferenceDescriptor["fileKey"] = $fileKey;
         $initDifferenceDescriptor["history"] = $history;
+        $initDifferenceDescriptor["output"] = [];
 
         return $initDifferenceDescriptor;
     }
@@ -220,31 +222,29 @@ class FilesDiffCommand implements FilesDiffCommandInterface
 
                 $file1Content = null;
                 if (is_array($file1Item)) {
-                    $file1Content = in_array($fileKey, $file1Item) ? $file1Item[$fileKey] : null;
+                    $file1Content = $file1Item[$fileKey] ?? null;
                 }
 
                 $file2Content = null;
                 if (is_array($file2Item)) {
-                    $file2Content = in_array($fileKey, $file2Item) ? $file2Item[$fileKey] : null;
+                    $file2Content = $file2Item[$fileKey] ?? null;
                 }
 
                 $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
 
-                $currentStatus = "not changed";
-                if (is_array($differenceDescriptor)) {
-                    $tmpStatus = $differenceDescriptor['status'];
-                    $currentStatus = is_string($tmpStatus) ? $tmpStatus : "not changed";
-                }
+                $currentStatus = is_array($differenceDescriptor) ? $differenceDescriptor['status'] : "";
+                $statusData = is_string($currentStatus) ? $currentStatus : "";
 
                 $status = $this->getNextItemStatus(
                     $file1Content,
                     $file2Content,
-                    $currentStatus,
+                    $statusData,
                     $nextItemIsNotArray
                 );
 
                 $prevLevel = is_array($differenceDescriptor) ? $differenceDescriptor["level"] : 0;
                 $level = is_integer($prevLevel) ? $prevLevel + 1 : 0;
+
                 $history = "";
                 if (is_array($differenceDescriptor)) {
                     $nextHistory = $differenceDescriptor["history"];
@@ -265,12 +265,12 @@ class FilesDiffCommand implements FilesDiffCommandInterface
                     $fileKey,
                     $history,
                     $file1Content,
-                    $file2Content
+                    $file2Content,
                 );
 
                 if (is_array($differenceDescriptor)) {
                     if (is_array($differenceDescriptor["output"])) {
-                        $differenceDescriptor["output"][] = $this->getDifference(
+                        $differenceDescriptor["output"][$fileKey] = $this->getDifference(
                             $contentKeys,
                             $initDifferenceDescriptor
                         );
@@ -283,15 +283,13 @@ class FilesDiffCommand implements FilesDiffCommandInterface
         );
     }
 
-     public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface
+    public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface
     {
         $fileNames = $command->getFileNames();
-        if (is_array($fileNames)) {
-            $this->filesPaths = [
-                is_string($fileNames['FILE1']) ? $fileNames['FILE1'] : "",
-                is_string($fileNames['FILE2']) ? $fileNames['FILE2'] : ""
-            ];
-        };
+        $this->filesPaths = [
+            $fileNames['FILE1'],
+            $fileNames['FILE2']
+        ];
 
         foreach ($this->filesPaths as $filePath) {
             $this->filesDataItems[] = $this->fileReader->readFile($filePath);
@@ -356,10 +354,12 @@ class FilesDiffCommand implements FilesDiffCommandInterface
             "file2Content" => $file2Content,
             "output" => []
         ];
+
         $differenceResult = $this->getDifference(
             $mergedFileKeys,
             $initDifferenceDescriptor
         );
+
         if (is_array($differenceResult)) {
             $this->differenceDescriptor = $differenceResult;
         }

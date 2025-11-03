@@ -5,7 +5,7 @@ namespace Differ;
 class DocoptDouble implements DocoptDoubleInterface
 {
     /**
-     * @var array
+     * @var array<string,string>
      */
     public array $args;
 

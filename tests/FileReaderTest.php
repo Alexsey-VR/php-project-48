@@ -49,6 +49,6 @@ class FileReaderTest extends TestCase
             __DIR__ . "/../fixtures/fileNotJson.json"
         );
 
-        $this->assertNull($fileContent);
+        $this->assertEquals([], $fileContent);
     }
 }

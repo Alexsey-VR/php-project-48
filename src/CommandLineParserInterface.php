@@ -12,9 +12,9 @@ interface CommandLineParserInterface
     public function setFileNames(array $fileNames): CommandLineParserInterface;
 
     /**
-     * return array<string,string>
+     * @return array<string,string>
      */
-    public function getFileNames(): mixed;//array;
+    public function getFileNames(): array;
 
     public function setFormat(string $format): CommandLineParserInterface;
     public function getFormat(): string;
