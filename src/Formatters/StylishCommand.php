@@ -320,7 +320,7 @@ class StylishCommand implements FI
         foreach ($this->statusKeys as $key) {
             $altStatusComments[$key] = "";
         }
-        $this->statusComments = !strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES["verbose"]) ?
+        $this->statusComments = (strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES["verbose"]) === 0) ?
         [
             $this->statusKeys[0] => "",
             $this->statusKeys[1] => " # Old value",
