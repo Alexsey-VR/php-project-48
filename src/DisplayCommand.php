@@ -58,7 +58,7 @@ class DisplayCommand implements DCI
 
     public function setMode(string $mode): DCI
     {
-        if (in_array($mode, array_keys(self::AVAILABLE_MODES))) {
+        if (in_array($mode, array_keys(self::AVAILABLE_MODES), true)) {
             $this->mode = $mode;
 
             return $this;
