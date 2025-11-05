@@ -2,8 +2,6 @@
 
 namespace Differ;
 
-use Differ\Formatters\StylishCommand;
-
 /**
  * @param CommandFactoryInterface $commandFactory
  */

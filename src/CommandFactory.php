@@ -2,16 +2,6 @@
 
 namespace Differ;
 
-use Differ\CommandFactoryInterface;
-use Differ\FileReaderInterface;
-use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlainCommand;
-use Differ\Formatters\JSONCommand;
-use Differ\CommandLineParser;
-use Differ\FilesDiffCommand;
-use Differ\Formatters;
-use Differ\DisplayCommand;
-use Differ\DifferException;
 use Differ\CommandLineParserInterface as CLP;
 use Differ\FilesDiffCommandInterface as FDCI;
 use Differ\FormattersInterface as FI;
