@@ -2,11 +2,9 @@
 
 namespace Differ\Formatters;
 
-use Differ\CommandLineParserInterface as CLPI;
-use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\FormattersInterface as FI;
+use Differ\Interfaces\FormattersInterface as FI;
 
-class StylishCommand implements FI
+class StylishCommand implements \Differ\Interfaces\FormattersInterface
 {
     private string $files1ContentString;
     private string $files2ContentString;
@@ -54,7 +52,7 @@ class StylishCommand implements FI
 
                     $outputValue = is_array($contentItem["output"]) ? $contentItem["output"] : [];
                     $fileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
-                    //$fileContentItem = is_string($contentItem["fileContent"]) ? $contentItem["fileContent"] : "";
+
                     if (is_string($contentItem["fileContent"])) {
                         $fileContentItem = $contentItem["fileContent"];
                     } elseif (is_numeric($contentItem["fileContent"])) {
@@ -301,7 +299,7 @@ class StylishCommand implements FI
         }
     }
 
-    public function execute(FDCI $command): FI
+    public function execute(\Differ\Interfaces\FilesDiffCommandInterface $command): FI
     {
         $file1Name = $command->getFile1Name();
         $file2Name = $command->getFile2Name();

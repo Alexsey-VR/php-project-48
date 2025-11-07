@@ -1,40 +1,33 @@
 <?php
 
-namespace Differ;
+namespace Differ\tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use Differ\CommandFactory;
-use Differ\DisplayCommand;
-use Differ\FilesDiffCommand;
-use Differ\Formatters;
-use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlainCommand;
-use Differ\FileReader;
 
-#[CoversClass(ConsoleApp::class)]
-#[CoversClass(CommandFactory::class)]
-#[CoversClass(DisplayCommand::class)]
-#[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(FileReader::class)]
-#[CoversMethod(ConsoleApp::class, 'run')]
-#[CoversClass(DocoptDouble::class)]
-#[CoversClass(CommandLineParser::class)]
-#[CoversClass(Formatters::class)]
-#[CoversClass(StylishCommand::class)]
-#[CoversClass(PlainCommand::class)]
+#[CoversClass(\Differ\ConsoleApp::class)]
+#[CoversClass(\Differ\CommandFactory::class)]
+#[CoversClass(\Differ\DisplayCommand::class)]
+#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(\Differ\FileReader::class)]
+#[CoversMethod(\Differ\ConsoleApp::class, 'run')]
+#[CoversClass(\Differ\DocoptDouble::class)]
+#[CoversClass(\Differ\CommandLineParser::class)]
+#[CoversClass(\Differ\Formatters::class)]
+#[CoversClass(\Differ\Formatters\StylishCommand::class)]
+#[CoversClass(\Differ\Formatters\PlainCommand::class)]
 class ConsoleAppTest extends TestCase
 {
     public function testStylishConsoleAppRunning()
     {
-        $commandFactory = new CommandFactory(
-            new DocoptDouble(),
-            new FileReader(),
-            new Formatters()
+        $commandFactory = new \Differ\CommandFactory(
+            new \Differ\DocoptDouble(),
+            new \Differ\FileReader(),
+            new \Differ\Formatters()
         );
 
-        $consoleApp = new ConsoleApp($commandFactory);
+        $consoleApp = new \Differ\ConsoleApp($commandFactory);
 
         ob_start();
         $consoleApp->run();
@@ -48,13 +41,13 @@ class ConsoleAppTest extends TestCase
 
     public function testPlainConsoleAppRunning()
     {
-        $commandFactory = new CommandFactory(
-            new DocoptDouble("plain"),
-            new FileReader(),
-            new Formatters()
+        $commandFactory = new \Differ\CommandFactory(
+            new \Differ\DocoptDouble("plain"),
+            new \Differ\FileReader(),
+            new \Differ\Formatters()
         );
 
-        $consoleApp = new ConsoleApp($commandFactory);
+        $consoleApp = new \Differ\ConsoleApp($commandFactory);
 
         ob_start();
         $consoleApp->run();

@@ -4,7 +4,7 @@ namespace Differ;
 
 use Symfony\Component\Yaml\Yaml;
 
-class FileReader implements FileReaderInterface
+class FileReader implements \Differ\Interfaces\FileReaderInterface
 {
     private const MAX_FILE_SIZE = 4096;
 

@@ -2,31 +2,19 @@
 
 namespace Differ\Differ;
 
-use Differ\CommandFactory;
-use Differ\CommandLineParser;
-use Differ\FilesDiffCommand;
-use Differ\FileReader;
-use Differ\DisplayCommand;
-use Differ\Formatters;
-use Differ\DifferException;
-use Differ\CommandLineParserInterface as CLPI;
-use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\FormattersInterface as FI;
-use Differ\DisplayCommandInterface as DCI;
-
 function genDiff(
     string $pathToFile1,
     string $pathToFile2,
     string $format = 'stylish'
 ): string {
-    $commandFactory = new CommandFactory(
+    $commandFactory = new \Differ\CommandFactory(
         new \Docopt(),
-        new FileReader(),
-        new Formatters()
+        new \Differ\FileReader(),
+        new \Differ\Formatters()
     );
 
     /**
-     * @var CLPI $parseCommand
+     * @var \Differ\Interfaces\CommandLineParserInterface $parseCommand
      */
     $parseCommand = $commandFactory->createCommand('parse');
     $fileNames = [
@@ -35,32 +23,32 @@ function genDiff(
     ];
 
     /**
-     * @var CLPI $initCLPICommand
+     * @var \Differ\Interfaces\CommandLineParserInterface $initCLPICommand
      */
     $initCLPICommand = $parseCommand->setFileNames($fileNames)
                                 ->setFormat($format);
 
     $differ = $commandFactory->createCommand("difference");
-    if ($differ instanceof FDCI) {
+    if ($differ instanceof \Differ\Interfaces\FilesDiffCommandInterface) {
         $nextFDCICommand = $differ;
     } else {
-        throw new DifferException("internal error: invalid type for \"difference\" command");
+        throw new \Differ\DifferException("internal error: invalid type for \"difference\" command");
     }
     $initFDCICommand = $nextFDCICommand->execute($initCLPICommand);
 
     $formatter = $commandFactory->createCommand(strtolower($parseCommand->getFormat()));
-    if ($formatter instanceof FI) {
+    if ($formatter instanceof \Differ\Interfaces\FormattersInterface) {
         $nextFICommand = $formatter;
     } else {
-        throw new DifferException("internal error: invalid type for \"format\" command");
+        throw new \Differ\DifferException("internal error: invalid type for \"format\" command");
     }
     $initFICommand = $nextFICommand->execute($initFDCICommand);
 
     $showCommand = $commandFactory->createCommand("show");
-    if ($showCommand instanceof DCI) {
+    if ($showCommand instanceof \Differ\Interfaces\DisplayCommandInterface) {
         $nextDCICommand = $showCommand;
     } else {
-        throw new DifferException("internal error: invalid type for \"show\" command");
+        throw new \Differ\DifferException("internal error: invalid type for \"show\" command");
     }
 
     return $nextDCICommand->setFormatter($initFICommand)

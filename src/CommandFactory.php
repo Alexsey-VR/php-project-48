@@ -2,16 +2,16 @@
 
 namespace Differ;
 
-use Differ\CommandLineParserInterface as CLP;
-use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\FormattersInterface as FI;
-use Differ\DisplayCommandInterface as DCI;
+use Differ\Interfaces\CommandLineParserInterface as CLPI;
+use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
+use Differ\Interfaces\FormattersInterface as FI;
+use Differ\Interfaces\DisplayCommandInterface as DCI;
 
-class CommandFactory implements CommandFactoryInterface
+class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
 {
-    private \Docopt|DocoptDoubleInterface $parser;
-    private FileReaderInterface $fileReader;
-    private CommandFactoryInterface $formatters;
+    private \Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser;
+    private \Differ\Interfaces\FileReaderInterface $fileReader;
+    private \Differ\Interfaces\CommandFactoryInterface $formatters;
 
     private const array FORMAT_KEYS = [
         "stylish" => "stylish",
@@ -20,9 +20,9 @@ class CommandFactory implements CommandFactoryInterface
     ];
 
     public function __construct(
-        \Docopt|DocoptDoubleInterface $parser,
-        FileReaderInterface $fileReader,
-        CommandFactoryInterface $formatters
+        \Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser,
+        \Differ\Interfaces\FileReaderInterface $fileReader,
+        \Differ\Interfaces\CommandFactoryInterface $formatters
     ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
@@ -37,7 +37,7 @@ class CommandFactory implements CommandFactoryInterface
         return self::FORMAT_KEYS;
     }
 
-    public function createCommand(string $commandType): CLP|FDCI|FI|DCI
+    public function createCommand(string $commandType): CLPI | FDCI | FI | DCI
     {
         switch ($commandType) {
             case "parse":

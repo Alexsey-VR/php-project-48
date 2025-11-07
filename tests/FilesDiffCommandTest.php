@@ -1,28 +1,26 @@
 <?php
 
-namespace Differ;
+namespace Differ\tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\FileReader;
-use Differ\DifferException;
 
-#[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(FileReader::class)]
-#[CoversMethod(FilesDiffCommand::class, 'execute')]
-#[CoversClass(DifferException::class)]
+#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(\Differ\FileReader::class)]
+#[CoversMethod(\Differ\FilesDiffCommand::class, 'execute')]
+#[CoversClass(\Differ\DifferException::class)]
 class FilesDiffCommandTest extends TestCase
 {
     private $fileNames;
 
     public function testSetFileReader()
     {
-        $diffCommand = new FilesDiffCommand(new FileReader());
+        $diffCommand = new \Differ\FilesDiffCommand(new \Differ\FileReader());
 
         $this->assertInstanceOf(
-            FilesDiffCommand::class,
+            \Differ\FilesDiffCommand::class,
             $diffCommand
         );
     }
@@ -51,13 +49,13 @@ class FilesDiffCommandTest extends TestCase
     public function testExecute($fileNamesInput, $outputFilePath)
     {
         $cmdLineParser = $this->createConfiguredStub(
-            CommandLineParser::class,
+            \Differ\CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput
             ]
         );
 
-        $diffCommand = new FilesDiffCommand(new FileReader());
+        $diffCommand = new \Differ\FilesDiffCommand(new \Differ\FileReader());
 
         $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
                                  ->getContent1Descriptor();
@@ -78,7 +76,7 @@ class FilesDiffCommandTest extends TestCase
     public function testExecuteForException()
     {
         $cmdLineParser = $this->createConfiguredStub(
-            CommandLineParser::class,
+            \Differ\CommandLineParser::class,
             [
                 'getFileNames' => [
                     "FILE1" => __DIR__ . "/../fixtures/file1.txt",
@@ -87,9 +85,9 @@ class FilesDiffCommandTest extends TestCase
             ]
         );
 
-        $diffCommand = new FilesDiffCommand(new FileReader());
+        $diffCommand = new \Differ\FilesDiffCommand(new \Differ\FileReader());
 
-        $this->expectException(DifferException::class);
+        $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/unknown files format: use json, yaml \(yml\) enstead\\n/");
 
         $diffCommand->execute($cmdLineParser);

@@ -2,11 +2,9 @@
 
 namespace Differ\Formatters;
 
-use Differ\CommandLineParserInterface as CLPI;
-use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\FormattersInterface as FI;
+use Differ\Interfaces\FormattersInterface as FI;
 
-class PlainCommand implements FI
+class PlainCommand implements \Differ\Interfaces\FormattersInterface
 {
     private string $file1ContentString;
     private string $file2ContentString;
@@ -219,7 +217,7 @@ class PlainCommand implements FI
         }
     }
 
-    public function execute(FDCI $command): FI
+    public function execute(\Differ\Interfaces\FilesDiffCommandInterface $command): FI
     {
         $file1Name = $command->getFile1Name();
         $file2Name = $command->getFile2Name();

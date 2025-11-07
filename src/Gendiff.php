@@ -3,7 +3,7 @@
 namespace Differ;
 
 /**
- * @param CommandFactoryInterface $commandFactory
+ * @param \Differ\Interfaces\CommandFactoryInterface $commandFactory
  */
 function runGendiff(
     $commandFactory = new CommandFactory(

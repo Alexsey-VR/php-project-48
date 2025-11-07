@@ -1,34 +1,24 @@
 <?php
 
-namespace Differ;
+namespace Differ\tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\CommandFactory;
-use Differ\CommandLineParser;
-use Differ\Formatters;
-use Differ\FileReader;
-use Differ\DifferException;
-use Differ\DocoptDouble;
-use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlainCommand;
-use Differ\Formatters\JSONCommand;
-use Differ\DisplayCommand;
 
-#[CoversClass(CommandFactory::class)]
-#[CoversClass(CommandLineParser::class)]
-#[CoversClass(Formatters::class)]
-#[CoversClass(DocoptDouble::class)]
-#[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(FileReader::class)]
-#[CoversMethod(FilesDiffCommand::class, 'execute')]
-#[CoversClass(DifferException::class)]
-#[CoversClass(StylishCommand::class)]
-#[CoversClass(PlainCommand::class)]
-#[CoversClass(JSONCommand::class)]
-#[CoversClass(DisplayCommand::class)]
+#[CoversClass(\Differ\CommandFactory::class)]
+#[CoversClass(\Differ\CommandLineParser::class)]
+#[CoversClass(\Differ\Formatters::class)]
+#[CoversClass(\Differ\DocoptDouble::class)]
+#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(\Differ\FileReader::class)]
+#[CoversMethod(\Differ\FilesDiffCommand::class, 'execute')]
+#[CoversClass(\Differ\DifferException::class)]
+#[CoversClass(\Differ\Formatters\StylishCommand::class)]
+#[CoversClass(\Differ\Formatters\PlainCommand::class)]
+#[CoversClass(\Differ\Formatters\JSONCommand::class)]
+#[CoversClass(\Differ\DisplayCommand::class)]
 class FormattersTest extends TestCase
 {
     public static function getParserArguments(): array
@@ -95,17 +85,17 @@ class FormattersTest extends TestCase
     public function testExecute($fileNamesInput, $contentFilePath, $outputFormat, $outputDiffsPath)
     {
         $cmdLineParser = $this->createConfiguredStub(
-            CommandLineParser::class,
+            \Differ\CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput,
                 'getFormat' => $outputFormat
             ]
         );
 
-        $commandFactory = new CommandFactory(
-            new DocoptDouble(),
-            new FileReader(),
-            new Formatters()
+        $commandFactory = new \Differ\CommandFactory(
+            new \Differ\DocoptDouble(),
+            new \Differ\FileReader(),
+            new \Differ\Formatters()
         );
 
         $diffCommand = $commandFactory->createCommand("difference");
@@ -158,17 +148,17 @@ class FormattersTest extends TestCase
         ];
 
         $cmdLineParser = $this->createConfiguredStub(
-            CommandLineParser::class,
+            \Differ\CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput,
                 'getFormat' => 'undefined'
             ]
         );
 
-        $commandFactory = new CommandFactory(
-            new DocoptDouble(),
-            new FileReader(),
-            new Formatters()
+        $commandFactory = new \Differ\CommandFactory(
+            new \Differ\DocoptDouble(),
+            new \Differ\FileReader(),
+            new \Differ\Formatters()
         );
 
         $parseCommand = $commandFactory->createCommand("parse");
@@ -192,7 +182,7 @@ class FormattersTest extends TestCase
 
         $resultDiffs = $diffCommand->execute($cmdLineParser);
 
-         $this->expectException(DifferException::class);
+         $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown command factory option/");
 
         $formatCommand = $commandFactory->createCommand(

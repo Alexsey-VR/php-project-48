@@ -2,15 +2,12 @@
 
 namespace Differ;
 
-use Differ\CommandLineParserInterface as CLP;
-use Differ\FilesDiffCommandInterface as FDCI;
-use Differ\FormattersInterface as FI;
-use Differ\DisplayCommandInterface as DCI;
+use Differ\Interfaces\DisplayCommandInterface as DCI;
 
 class DisplayCommand implements DCI
 {
     private string $mode;
-    private FormattersInterface $formatCommand;
+    private \Differ\Interfaces\FormattersInterface $formatCommand;
     private const string MODE_EXCEPTION_MESSAGE = "internal error: unknown mode for display\n";
     public const AVAILABLE_MODES = [
         "differents" => "differents",
@@ -22,7 +19,7 @@ class DisplayCommand implements DCI
         $this->mode = $mode;
     }
 
-    public function setFormatter(FI $formatter): DCI
+    public function setFormatter(\Differ\Interfaces\FormattersInterface $formatter): DCI
     {
         $this->formatCommand = $formatter;
 
@@ -39,7 +36,7 @@ class DisplayCommand implements DCI
         return $this->formatCommand->getDiffsString();
     }
 
-    public function execute(FI $command): DCI
+    public function execute(\Differ\Interfaces\FormattersInterface $command): DCI
     {
         $this->formatCommand = $command;
         switch ($this->mode) {

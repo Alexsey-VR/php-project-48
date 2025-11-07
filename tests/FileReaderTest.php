@@ -1,20 +1,19 @@
 <?php
 
-namespace Differ;
+namespace Differ\tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use Differ\FileReader;
 
-#[CoversClass(FileReader::class)]
-#[CoversMethod(FileReader::class, 'readFile')]
+#[CoversClass(\Differ\FileReader::class)]
+#[CoversMethod(\Differ\FileReader::class, 'readFile')]
 class FileReaderTest extends TestCase
 {
     public const JSON_FILE_FOR_ARRAY = __DIR__ . "/../fixtures/fileForArray.json";
     public function testReadFileAsObject()
     {
-        $fileReader = new FileReader();
+        $fileReader = new \Differ\FileReader();
 
         $fileContent = $fileReader->readFile(
             self::JSON_FILE_FOR_ARRAY
@@ -28,7 +27,7 @@ class FileReaderTest extends TestCase
 
     public function testReadFileAsArray()
     {
-        $fileReader = new FileReader();
+        $fileReader = new \Differ\FileReader();
 
         $fileContent = $fileReader->readFile(
             self::JSON_FILE_FOR_ARRAY,
@@ -43,7 +42,7 @@ class FileReaderTest extends TestCase
 
     public function testReadFileNotJson()
     {
-        $fileReader = new FileReader();
+        $fileReader = new \Differ\FileReader();
 
         $fileContent = $fileReader->readFile(
             __DIR__ . "/../fixtures/fileNotJson.json"

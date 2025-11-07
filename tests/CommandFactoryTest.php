@@ -5,60 +5,49 @@ namespace Differ\tests;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use Differ\CommandFactory;
-use Differ\CommandLineParser;
-use Differ\FilesDiffCommand;
-use Differ\DisplayCommand;
-use Differ\FileReader;
-use Differ\DocoptDouble;
-use Differ\DifferException;
-use Differ\Formatters;
-use Differ\Formatters\StylishCommand;
-use Differ\Formatters\PlainCommand;
-use Differ\Formatters\JSONCommand;
 
-#[CoversClass(CommandFactory::class)]
-#[CoversClass(CommandLineParser::class)]
-#[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(DisplayCommand::class)]
-#[CoversClass(DocoptDouble::class)]
-#[CoversClass(FileReader::class)]
-#[CoversClass(DifferException::class)]
-#[CoversClass(StylishCommand::class)]
-#[CoversClass(PlainCommand::class)]
-#[CoversClass(JSONCommand::class)]
-#[CoversMethod(CommandFactory::class, 'createCommand')]
-#[CoversClass(Formatters::class)]
+#[CoversClass(\Differ\CommandFactory::class)]
+#[CoversClass(\Differ\CommandLineParser::class)]
+#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(\Differ\DisplayCommand::class)]
+#[CoversClass(\Differ\DocoptDouble::class)]
+#[CoversClass(\Differ\FileReader::class)]
+#[CoversClass(\Differ\DifferException::class)]
+#[CoversClass(\Differ\Formatters\StylishCommand::class)]
+#[CoversClass(\Differ\Formatters\PlainCommand::class)]
+#[CoversClass(\Differ\Formatters\JSONCommand::class)]
+#[CoversMethod(\Differ\CommandFactory::class, 'createCommand')]
+#[CoversClass(\Differ\Formatters::class)]
 class CommandFactoryTest extends TestCase
 {
     private $commandFactory;
 
     public function setUp(): void
     {
-        $this->commandFactory = new CommandFactory(
-            new DocoptDouble(),
-            new FileReader(),
-            new Formatters()
+        $this->commandFactory = new \Differ\CommandFactory(
+            new \Differ\DocoptDouble(),
+            new \Differ\FileReader(),
+            new \Differ\Formatters()
         );
     }
 
     public function testCreateCommand()
     {
-        $this->assertInstanceOf(CommandLineParser::class, $this->commandFactory->createCommand('parse'));
+        $this->assertInstanceOf(\Differ\CommandLineParser::class, $this->commandFactory->createCommand('parse'));
 
-        $this->assertInstanceOf(FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
+        $this->assertInstanceOf(\Differ\FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
 
-        $this->assertInstanceOf(StylishCommand::class, $this->commandFactory->createCommand('stylish'));
+        $this->assertInstanceOf(\Differ\Formatters\StylishCommand::class, $this->commandFactory->createCommand('stylish'));
 
-        $this->assertInstanceOf(PlainCommand::class, $this->commandFactory->createCommand('plain'));
+        $this->assertInstanceOf(\Differ\Formatters\PlainCommand::class, $this->commandFactory->createCommand('plain'));
 
-        $this->assertInstanceOf(JSONCommand::class, $this->commandFactory->createCommand('json'));
+        $this->assertInstanceOf(\Differ\Formatters\JSONCommand::class, $this->commandFactory->createCommand('json'));
 
-        $this->assertInstanceOf(PlainCommand::class, $this->commandFactory->createCommand('plain'));
+        $this->assertInstanceOf(\Differ\Formatters\PlainCommand::class, $this->commandFactory->createCommand('plain'));
 
-        $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->createCommand('show'));
+        $this->assertInstanceOf(\Differ\DisplayCommand::class, $this->commandFactory->createCommand('show'));
 
-        $this->expectException(DifferException::class);
+        $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown command factory option\\n/");
 
         $this->commandFactory->createCommand('undefined');

@@ -1,24 +1,17 @@
 <?php
 
-namespace Differ;
+namespace Differ\tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use Differ\CommandFactory;
-use Differ\DocoptDouble;
-use Differ\FileReader;
-use Differ\DisplayCommand;
-use Differ\DifferException;
-use Differ\Formatters;
-use Differ\Formatters\JSONCommand;
 
-#[CoversClass(DisplayCommand::class)]
-#[CoversMethod(DisplayCommand::class, 'execute')]
-#[CoversClass(DifferException::class)]
-#[CoversClass(CommandFactory::class)]
-#[CoversClass(DocoptDouble::class)]
-#[CoversClass(FileReader::class)]
+#[CoversClass(\Differ\DisplayCommand::class)]
+#[CoversMethod(\Differ\DisplayCommand::class, 'execute')]
+#[CoversClass(\Differ\DifferException::class)]
+#[CoversClass(\Differ\CommandFactory::class)]
+#[CoversClass(\Differ\DocoptDouble::class)]
+#[CoversClass(\Differ\FileReader::class)]
 class DisplayCommandTest extends TestCase
 {
     private $commandFactory;
@@ -31,16 +24,16 @@ class DisplayCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->commandFactory = new CommandFactory(
-            new DocoptDouble(),
-            new FileReader(),
-            new Formatters()
+        $this->commandFactory = new \Differ\CommandFactory(
+            new \Differ\DocoptDouble(),
+            new \Differ\FileReader(),
+            new \Differ\Formatters()
         );
 
         $this->displayCommand = $this->commandFactory->createCommand("show");
 
         $this->formattersStub = $this->createConfiguredStub(
-            JSONCommand::class,
+            \Differ\Formatters\JSONCommand::class,
             [
                 "getContentString" => $this->displayCommand::AVAILABLE_MODES["content"] . self::STRING_POSTFIX,
                 "getDiffsString" => $this->displayCommand::AVAILABLE_MODES["differents"] . self::STRING_POSTFIX
@@ -60,7 +53,7 @@ class DisplayCommandTest extends TestCase
 
     public function testInstance()
     {
-        $this->assertInstanceOf(DisplayCommand::class, $this->displayCommand);
+        $this->assertInstanceOf(\Differ\DisplayCommand::class, $this->displayCommand);
     }
 
     public function testDisplay()
@@ -77,7 +70,7 @@ class DisplayCommandTest extends TestCase
 
     public function testUnknownDisplayMode()
     {
-        $this->expectException(DifferException::class);
+        $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown mode for display\\n/");
 
         $this->displayCommand->setMode("undefined");

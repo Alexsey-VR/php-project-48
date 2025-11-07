@@ -2,9 +2,11 @@
 
 namespace Differ;
 
-class FilesDiffCommand implements FilesDiffCommandInterface
+use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
+
+class FilesDiffCommand implements FDCI
 {
-    private FileReaderInterface $fileReader;
+    private \Differ\Interfaces\FileReaderInterface $fileReader;
 
     /**
      * @var array<int,string> $filesPaths
@@ -35,7 +37,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
         "not changed", "changed", "added", "deleted", "empty", "new value"
     ];
 
-    public function __construct(FileReaderInterface $reader)
+    public function __construct(\Differ\Interfaces\FileReaderInterface $reader)
     {
         $this->filesDataItems = [];
 
@@ -283,7 +285,7 @@ class FilesDiffCommand implements FilesDiffCommandInterface
         );
     }
 
-    public function execute(CommandLineParserInterface $command): FilesDiffCommandInterface
+    public function execute(\Differ\Interfaces\CommandLineParserInterface $command): FDCI
     {
         $fileNames = $command->getFileNames();
         $this->filesPaths = [
