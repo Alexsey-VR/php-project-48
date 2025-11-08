@@ -18,11 +18,11 @@ class ConsoleApp
     ) {
         $this->commandFactory = $commandFactory;
 
-        $parser = $this->commandFactory->createCommand("parse");
+        $parser = $this->commandFactory->createCommand("parseCMDLine");
         if ($parser instanceof \Differ\Interfaces\CommandLineParserInterface) {
             $this->parseCommand = $parser;
         } else {
-            throw new DifferException("internal error: invalid type for \"parse\" command");
+            throw new DifferException("internal error: invalid type for \"parseCMDLine\" command");
         }
         $this->initCLPICommand = $this->parseCommand->execute($this->parseCommand);
     }
@@ -35,7 +35,15 @@ class ConsoleApp
         } else {
             throw new DifferException("internal error: invalid type for \"difference\" command");
         }
-        $this->initFDCICommand = $this->nextFDCICommand->execute($this->initCLPICommand);
+        $fileParser = $this->commandFactory->createCommand("parseFile");
+        if ($fileParser instanceof \Differ\Interfaces\FileParserInterface) {
+            $this->initFDCICommand = $this->nextFDCICommand->execute(
+                $this->initCLPICommand,
+                $fileParser
+            );
+        } else {
+            throw new DifferException("internal error: invalid type for \"parseFile\" command");
+        }
 
         $formatter = $this->commandFactory->createCommand(strtolower($this->parseCommand->getFormat()));
         if ($formatter instanceof \Differ\Interfaces\FormattersInterface) {

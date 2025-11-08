@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
+#[CoversClass(\Differ\FileParser::class)]
 #[CoversMethod(\Differ\FilesDiffCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
 class FilesDiffCommandTest extends TestCase
@@ -55,19 +56,22 @@ class FilesDiffCommandTest extends TestCase
             ]
         );
 
-        $diffCommand = new \Differ\FilesDiffCommand(new \Differ\FileReader());
+        $diffCommand = new \Differ\FilesDiffCommand(
+            new \Differ\FileReader()
+        );
+        $fileParser = new \Differ\FileParser();
 
-        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
+        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
 
         $this->assertTrue(is_array($resultContent1Descriptor));
 
-        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser)
+        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent2Descriptor();
 
         $this->assertTrue(is_array($resultContent2Descriptor));
 
-        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser)
+        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getDifferenceDescriptor();
 
         $this->assertTrue(is_array($resultDifferenceDescriptor));
@@ -86,10 +90,11 @@ class FilesDiffCommandTest extends TestCase
         );
 
         $diffCommand = new \Differ\FilesDiffCommand(new \Differ\FileReader());
+        $fileParser = new \Differ\FileParser();
 
         $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/unknown files format: use json, yaml \(yml\) enstead\\n/");
 
-        $diffCommand->execute($cmdLineParser);
+        $diffCommand->execute($cmdLineParser, $fileParser);
     }
 }

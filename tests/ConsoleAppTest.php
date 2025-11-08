@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 #[CoversMethod(\Differ\ConsoleApp::class, 'run')]
 #[CoversClass(\Differ\DocoptDouble::class)]
 #[CoversClass(\Differ\CommandLineParser::class)]
+#[CoversClass(\Differ\FileParser::class)]
 #[CoversClass(\Differ\Formatters::class)]
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
 #[CoversClass(\Differ\Formatters\PlainCommand::class)]

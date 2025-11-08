@@ -285,8 +285,10 @@ class FilesDiffCommand implements FDCI
         );
     }
 
-    public function execute(\Differ\Interfaces\CommandLineParserInterface $command): FDCI
-    {
+    public function execute(
+        \Differ\Interfaces\CommandLineParserInterface $command,
+        \Differ\Interfaces\FileParserInterface $fileParser
+    ): FDCI {
         $fileNames = $command->getFileNames();
         $this->filesPaths = [
             $fileNames['FILE1'],
@@ -294,7 +296,8 @@ class FilesDiffCommand implements FDCI
         ];
 
         foreach ($this->filesPaths as $filePath) {
-            $this->filesDataItems[] = $this->fileReader->readFile($filePath);
+            $fileReaderContainer = $this->fileReader->readFile($filePath);
+            $this->filesDataItems[] = $fileParser->execute($fileReaderContainer, true);
         }
 
         $filesDataItems = $this->filesDataItems[0];

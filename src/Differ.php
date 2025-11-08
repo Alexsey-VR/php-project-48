@@ -16,7 +16,7 @@ function genDiff(
     /**
      * @var \Differ\Interfaces\CommandLineParserInterface $parseCommand
      */
-    $parseCommand = $commandFactory->createCommand('parse');
+    $parseCommand = $commandFactory->createCommand('parseCMDLine');
     $fileNames = [
         "FILE1" => $pathToFile1,
         "FILE2" => $pathToFile2
@@ -34,7 +34,12 @@ function genDiff(
     } else {
         throw new \Differ\DifferException("internal error: invalid type for \"difference\" command");
     }
-    $initFDCICommand = $nextFDCICommand->execute($initCLPICommand);
+    $fileParser = $commandFactory->createCommand("parseFile");
+    if ($fileParser instanceof \Differ\Interfaces\FileParserInterface) {
+        $initFDCICommand = $nextFDCICommand->execute($initCLPICommand, $fileParser);
+    } else {
+        throw new \Differ\DifferException("internal error: invalid type for \"parseFile\" command");
+    }
 
     $formatter = $commandFactory->createCommand(strtolower($parseCommand->getFormat()));
     if ($formatter instanceof \Differ\Interfaces\FormattersInterface) {

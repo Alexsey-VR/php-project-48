@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 
 #[CoversClass(\Differ\CommandFactory::class)]
 #[CoversClass(\Differ\CommandLineParser::class)]
+#[CoversClass(\Differ\FileParser::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\DisplayCommand::class)]
 #[CoversClass(\Differ\DocoptDouble::class)]
@@ -33,7 +34,9 @@ class CommandFactoryTest extends TestCase
 
     public function testCreateCommand()
     {
-        $this->assertInstanceOf(\Differ\CommandLineParser::class, $this->commandFactory->createCommand('parse'));
+        $this->assertInstanceOf(\Differ\CommandLineParser::class, $this->commandFactory->createCommand('parseCMDLine'));
+
+        $this->assertInstanceOf(\Differ\FileParser::class, $this->commandFactory->createCommand("parseFile"));
 
         $this->assertInstanceOf(\Differ\FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
 

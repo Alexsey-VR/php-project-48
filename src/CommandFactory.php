@@ -3,6 +3,7 @@
 namespace Differ;
 
 use Differ\Interfaces\CommandLineParserInterface as CLPI;
+use Differ\Interfaces\FileParserInterface as FPI;
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
 use Differ\Interfaces\FormattersInterface as FI;
 use Differ\Interfaces\DisplayCommandInterface as DCI;
@@ -37,11 +38,14 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
         return self::FORMAT_KEYS;
     }
 
-    public function createCommand(string $commandType): CLPI | FDCI | FI | DCI
+    public function createCommand(string $commandType): CLPI | FDCI | FI | DCI | FPI
     {
         switch ($commandType) {
-            case "parse":
+            case "parseCMDLine":
                 $requestedCommand = new CommandLineParser($this->parser);
+                break;
+            case "parseFile":
+                $requestedCommand = new FileParser();
                 break;
             case "difference":
                 $requestedCommand = new FilesDiffCommand($this->fileReader);

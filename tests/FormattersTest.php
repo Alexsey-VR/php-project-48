@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(\Differ\CommandFactory::class)]
 #[CoversClass(\Differ\CommandLineParser::class)]
+#[CoversClass(\Differ\FileParser::class)]
 #[CoversClass(\Differ\Formatters::class)]
 #[CoversClass(\Differ\DocoptDouble::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
@@ -99,23 +100,23 @@ class FormattersTest extends TestCase
         );
 
         $diffCommand = $commandFactory->createCommand("difference");
-
-        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
+        $fileParser = $commandFactory->createCommand("parseFile");
+        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
 
         $this->assertTrue(is_array($resultContent1Descriptor));
 
-        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser)
+        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
 
         $this->assertTrue(is_array($resultContent2Descriptor));
 
-        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser)
+        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getDifferenceDescriptor();
 
         $this->assertTrue(is_array($resultDifferenceDescriptor));
 
-        $resultDiffs = $diffCommand->execute($cmdLineParser);
+        $resultDiffs = $diffCommand->execute($cmdLineParser, $fileParser);
 
         $formatCommand = $commandFactory->createCommand(
             strtolower($cmdLineParser->getFormat())
@@ -161,26 +162,26 @@ class FormattersTest extends TestCase
             new \Differ\Formatters()
         );
 
-        $parseCommand = $commandFactory->createCommand("parse");
+        $parseCommand = $commandFactory->createCommand("parseCMDLine");
 
         $diffCommand = $commandFactory->createCommand("difference");
-
-        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser)
+        $fileParser = $commandFactory->createCommand("parseFile");
+        $resultContent1Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
 
         $this->assertTrue(is_array($resultContent1Descriptor));
 
-        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser)
+        $resultContent2Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
 
         $this->assertTrue(is_array($resultContent2Descriptor));
 
-        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser)
+        $resultDifferenceDescriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getDifferenceDescriptor();
 
         $this->assertTrue(is_array($resultDifferenceDescriptor));
 
-        $resultDiffs = $diffCommand->execute($cmdLineParser);
+        $resultDiffs = $diffCommand->execute($cmdLineParser, $fileParser);
 
          $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown command factory option/");
