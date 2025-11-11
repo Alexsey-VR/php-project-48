@@ -7,11 +7,13 @@ use Differ\Interfaces\FileParserInterface as FPI;
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
 use Differ\Interfaces\FormattersInterface as FI;
 use Differ\Interfaces\DisplayCommandInterface as DCI;
+use Differ\Interfaces\DocoptDoubleInterface;
+use Differ\Interfaces\FileReaderInterface;
 
 class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
 {
     private \Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser;
-    private \Differ\Interfaces\FileReaderInterface $fileReader;
+    private FileReaderInterface $fileReader;
     private \Differ\Interfaces\CommandFactoryInterface $formatters;
 
     private const array FORMAT_KEYS = [
@@ -21,7 +23,7 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
     ];
 
     public function __construct(
-        \Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser,
+        \Docopt|DocoptDoubleInterface $parser,
         \Differ\Interfaces\FileReaderInterface $fileReader,
         \Differ\Interfaces\CommandFactoryInterface $formatters
     ) {
@@ -42,10 +44,10 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
     {
         switch ($commandType) {
             case "parseCMDLine":
-                $requestedCommand = new CommandLineParser($this->parser);
+                $requestedCommand = new \Differ\Parsers\CommandLineParser($this->parser);
                 break;
             case "parseFile":
-                $requestedCommand = new FileParser();
+                $requestedCommand = new \Differ\Parsers\FileParser();
                 break;
             case "difference":
                 $requestedCommand = new FilesDiffCommand($this->fileReader);

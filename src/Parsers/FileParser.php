@@ -1,8 +1,13 @@
 <?php
 
-namespace Differ;
+namespace Differ\Parsers;
 
-class FileParser implements \Differ\Interfaces\FileParserInterface
+use Symfony\Component\Yaml\Yaml;
+use Differ\DifferException;
+use Differ\Interfaces\FileParserInterface;
+use Differ\Interfaces\FileReaderInterface;
+
+class FileParser implements FileParserInterface
 {
     private string $fileName;
     private string $fileFormat;
@@ -15,7 +20,7 @@ class FileParser implements \Differ\Interfaces\FileParserInterface
         $this->fileContent = "";
     }
 
-    public function execute(\Differ\Interfaces\FileReaderInterface $fileReader, bool $isArray = true): array
+    public function execute(FileReaderInterface $fileReader, bool $isArray = true): array
     {
         $this->fileName = $fileReader->getName();
         $this->fileFormat = $fileReader->getFormat();
@@ -31,7 +36,7 @@ class FileParser implements \Differ\Interfaces\FileParserInterface
             $fileContentArray = is_array($jsonVariables) ?
                 $jsonVariables : throw new DifferException("internal error: json file can't be parsed\n");
         } elseif ($this->fileFormat === 'yaml' || $this->fileFormat === 'yml') {
-            $yamlVariables = \Symfony\Component\Yaml\Yaml::parseFile($this->fileName);
+            $yamlVariables = Yaml::parseFile($this->fileName);
             $fileContentArray = is_array($yamlVariables) ?
             $yamlVariables : throw new DifferException("internal error: yaml file can't be parsed\n");
         }

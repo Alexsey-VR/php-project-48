@@ -1,8 +1,10 @@
 <?php
 
-namespace Differ;
+namespace Differ\Parsers;
 
-class DocoptDouble implements \Differ\Interfaces\DocoptDoubleInterface
+use Differ\Interfaces\DocoptDoubleInterface;
+
+class DocoptDouble implements DocoptDoubleInterface
 {
     /**
      * @var array<string,string>
@@ -15,12 +17,12 @@ class DocoptDouble implements \Differ\Interfaces\DocoptDoubleInterface
             "--help" => "",
             "--version" => "",
             "--format" => $format,
-            "FILE1" => __DIR__ . "/../fixtures/file1.json",
-            "FILE2" => __DIR__ . "/../fixtures/file2.json"
+            "FILE1" => __DIR__ . "/../../fixtures/file1.json",
+            "FILE2" => __DIR__ . "/../../fixtures/file2.json"
         ];
     }
 
-    public function handle(): \Differ\Interfaces\DocoptDoubleInterface
+    public function handle(): DocoptDoubleInterface
     {
         return $this;
     }

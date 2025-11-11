@@ -5,13 +5,14 @@ namespace Differ\tests;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use \Differ\Parsers\DocoptDouble;
 
 #[CoversClass(\Differ\CommandFactory::class)]
-#[CoversClass(\Differ\CommandLineParser::class)]
-#[CoversClass(\Differ\FileParser::class)]
+#[CoversClass(\Differ\Parsers\CommandLineParser::class)]
+#[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\DisplayCommand::class)]
-#[CoversClass(\Differ\DocoptDouble::class)]
+#[CoversClass(DocoptDouble::class)]
 #[CoversClass(\Differ\FileReader::class)]
 #[CoversClass(\Differ\DifferException::class)]
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
@@ -26,7 +27,7 @@ class CommandFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->commandFactory = new \Differ\CommandFactory(
-            new \Differ\DocoptDouble(),
+            new DocoptDouble(),
             new \Differ\FileReader(),
             new \Differ\Formatters()
         );
@@ -34,9 +35,9 @@ class CommandFactoryTest extends TestCase
 
     public function testCreateCommand()
     {
-        $this->assertInstanceOf(\Differ\CommandLineParser::class, $this->commandFactory->createCommand('parseCMDLine'));
+        $this->assertInstanceOf(\Differ\Parsers\CommandLineParser::class, $this->commandFactory->createCommand('parseCMDLine'));
 
-        $this->assertInstanceOf(\Differ\FileParser::class, $this->commandFactory->createCommand("parseFile"));
+        $this->assertInstanceOf(\Differ\Parsers\FileParser::class, $this->commandFactory->createCommand("parseFile"));
 
         $this->assertInstanceOf(\Differ\FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
 

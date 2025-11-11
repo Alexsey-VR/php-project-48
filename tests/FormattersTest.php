@@ -6,12 +6,13 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
+use \Differ\Parsers\DocoptDouble;
 
 #[CoversClass(\Differ\CommandFactory::class)]
-#[CoversClass(\Differ\CommandLineParser::class)]
-#[CoversClass(\Differ\FileParser::class)]
+#[CoversClass(\Differ\Parsers\CommandLineParser::class)]
+#[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversClass(\Differ\Formatters::class)]
-#[CoversClass(\Differ\DocoptDouble::class)]
+#[CoversClass(DocoptDouble::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
 #[CoversMethod(\Differ\FilesDiffCommand::class, 'execute')]
@@ -86,7 +87,7 @@ class FormattersTest extends TestCase
     public function testExecute($fileNamesInput, $contentFilePath, $outputFormat, $outputDiffsPath)
     {
         $cmdLineParser = $this->createConfiguredStub(
-            \Differ\CommandLineParser::class,
+            \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput,
                 'getFormat' => $outputFormat
@@ -94,7 +95,7 @@ class FormattersTest extends TestCase
         );
 
         $commandFactory = new \Differ\CommandFactory(
-            new \Differ\DocoptDouble(),
+            new DocoptDouble(),
             new \Differ\FileReader(),
             new \Differ\Formatters()
         );
@@ -149,7 +150,7 @@ class FormattersTest extends TestCase
         ];
 
         $cmdLineParser = $this->createConfiguredStub(
-            \Differ\CommandLineParser::class,
+            \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput,
                 'getFormat' => 'undefined'
@@ -157,7 +158,7 @@ class FormattersTest extends TestCase
         );
 
         $commandFactory = new \Differ\CommandFactory(
-            new \Differ\DocoptDouble(),
+            new DocoptDouble(),
             new \Differ\FileReader(),
             new \Differ\Formatters()
         );

@@ -1,25 +1,26 @@
 <?php
 
-namespace Differ;
+namespace Differ\Parsers;
 
-use Differ\Interfaces\CommandLineParserInterface as CLPI;
+use Differ\Interfaces\CommandLineParserInterface;
+use Differ\Interfaces\DocoptDoubleInterface;
 
-class CommandLineParser implements \Differ\Interfaces\CommandLineParserInterface
+class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
-    private \Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser;
+    private \Docopt|DocoptDoubleInterface $parser;
     /**
      * @var array<string,string> $args
      */
     private array $args;
     private string $defaultFormat;
 
-    public function __construct(\Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser)
+    public function __construct(\Docopt|DocoptDoubleInterface $parser)
     {
         $this->parser = $parser;
         $this->defaultFormat = 'stylish';
 
-        $filename = __DIR__ . "/../docopt.txt";
+        $filename = __DIR__ . "/../../docopt.txt";
         if (file_exists($filename)) {
             $handler = fopen($filename, 'r');
             $filesize = filesize($filename);
@@ -34,10 +35,10 @@ class CommandLineParser implements \Differ\Interfaces\CommandLineParserInterface
         }
     }
 
-    public function execute(CLPI $command): CLPI
+    public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
         /**
-         * @var \Docopt\Response|\Differ\Interfaces\DocoptDoubleInterface $objArgs
+         * @var \Docopt\Response|DocoptDoubleInterface $objArgs
          */
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
         if (isset($objArgs->args)) {
@@ -58,7 +59,7 @@ class CommandLineParser implements \Differ\Interfaces\CommandLineParserInterface
     /**
      * @param array<string,string> $fileNames
      */
-    public function setFileNames(array $fileNames): \Differ\Interfaces\CommandLineParserInterface
+    public function setFileNames(array $fileNames): CommandLineParserInterface
     {
         foreach ($fileNames as $key => $value) {
             $this->args[$key] = $value;
@@ -75,7 +76,7 @@ class CommandLineParser implements \Differ\Interfaces\CommandLineParserInterface
         return $this->args;
     }
 
-    public function setFormat(string $format): \Differ\Interfaces\CommandLineParserInterface
+    public function setFormat(string $format): CommandLineParserInterface
     {
         $this->defaultFormat = $format;
 

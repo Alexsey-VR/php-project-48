@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
-#[CoversClass(\Differ\FileParser::class)]
+#[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversMethod(\Differ\FilesDiffCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
 class FilesDiffCommandTest extends TestCase
@@ -50,7 +50,7 @@ class FilesDiffCommandTest extends TestCase
     public function testExecute($fileNamesInput, $outputFilePath)
     {
         $cmdLineParser = $this->createConfiguredStub(
-            \Differ\CommandLineParser::class,
+            \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput
             ]
@@ -59,7 +59,7 @@ class FilesDiffCommandTest extends TestCase
         $diffCommand = new \Differ\FilesDiffCommand(
             new \Differ\FileReader()
         );
-        $fileParser = new \Differ\FileParser();
+        $fileParser = new \Differ\Parsers\FileParser();
 
         $resultContent1Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
@@ -80,7 +80,7 @@ class FilesDiffCommandTest extends TestCase
     public function testExecuteForException()
     {
         $cmdLineParser = $this->createConfiguredStub(
-            \Differ\CommandLineParser::class,
+            \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => [
                     "FILE1" => __DIR__ . "/../fixtures/file1.txt",
@@ -90,7 +90,7 @@ class FilesDiffCommandTest extends TestCase
         );
 
         $diffCommand = new \Differ\FilesDiffCommand(new \Differ\FileReader());
-        $fileParser = new \Differ\FileParser();
+        $fileParser = new \Differ\Parsers\FileParser();
 
         $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/unknown files format: use json, yaml \(yml\) enstead\\n/");

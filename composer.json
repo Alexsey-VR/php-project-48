@@ -14,9 +14,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Differ\\": "src/",
-            "Differ\\Interfaces\\": "src/Interfaces",
-            "Differ\\Formatters\\": "src/Formatters"
+            "Differ\\": "src/"
         },
         "files": [
             "vendor/docopt/docopt/src/docopt.php",

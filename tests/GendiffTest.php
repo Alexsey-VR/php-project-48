@@ -4,6 +4,7 @@ namespace Differ\tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use \Differ\Parsers\DocoptDouble;
 
 use function Differ\runGendiff;
 
@@ -13,7 +14,7 @@ class GendiffTest extends TestCase
     public function testRunGendiff()
     {
         $commandFactory = new \Differ\CommandFactory(
-            new \Differ\DocoptDouble(),
+            new DocoptDouble(),
             new \Differ\FileReader(),
             new \Differ\Formatters()
         );
@@ -31,7 +32,7 @@ class GendiffTest extends TestCase
     public function testRunPlainGendiff()
     {
         $commandFactory = new \Differ\CommandFactory(
-            new \Differ\DocoptDouble("plain"),
+            new DocoptDouble("plain"),
             new \Differ\FileReader(),
             new \Differ\Formatters()
         );
