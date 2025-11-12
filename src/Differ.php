@@ -7,10 +7,10 @@ function genDiff(
     string $pathToFile2,
     string $format = 'stylish'
 ): string {
-    $commandFactory = new \Differ\CommandFactory(
+    $commandFactory = new \Differ\Factories\CommandFactory(
         new \Docopt(),
         new \Differ\FileReader(),
-        new \Differ\Formatters()
+        new \Differ\Factories\Formatters()
     );
 
     /**

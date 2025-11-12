@@ -6,12 +6,14 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use \Differ\Parsers\DocoptDouble;
+use Differ\Parsers\DocoptDouble;
+use Differ\Factories\CommandFactory;
+use Differ\Factories\Formatters;
 
-#[CoversClass(\Differ\CommandFactory::class)]
+#[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
-#[CoversClass(\Differ\Formatters::class)]
+#[CoversClass(Formatters::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
@@ -94,10 +96,10 @@ class FormattersTest extends TestCase
             ]
         );
 
-        $commandFactory = new \Differ\CommandFactory(
+        $commandFactory = new CommandFactory(
             new DocoptDouble(),
             new \Differ\FileReader(),
-            new \Differ\Formatters()
+            new Formatters()
         );
 
         $diffCommand = $commandFactory->createCommand("difference");
@@ -157,10 +159,10 @@ class FormattersTest extends TestCase
             ]
         );
 
-        $commandFactory = new \Differ\CommandFactory(
+        $commandFactory = new CommandFactory(
             new DocoptDouble(),
             new \Differ\FileReader(),
-            new \Differ\Formatters()
+            new Formatters()
         );
 
         $parseCommand = $commandFactory->createCommand("parseCMDLine");

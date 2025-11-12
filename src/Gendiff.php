@@ -6,10 +6,10 @@ namespace Differ;
  * @param \Differ\Interfaces\CommandFactoryInterface $commandFactory
  */
 function runGendiff(
-    $commandFactory = new CommandFactory(
+    $commandFactory = new \Differ\Factories\CommandFactory(
         new \Docopt(),
         new FileReader(),
-        new Formatters()
+        new \Differ\Factories\Formatters()
     )
 ): void {
     $consoleApp = new ConsoleApp($commandFactory);

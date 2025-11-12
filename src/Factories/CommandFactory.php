@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ;
+namespace Differ\Factories;
 
 use Differ\Interfaces\CommandLineParserInterface as CLPI;
 use Differ\Interfaces\FileParserInterface as FPI;
@@ -50,7 +50,7 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
                 $requestedCommand = new \Differ\Parsers\FileParser();
                 break;
             case "difference":
-                $requestedCommand = new FilesDiffCommand($this->fileReader);
+                $requestedCommand = new \Differ\FilesDiffCommand($this->fileReader);
                 break;
             case self::FORMAT_KEYS["stylish"]:
                 $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["stylish"]);
@@ -62,10 +62,10 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
                 $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["json"]);
                 break;
             case "show":
-                $requestedCommand = new DisplayCommand();
+                $requestedCommand = new \Differ\DisplayCommand();
                 break;
             default:
-                throw new DifferException("internal error: unknown command factory option\n");
+                throw new \Differ\DifferException("internal error: unknown command factory option\n");
         }
         return $requestedCommand;
     }

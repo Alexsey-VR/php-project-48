@@ -5,9 +5,11 @@ namespace Differ\tests;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use \Differ\Parsers\DocoptDouble;
+use Differ\Parsers\DocoptDouble;
+use Differ\Factories\CommandFactory;
+use Differ\Factories\Formatters;
 
-#[CoversClass(\Differ\CommandFactory::class)]
+#[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
@@ -18,18 +20,18 @@ use \Differ\Parsers\DocoptDouble;
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
 #[CoversClass(\Differ\Formatters\PlainCommand::class)]
 #[CoversClass(\Differ\Formatters\JSONCommand::class)]
-#[CoversMethod(\Differ\CommandFactory::class, 'createCommand')]
-#[CoversClass(\Differ\Formatters::class)]
+#[CoversMethod(CommandFactory::class, 'createCommand')]
+#[CoversClass(Formatters::class)]
 class CommandFactoryTest extends TestCase
 {
     private $commandFactory;
 
     public function setUp(): void
     {
-        $this->commandFactory = new \Differ\CommandFactory(
+        $this->commandFactory = new CommandFactory(
             new DocoptDouble(),
             new \Differ\FileReader(),
-            new \Differ\Formatters()
+            new Formatters()
         );
     }
 
@@ -46,8 +48,6 @@ class CommandFactoryTest extends TestCase
         $this->assertInstanceOf(\Differ\Formatters\PlainCommand::class, $this->commandFactory->createCommand('plain'));
 
         $this->assertInstanceOf(\Differ\Formatters\JSONCommand::class, $this->commandFactory->createCommand('json'));
-
-        $this->assertInstanceOf(\Differ\Formatters\PlainCommand::class, $this->commandFactory->createCommand('plain'));
 
         $this->assertInstanceOf(\Differ\DisplayCommand::class, $this->commandFactory->createCommand('show'));
 
