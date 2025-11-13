@@ -8,12 +8,13 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
+use Differ\Displays\DisplayCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
-#[CoversClass(\Differ\DisplayCommand::class)]
+#[CoversClass(DisplayCommand::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(\Differ\FileReader::class)]
 #[CoversClass(\Differ\DifferException::class)]
@@ -49,7 +50,7 @@ class CommandFactoryTest extends TestCase
 
         $this->assertInstanceOf(\Differ\Formatters\JSONCommand::class, $this->commandFactory->createCommand('json'));
 
-        $this->assertInstanceOf(\Differ\DisplayCommand::class, $this->commandFactory->createCommand('show'));
+        $this->assertInstanceOf(DisplayCommand::class, $this->commandFactory->createCommand('show'));
 
         $this->expectException(\Differ\DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown command factory option\\n/");

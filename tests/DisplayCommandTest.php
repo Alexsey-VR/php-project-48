@@ -8,9 +8,10 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
+use Differ\Displays\DisplayCommand;
 
-#[CoversClass(\Differ\DisplayCommand::class)]
-#[CoversMethod(\Differ\DisplayCommand::class, 'execute')]
+#[CoversClass(DisplayCommand::class)]
+#[CoversMethod(DisplayCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(DocoptDouble::class)]
@@ -56,7 +57,7 @@ class DisplayCommandTest extends TestCase
 
     public function testInstance()
     {
-        $this->assertInstanceOf(\Differ\DisplayCommand::class, $this->displayCommand);
+        $this->assertInstanceOf(DisplayCommand::class, $this->displayCommand);
     }
 
     public function testDisplay()

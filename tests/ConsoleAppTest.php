@@ -8,10 +8,10 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
+use Differ\Displays\DisplayCommand;
 
 #[CoversClass(\Differ\ConsoleApp::class)]
 #[CoversClass(CommandFactory::class)]
-#[CoversClass(\Differ\DisplayCommand::class)]
 #[CoversClass(\Differ\FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
 #[CoversMethod(\Differ\ConsoleApp::class, 'run')]
@@ -21,6 +21,7 @@ use Differ\Factories\Formatters;
 #[CoversClass(Formatters::class)]
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
 #[CoversClass(\Differ\Formatters\PlainCommand::class)]
+#[CoversClass(DisplayCommand::class)]
 class ConsoleAppTest extends TestCase
 {
     public function testStylishConsoleAppRunning()

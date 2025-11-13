@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
+use Differ\Displays\DisplayCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
@@ -22,7 +23,7 @@ use Differ\Factories\Formatters;
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
 #[CoversClass(\Differ\Formatters\PlainCommand::class)]
 #[CoversClass(\Differ\Formatters\JSONCommand::class)]
-#[CoversClass(\Differ\DisplayCommand::class)]
+#[CoversClass(DisplayCommand::class)]
 class FormattersTest extends TestCase
 {
     public static function getParserArguments(): array

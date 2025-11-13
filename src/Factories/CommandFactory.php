@@ -62,7 +62,7 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
                 $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["json"]);
                 break;
             case "show":
-                $requestedCommand = new \Differ\DisplayCommand();
+                $requestedCommand = new \Differ\Displays\DisplayCommand();
                 break;
             default:
                 throw new \Differ\DifferException("internal error: unknown command factory option\n");

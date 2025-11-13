@@ -1,13 +1,14 @@
 <?php
 
-namespace Differ;
+namespace Differ\Displays;
 
 use Differ\Interfaces\DisplayCommandInterface as DCI;
+use Differ\Interfaces\FormattersInterface as FI;
 
 class DisplayCommand implements DCI
 {
     private string $mode;
-    private \Differ\Interfaces\FormattersInterface $formatCommand;
+    private FI $formatCommand;
     private const string MODE_EXCEPTION_MESSAGE = "internal error: unknown mode for display\n";
     public const AVAILABLE_MODES = [
         "differents" => "differents",
@@ -19,7 +20,7 @@ class DisplayCommand implements DCI
         $this->mode = $mode;
     }
 
-    public function setFormatter(\Differ\Interfaces\FormattersInterface $formatter): DCI
+    public function setFormatter(FI $formatter): DCI
     {
         $this->formatCommand = $formatter;
 
@@ -36,7 +37,7 @@ class DisplayCommand implements DCI
         return $this->formatCommand->getDiffsString();
     }
 
-    public function execute(\Differ\Interfaces\FormattersInterface $command): DCI
+    public function execute(FI $command): DCI
     {
         $this->formatCommand = $command;
         switch ($this->mode) {
@@ -47,7 +48,7 @@ class DisplayCommand implements DCI
                 print_r($this->getFilesContent());
                 break;
             default:
-                throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
+                throw new \Differ\DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
 
         return $this;
@@ -60,7 +61,7 @@ class DisplayCommand implements DCI
 
             return $this;
         } else {
-            throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
+            throw new \Differ\DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
     }
 }
