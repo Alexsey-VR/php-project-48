@@ -9,10 +9,11 @@ use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
+use Differ\Differs\FilesDiffCommand;
 
 #[CoversClass(\Differ\ConsoleApp::class)]
 #[CoversClass(CommandFactory::class)]
-#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
 #[CoversMethod(\Differ\ConsoleApp::class, 'run')]
 #[CoversClass(DocoptDouble::class)]

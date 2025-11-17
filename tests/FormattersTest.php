@@ -10,15 +10,16 @@ use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
+use Differ\Differs\FilesDiffCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversClass(Formatters::class)]
 #[CoversClass(DocoptDouble::class)]
-#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(\Differ\FileReader::class)]
-#[CoversMethod(\Differ\FilesDiffCommand::class, 'execute')]
+#[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
 #[CoversClass(\Differ\Formatters\PlainCommand::class)]

@@ -9,11 +9,12 @@ use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
+use Differ\Differs\FilesDiffCommand;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
-#[CoversClass(\Differ\FilesDiffCommand::class)]
+#[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(DisplayCommand::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(\Differ\FileReader::class)]
@@ -42,7 +43,7 @@ class CommandFactoryTest extends TestCase
 
         $this->assertInstanceOf(\Differ\Parsers\FileParser::class, $this->commandFactory->createCommand("parseFile"));
 
-        $this->assertInstanceOf(\Differ\FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
+        $this->assertInstanceOf(FilesDiffCommand::class, $this->commandFactory->createCommand('difference'));
 
         $this->assertInstanceOf(\Differ\Formatters\StylishCommand::class, $this->commandFactory->createCommand('stylish'));
 

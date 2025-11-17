@@ -1,8 +1,9 @@
 <?php
 
-namespace Differ;
+namespace Differ\Differs;
 
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
+use Differ\DifferException;
 
 class FilesDiffCommand implements FDCI
 {

@@ -50,7 +50,7 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
                 $requestedCommand = new \Differ\Parsers\FileParser();
                 break;
             case "difference":
-                $requestedCommand = new \Differ\FilesDiffCommand($this->fileReader);
+                $requestedCommand = new \Differ\Differs\FilesDiffCommand($this->fileReader);
                 break;
             case self::FORMAT_KEYS["stylish"]:
                 $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["stylish"]);
