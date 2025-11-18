@@ -17,9 +17,7 @@
             "Differ\\": "src/"
         },
         "files": [
-            "vendor/docopt/docopt/src/docopt.php",
-            "src/Gendiff.php",
-            "src/Differ.php"
+            "vendor/docopt/docopt/src/docopt.php"
         ]
     },
     "authors": [

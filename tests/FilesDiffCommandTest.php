@@ -7,9 +7,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\Differs\FilesDiffCommand;
+use Differ\Readers\FileReader;
 
 #[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(\Differ\FileReader::class)]
+#[CoversClass(FileReader::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
@@ -19,7 +20,7 @@ class FilesDiffCommandTest extends TestCase
 
     public function testSetFileReader()
     {
-        $diffCommand = new FilesDiffCommand(new \Differ\FileReader());
+        $diffCommand = new FilesDiffCommand(new FileReader());
 
         $this->assertInstanceOf(
             FilesDiffCommand::class,
@@ -58,7 +59,7 @@ class FilesDiffCommandTest extends TestCase
         );
 
         $diffCommand = new FilesDiffCommand(
-            new \Differ\FileReader()
+            new FileReader()
         );
         $fileParser = new \Differ\Parsers\FileParser();
 
@@ -90,7 +91,7 @@ class FilesDiffCommandTest extends TestCase
             ]
         );
 
-        $diffCommand = new FilesDiffCommand(new \Differ\FileReader());
+        $diffCommand = new FilesDiffCommand(new FileReader());
         $fileParser = new \Differ\Parsers\FileParser();
 
         $this->expectException(\Differ\DifferException::class);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ;
+namespace Differ\Readers;
 
 class FileReader implements \Differ\Interfaces\FileReaderInterface
 {
@@ -38,7 +38,7 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
                     fclose($handle);
                 }
             } elseif (($this->fileFormat === "yaml" || $this->fileFormat === "yml") === false) {
-                throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
+                throw new \Differ\DifferException("unknown files format: use json, yaml (yml) enstead\n");
             }
         }
         return $this;

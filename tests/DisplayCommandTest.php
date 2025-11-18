@@ -9,13 +9,14 @@ use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
+use Differ\Readers\FileReader;
 
 #[CoversClass(DisplayCommand::class)]
 #[CoversMethod(DisplayCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(DocoptDouble::class)]
-#[CoversClass(\Differ\FileReader::class)]
+#[CoversClass(FileReader::class)]
 class DisplayCommandTest extends TestCase
 {
     private $commandFactory;
@@ -30,7 +31,7 @@ class DisplayCommandTest extends TestCase
     {
         $this->commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new \Differ\FileReader(),
+            new FileReader(),
             new Formatters()
         );
 

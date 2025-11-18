@@ -10,12 +10,14 @@ use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
 use Differ\Differs\FilesDiffCommand;
+use Differ\Readers\FileReader;
+use Differ\ConsoleApp;
 
 #[CoversClass(\Differ\ConsoleApp::class)]
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(\Differ\FileReader::class)]
-#[CoversMethod(\Differ\ConsoleApp::class, 'run')]
+#[CoversClass(FileReader::class)]
+#[CoversMethod(ConsoleApp::class, 'run')]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
@@ -29,11 +31,11 @@ class ConsoleAppTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new \Differ\FileReader(),
+            new FileReader(),
             new Formatters()
         );
 
-        $consoleApp = new \Differ\ConsoleApp($commandFactory);
+        $consoleApp = new ConsoleApp($commandFactory);
 
         ob_start();
         $consoleApp->run();
@@ -49,7 +51,7 @@ class ConsoleAppTest extends TestCase
     {
         $commandFactory = new CommandFactory(
             new DocoptDouble("plain"),
-            new \Differ\FileReader(),
+            new FileReader(),
             new Formatters()
         );
 

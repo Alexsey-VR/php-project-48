@@ -3,6 +3,22 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function Differ\runGendiff;
+use Differ\ConsoleApp;
+use Differ\Readers\FileReader;
+use Differ\Factories\CommandFactory;
+use Differ\Factories\Formatters;
+use Differ\DifferException;
 
-runGendiff();
+$differ = new ConsoleApp(
+    $commandFactory = new CommandFactory(
+        new \Docopt(),
+        new FileReader(),
+        new Formatters()
+    )
+);
+try {
+    $differ->run();
+} catch (DifferException $e) {
+    print_r("{$e->getMessage()}");
+}
+

@@ -11,6 +11,7 @@ use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
 use Differ\Differs\FilesDiffCommand;
+use Differ\Readers\FileReader;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
@@ -18,7 +19,7 @@ use Differ\Differs\FilesDiffCommand;
 #[CoversClass(Formatters::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FilesDiffCommand::class)]
-#[CoversClass(\Differ\FileReader::class)]
+#[CoversClass(FileReader::class)]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(\Differ\DifferException::class)]
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
@@ -100,7 +101,7 @@ class FormattersTest extends TestCase
 
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new \Differ\FileReader(),
+            new FileReader(),
             new Formatters()
         );
 
@@ -163,7 +164,7 @@ class FormattersTest extends TestCase
 
         $commandFactory = new CommandFactory(
             new DocoptDouble(),
-            new \Differ\FileReader(),
+            new FileReader(),
             new Formatters()
         );
 
