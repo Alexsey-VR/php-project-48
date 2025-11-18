@@ -4,6 +4,7 @@ namespace Differ\Displays;
 
 use Differ\Interfaces\DisplayCommandInterface as DCI;
 use Differ\Interfaces\FormattersInterface as FI;
+use Differ\Exceptions\DifferException;
 
 class DisplayCommand implements DCI
 {
@@ -48,7 +49,7 @@ class DisplayCommand implements DCI
                 print_r($this->getFilesContent());
                 break;
             default:
-                throw new \Differ\DifferException(self::MODE_EXCEPTION_MESSAGE);
+                throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
 
         return $this;
@@ -61,7 +62,7 @@ class DisplayCommand implements DCI
 
             return $this;
         } else {
-            throw new \Differ\DifferException(self::MODE_EXCEPTION_MESSAGE);
+            throw new DifferException(self::MODE_EXCEPTION_MESSAGE);
         }
     }
 }

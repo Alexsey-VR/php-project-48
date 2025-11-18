@@ -2,6 +2,8 @@
 
 namespace Differ\Readers;
 
+use Differ\Exceptions\DifferException;
+
 class FileReader implements \Differ\Interfaces\FileReaderInterface
 {
     private const MAX_FILE_SIZE = 4096;
@@ -38,7 +40,7 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
                     fclose($handle);
                 }
             } elseif (($this->fileFormat === "yaml" || $this->fileFormat === "yml") === false) {
-                throw new \Differ\DifferException("unknown files format: use json, yaml (yml) enstead\n");
+                throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
             }
         }
         return $this;

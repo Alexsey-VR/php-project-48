@@ -3,7 +3,7 @@
 namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
-use Differ\DifferException;
+use Differ\Exceptions\DifferException;
 use Differ\Interfaces\FileParserInterface;
 use Differ\Interfaces\FileReaderInterface;
 

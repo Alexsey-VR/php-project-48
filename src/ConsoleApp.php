@@ -11,7 +11,7 @@ use Differ\Interfaces\DisplayCommandInterface;
 use Differ\Factories\CommandFactory;
 use Differ\Readers\FileReader;
 use Differ\Factories\Formatters;
-use Differ\DifferException;
+use Differ\Exceptions\DifferException;
 
 class ConsoleApp
 {

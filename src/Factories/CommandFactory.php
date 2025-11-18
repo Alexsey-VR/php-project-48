@@ -9,6 +9,7 @@ use Differ\Interfaces\FormattersInterface as FI;
 use Differ\Interfaces\DisplayCommandInterface as DCI;
 use Differ\Interfaces\DocoptDoubleInterface;
 use Differ\Interfaces\FileReaderInterface;
+use Differ\Exceptions\DifferException;
 
 class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
 {
@@ -65,7 +66,7 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
                 $requestedCommand = new \Differ\Displays\DisplayCommand();
                 break;
             default:
-                throw new \Differ\DifferException("internal error: unknown command factory option\n");
+                throw new DifferException("internal error: unknown command factory option\n");
         }
         return $requestedCommand;
     }

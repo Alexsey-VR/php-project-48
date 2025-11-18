@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ;
+namespace Differ\Exceptions;
 
 class DifferException extends \Exception
 {

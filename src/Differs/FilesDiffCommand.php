@@ -3,7 +3,7 @@
 namespace Differ\Differs;
 
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
-use Differ\DifferException;
+use Differ\Exceptions\DifferException;
 
 class FilesDiffCommand implements FDCI
 {

@@ -12,6 +12,7 @@ use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
 use Differ\Differs\FilesDiffCommand;
 use Differ\Readers\FileReader;
+use Differ\Exceptions\DifferException;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
@@ -21,7 +22,7 @@ use Differ\Readers\FileReader;
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
-#[CoversClass(\Differ\DifferException::class)]
+#[CoversClass(DifferException::class)]
 #[CoversClass(\Differ\Formatters\StylishCommand::class)]
 #[CoversClass(\Differ\Formatters\PlainCommand::class)]
 #[CoversClass(\Differ\Formatters\JSONCommand::class)]
@@ -189,7 +190,7 @@ class FormattersTest extends TestCase
 
         $resultDiffs = $diffCommand->execute($cmdLineParser, $fileParser);
 
-         $this->expectException(\Differ\DifferException::class);
+         $this->expectException(DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown command factory option/");
 
         $formatCommand = $commandFactory->createCommand(

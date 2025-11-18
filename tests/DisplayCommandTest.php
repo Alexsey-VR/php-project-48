@@ -10,10 +10,11 @@ use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
 use Differ\Readers\FileReader;
+use Differ\Exceptions\DifferException;
 
 #[CoversClass(DisplayCommand::class)]
 #[CoversMethod(DisplayCommand::class, 'execute')]
-#[CoversClass(\Differ\DifferException::class)]
+#[CoversClass(DifferException::class)]
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FileReader::class)]
@@ -75,7 +76,7 @@ class DisplayCommandTest extends TestCase
 
     public function testUnknownDisplayMode()
     {
-        $this->expectException(\Differ\DifferException::class);
+        $this->expectException(DifferException::class);
         $this->expectExceptionMessageMatches("/internal error: unknown mode for display\\n/");
 
         $this->displayCommand->setMode("undefined");

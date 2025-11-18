@@ -7,7 +7,7 @@ use Differ\ConsoleApp;
 use Differ\Readers\FileReader;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
-use Differ\DifferException;
+use Differ\Exceptions\DifferException;
 
 $differ = new ConsoleApp(
     $commandFactory = new CommandFactory(

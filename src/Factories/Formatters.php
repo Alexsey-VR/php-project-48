@@ -2,6 +2,8 @@
 
 namespace Differ\Factories;
 
+use Differ\Exceptions\DifferException;
+
 class Formatters implements \Differ\Interfaces\CommandFactoryInterface
 {
     private \Differ\Interfaces\FormattersInterface $formatCommand;
@@ -24,7 +26,7 @@ class Formatters implements \Differ\Interfaces\CommandFactoryInterface
                 $this->formatCommand = new \Differ\Formatters\JSONCommand();
                 break;
             default:
-                return throw new \Differ\DifferException("input error: unknown output format\n");
+                return throw new DifferException("input error: unknown output format\n");
         }
 
         return $this->formatCommand;
