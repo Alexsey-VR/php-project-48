@@ -1,7 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$autoload_path_1 = __DIR__ . '/../vendor/autoload.php';
+$autoload_path_2 = __DIR__ . '/../../../autoload.php';
+if (file_exists($autoload_path_1)) {
+    require_once $autoload_path_1;
+} else {
+    require_once $autoload_path_2;
+}
 
 use Differ\ConsoleApp;
 use Differ\Readers\FileReader;
