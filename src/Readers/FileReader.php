@@ -25,24 +25,30 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
 
     public function readFile(string $fileName): \Differ\Interfaces\FileReaderInterface
     {
-        $this->fileContent = "";
-        if (file_exists($fileName)) {
+        $this->fileName = __DIR__;
+        $fileExists = file_exists($fileName);
+        if ($fileExists) {
             $fileNameParts = explode(".", $this->normalizeFilename($fileName));
             $this->fileName = $fileName;
             $this->fileFormat = end($fileNameParts);
-            if ($this->fileFormat === 'json') {
-                $handle = fopen($this->fileName, "r");
-                if ($handle !== false) {
-                    $fileData = fread($handle, self::MAX_FILE_SIZE);
-                    if ($fileData !== false) {
-                        $this->fileContent = $fileData;
-                    }
-                    fclose($handle);
-                }
-            } elseif (($this->fileFormat === "yaml" || $this->fileFormat === "yml") === false) {
-                throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
-            }
         }
+
+        if (
+            $fileExists &&
+            ($this->fileFormat === "yaml" ||
+             $this->fileFormat === "yml" ||
+             $this->fileFormat === 'json') === false
+        ) {
+            throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
+        }
+
+        $this->fileContent = "";
+        if ($fileExists && ($handle = fopen($this->fileName, "r")) !== false) {
+            $fileData = fread($handle, self::MAX_FILE_SIZE);
+            $this->fileContent = ($fileData !== false) ? $fileData : "";
+            fclose($handle);
+        }
+
         return $this;
     }
 
