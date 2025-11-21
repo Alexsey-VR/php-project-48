@@ -9,13 +9,13 @@ if (file_exists($autoload_path_1)) {
     require_once $autoload_path_2;
 }
 
-use Differ\ConsoleApp;
+use Differ\Differ;
 use Differ\Readers\FileReader;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Exceptions\DifferException;
 
-$differ = new ConsoleApp(
+$differ = new Differ(
     $commandFactory = new CommandFactory(
         new \Docopt(),
         new FileReader(),

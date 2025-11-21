@@ -13,7 +13,7 @@ use Differ\Readers\FileReader;
 use Differ\Factories\Formatters;
 use Differ\Exceptions\DifferException;
 
-class ConsoleApp
+class Differ
 {
     private CommandLineParserInterface $parseCommand;
     private FilesDiffCommandInterface $nextFDCICommand;

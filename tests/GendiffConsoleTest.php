@@ -17,7 +17,7 @@ use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\formatters\JSONCommand;
 use Differ\Displays\DisplayCommand;
-use Differ\ConsoleApp;
+use Differ\Differ;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(Formatters::class)]
@@ -30,8 +30,8 @@ use Differ\ConsoleApp;
 #[CoversClass(PlainCommand::class)]
 #[CoversClass(JSONCommand::class)]
 #[CoversClass(DisplayCommand::class)]
-#[CoversClass(ConsoleApp::class)]
-#[CoversMethod(ConsoleApp::class, "run")]
+#[CoversClass(Differ::class)]
+#[CoversMethod(Differ::class, "run")]
 class GendiffConsoleTest extends TestCase
 {
     public static function getTestData(): array
@@ -67,7 +67,7 @@ class GendiffConsoleTest extends TestCase
         );
 
         ob_start();
-        $differ = new ConsoleApp($commandFactory);
+        $differ = new Differ($commandFactory);
         $differ->run();
         $outputBuffer = ob_get_clean();
 
@@ -81,7 +81,7 @@ class GendiffConsoleTest extends TestCase
     public function testAPIDiffer($formatter, $filePath)
     {
         $commandLineParser = is_null($formatter) ? new DocoptDouble() : new DocoptDouble($formatter);
-        $differ = new ConsoleApp(
+        $differ = new Differ(
             $commandFactory = new CommandFactory(
                 $commandLineParser,
                 new FileReader(),
