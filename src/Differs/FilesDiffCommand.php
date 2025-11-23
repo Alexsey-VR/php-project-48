@@ -3,6 +3,8 @@
 namespace Differ\Differs;
 
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
+use Differ\Interfaces\CommandLineParserInterface as CLPI;
+use Differ\Interfaces\FileParserInterface as FPI;
 use Differ\Exceptions\DifferException;
 
 class FilesDiffCommand implements FDCI
@@ -52,11 +54,7 @@ class FilesDiffCommand implements FDCI
     {
         $normalizedValue = $data;
         if (is_bool($data)) {
-            if ($data) {
-                $normalizedValue = "true";
-            } else {
-                $normalizedValue = "false";
-            }
+            $normalizedValue = $data ? "true" : "false";
         } elseif (is_null($data)) {
             $normalizedValue = "null";
         } elseif (is_array($data)) {
@@ -69,10 +67,108 @@ class FilesDiffCommand implements FDCI
         return $normalizedValue;
     }
 
+    private function getNextLevel(mixed $currentLevel): int
+    {
+        return is_integer($currentLevel) ? $currentLevel + 1 : 0;
+    }
+
+    private function getNextLevelHistory(
+        string $currentHistory,
+        string $fileKey
+    ): string {
+        return ($currentHistory === "") ?
+            $fileKey : $currentHistory . "." . $fileKey;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function getInitContentKeys(
+        mixed $file1Content,
+        mixed $file2Content
+    ): array {
+        $contentKeys = array_keys(array_merge(
+            is_array($file1Content) ? $file1Content : [],
+            is_array($file2Content) ? $file2Content : []
+        ));
+        asort($contentKeys);
+
+        return $contentKeys;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function getNextContentKeys(
+        mixed $file1Item,
+        mixed $file2Item,
+        string $fileKey
+    ): array {
+        $file1Content = $this->getNextItemContent($file1Item, $fileKey);
+        $file2Content = $this->getNextItemContent($file2Item, $fileKey);
+
+        $contentKeys = array_keys(array_merge(
+            is_array($file1Content) ? $file1Content : [],
+            is_array($file2Content) ? $file2Content : []
+        ));
+        asort($contentKeys);
+
+        return $contentKeys;
+    }
+
+    private function getNextItemContent(
+        mixed $fileItem,
+        string $fileKey
+    ): mixed {
+        $fileContent = null;
+        if (is_array($fileItem)) {
+            $fileContent = $fileItem[$fileKey] ?? null;
+        }
+
+        return $fileContent;
+    }
+
+    /**
+     * @return array<string,mixed>
+     * @param array<mixed> $fileContent
+     */
+    private function getInitContentDescriptor(
+        int $level,
+        string $fileKey,
+        string $history,
+        array $fileContent
+    ): array {
+        return [
+            "level" => $level,
+            "fileKey" => $fileKey,
+            "history" => $history,
+            "fileContent" => $fileContent,
+            "output" => []
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function getNextInitContentDescriptor(
+        int $nextLevel,
+        string $nextHistory,
+        string $fileKey,
+        mixed $fileContent
+    ): array {
+        return [
+            "level" => $nextLevel,
+            "history" => $nextHistory,
+            "fileKey" => $fileKey,
+            "fileContent" => $fileContent,
+            "output" => []
+        ];
+    }
+
     /**
      * @param array<string> $fileContentKeys
      * @param array<string,mixed> $initContentDescriptor
-     * @return array<mixed,mixed>
+     * @return array<mixed>
      */
     private function getContent(
         array $fileContentKeys,
@@ -82,37 +178,29 @@ class FilesDiffCommand implements FDCI
             $fileContentKeys,
             function ($contentDescriptor, $fileKey) {
                 $fileItem = is_array($contentDescriptor) ? $contentDescriptor['fileContent'] : "";
+                $currentHistory = is_array($contentDescriptor) ? $contentDescriptor["history"] : "";
+                $currentLevel = is_array($contentDescriptor) ? $contentDescriptor["level"] : 0;
 
-                $fileContent = is_array($fileItem) ? $fileItem[$fileKey] : $fileItem;
-
-                $levelNum = is_array($contentDescriptor) ? $contentDescriptor["level"] : 0;
-                $level = is_numeric($levelNum) ?
-                    ($levelNum + 1) : throw new DifferException("internal error: level is not numeric\n");
-
-                $historyValue = is_array($contentDescriptor) ? $contentDescriptor["history"] : "";
-                $historyString = is_string($historyValue) ? $historyValue : "";
-                $history = ($historyString === "") ?  $fileKey : $historyString . "." . $fileKey;
-
-                $fileContentKeys = array_keys(
-                    is_array($fileContent) ? $fileContent : []
+                $nextLevel = $this->getNextLevel($currentLevel);
+                $nextHistory = $this->getNextLevelHistory(
+                    is_string($currentHistory) ? $currentHistory : "",
+                    $fileKey
                 );
-                asort($fileContentKeys);
+                $fileContent = $this->getNextItemContent($fileItem, $fileKey);
 
-                $initContentDescriptor = [
-                    "level" => $level,
-                    "history" => $history,
-                    "fileKey" => $fileKey,
-                    "fileContent" => $fileContent,
-                    "output" => []
-                ];
+                $nextInitContentDescriptor = $this->getNextInitContentDescriptor(
+                    $nextLevel,
+                    $nextHistory,
+                    $fileKey,
+                    $fileContent
+                );
+                $nextContentKeys = $this->getNextContentKeys($fileItem, $fileItem, $fileKey);
 
-                if (is_array($contentDescriptor)) {
-                    if (is_array($contentDescriptor['output'])) {
-                        $contentDescriptor['output'][$fileKey] = $this->getContent(
-                            $fileContentKeys,
-                            $initContentDescriptor
-                        );
-                    }
+                if (is_array($contentDescriptor) && is_array($contentDescriptor['output'])) {
+                    $contentDescriptor['output'][$fileKey] = $this->getContent(
+                        $nextContentKeys,
+                        $nextInitContentDescriptor
+                    );
                 }
 
                 return $contentDescriptor;
@@ -128,17 +216,22 @@ class FilesDiffCommand implements FDCI
     }
 
     /**
-     * @param null|string|array<string|mixed>|mixed $file1Content
-     * @param null|string|array<string|mixed>|mixed $file2Content
+     * @param mixed $file1Item
+     * @param mixed $file2Item
+     * @param string $fileKey
      * @param string $currentStatus
-     * @param boolean $nextItemIsNotArray
      */
     private function getNextItemStatus(
-        $file1Content,
-        $file2Content,
-        $currentStatus,
-        $nextItemIsNotArray
+        $file1Item,
+        $file2Item,
+        $fileKey,
+        $currentStatus
     ): string {
+        $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
+
+        $file1Content = $this->getNextItemContent($file1Item, $fileKey);
+        $file2Content = $this->getNextItemContent($file2Item, $fileKey);
+
         $status = self::STATUS_KEYS[0];
         $bothFilesKeySet = isset($file1Content, $file2Content);
         $file1KeyOnlySet = isset($file1Content) && !isset($file2Content);
@@ -159,21 +252,37 @@ class FilesDiffCommand implements FDCI
     }
 
     /**
-     * @param string $status
-     * @param int $level
-     * @param string $fileKey
-     * @param string $history
-     * @param null|mixed $file1Content
-     * @param null|mixed $file2Content
-     * @return array<string|mixed>
+     * @return array<string,mixed>
      */
     private function getInitDifferenceDescriptor(
-        $status,
-        $level,
-        $fileKey,
-        $history,
-        $file1Content,
-        $file2Content
+        int $level,
+        string $status,
+        string $fileKey,
+        string $history,
+        mixed $file1Content,
+        mixed $file2Content
+    ): array {
+        return $initDifferenceDescriptor = [
+            "level" => $level,
+            "status" => $status,
+            "fileKey" => $fileKey,
+            "history" => $history,
+            "file1Content" => $file1Content,
+            "file2Content" => $file2Content,
+            "output" => []
+        ];
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getNextInitDifferenceDescriptor(
+        string $status,
+        int $level,
+        string $fileKey,
+        string $history,
+        mixed $file1Content,
+        mixed $file2Content
     ): array {
         if ($status === self::STATUS_KEYS[2]) {
             $initDifferenceDescriptor = [
@@ -211,164 +320,146 @@ class FilesDiffCommand implements FDCI
     /**
      * @param array<int,string> $fileContentKeys
      * @param array<mixed> $initDifferenceDescriptor
-     * @return mixed
+     * @return array<mixed>
      */
     private function getDifference(
         $fileContentKeys,
         $initDifferenceDescriptor
-    ): mixed {
-        return array_reduce(
+    ): array {
+        $result = array_reduce(
             $fileContentKeys,
             function ($differenceDescriptor, $fileKey) {
                 $file1Item = is_array($differenceDescriptor) ? $differenceDescriptor["file1Content"] : [];
                 $file2Item = is_array($differenceDescriptor) ? $differenceDescriptor["file2Content"] : [];
-
-                $file1Content = null;
-                if (is_array($file1Item)) {
-                    $file1Content = $file1Item[$fileKey] ?? null;
-                }
-
-                $file2Content = null;
-                if (is_array($file2Item)) {
-                    $file2Content = $file2Item[$fileKey] ?? null;
-                }
-
-                $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
-
                 $currentStatus = is_array($differenceDescriptor) ? $differenceDescriptor['status'] : "";
-                $statusData = is_string($currentStatus) ? $currentStatus : "";
+                $currentHistory = is_array($differenceDescriptor) ? $differenceDescriptor["history"] : "";
+                $currentLevel = is_array($differenceDescriptor) ? $differenceDescriptor["level"] : 0;
 
-                $status = $this->getNextItemStatus(
-                    $file1Content,
-                    $file2Content,
-                    $statusData,
-                    $nextItemIsNotArray
-                );
-
-                $prevLevel = is_array($differenceDescriptor) ? $differenceDescriptor["level"] : 0;
-                $level = is_integer($prevLevel) ? $prevLevel + 1 : 0;
-
-                $history = "";
-                if (is_array($differenceDescriptor)) {
-                    $nextHistory = $differenceDescriptor["history"];
-                    $strHistory = is_string($nextHistory) ? $nextHistory : "";
-                    $history = ($differenceDescriptor["history"] === "") ?
-                        $fileKey : $strHistory . "." . $fileKey;
-                }
-
-                $contentKeys = array_keys(array_merge(
-                    is_array($file1Content) ? $file1Content : [],
-                    is_array($file2Content) ? $file2Content : []
-                ));
-                asort($contentKeys);
-
-                $initDifferenceDescriptor = $this->getInitDifferenceDescriptor(
-                    $status,
-                    $level,
+                $nextStatus = $this->getNextItemStatus(
+                    $file1Item,
+                    $file2Item,
                     $fileKey,
-                    $history,
+                    is_string($currentStatus) ? $currentStatus : ""
+                );
+                $nextLevel = $this->getNextLevel($currentLevel);
+                $nextHistory = $this->getNextLevelHistory(
+                    is_string($currentHistory) ? $currentHistory : "",
+                    $fileKey
+                );
+                $file1Content = $this->getNextItemContent($file1Item, $fileKey);
+                $file2Content = $this->getNextItemContent($file2Item, $fileKey);
+
+                $nextInitDifferenceDescriptor = $this->getNextInitDifferenceDescriptor(
+                    $nextStatus,
+                    $nextLevel,
+                    $fileKey,
+                    $nextHistory,
                     $file1Content,
                     $file2Content,
                 );
+                $nextContentKeys = $this->getNextContentKeys($file1Item, $file2Item, $fileKey);
 
-                if (is_array($differenceDescriptor)) {
-                    if (is_array($differenceDescriptor["output"])) {
-                        $differenceDescriptor["output"][$fileKey] = $this->getDifference(
-                            $contentKeys,
-                            $initDifferenceDescriptor
-                        );
-                    }
+                if (is_array($differenceDescriptor) && is_array($differenceDescriptor["output"])) {
+                    $differenceDescriptor["output"][$fileKey] = $this->getDifference(
+                        $nextContentKeys,
+                        $nextInitDifferenceDescriptor
+                    );
                 }
 
                 return $differenceDescriptor;
             },
             $initDifferenceDescriptor
         );
+
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return [];
+        }
     }
 
-    public function execute(
-        \Differ\Interfaces\CommandLineParserInterface $command,
-        \Differ\Interfaces\FileParserInterface $fileParser
-    ): FDCI {
+    /**
+     * @return array<int,mixed>
+     */
+    private function getFileDataItems(CLPI $command, FPI $fileParser): array {
         $fileNames = $command->getFileNames();
         $this->filesPaths = [
             $fileNames['FILE1'],
             $fileNames['FILE2']
         ];
 
+        $filesDataItems = [];
         foreach ($this->filesPaths as $filePath) {
             $fileReaderContainer = $this->fileReader->readFile($filePath);
-            $this->filesDataItems[] = $fileParser->execute($fileReaderContainer, true);
+            $filesDataItems[] = $fileParser->execute($fileReaderContainer, true);
         }
 
-        $filesDataItems = $this->filesDataItems[0];
-        $file1Content = [];
-        if (is_array($filesDataItems)) {
-            $file1Content = array_map(
+        return $filesDataItems;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getNormalizedFileContent(mixed $dataItem): array
+    {
+        $fileContent = [];
+        if (is_array($dataItem)) {
+            $fileContent = array_map(
                 fn($item) => $this->normalizeData($item),
-                $filesDataItems
+                $dataItem
             );
         }
 
-        $filesDataItems = $this->filesDataItems[1];
-        $file2Content = [];
-        if (is_array($filesDataItems)) {
-            $file2Content = array_map(
-                fn($item) => $this->normalizeData($item),
-                $filesDataItems
-            );
-        }
+        return $fileContent;
+    }
 
-        $fileKeys = array_keys($file1Content);
-        asort($fileKeys);
-        $initContent1Descriptor = [
-            "level" => 0,
-            "fileKey" => "initKey",
-            "history" => "",
-            "fileContent" => $file1Content,
-            "output" => []
-        ];
+    public function execute(CLPI $command, FPI $fileParser): FDCI
+    {
+        $this->filesDataItems = $this->getFileDataItems($command, $fileParser);
+
+        $file1Content = $this->getNormalizedFileContent($this->filesDataItems[0]);
+        $file2Content = $this->getNormalizedFileContent($this->filesDataItems[1]);
+
+        $initContent1Descriptor = $this->getInitContentDescriptor(
+            level: 0,
+            fileKey: "initKey",
+            history: "",
+            fileContent: $file1Content
+        );
+        $fileKeys = $this->getInitContentKeys($file1Content, $file1Content);
 
         $this->content1Descriptor = $this->getContent(
             $fileKeys,
             $initContent1Descriptor
         );
 
-        $fileKeys = array_keys($file2Content);
-        asort($fileKeys);
-        $initContent2Descriptor = [
-            "level" => 0,
-            "fileKey" => "initKey",
-            "history" => "",
-            "fileContent" => $file2Content,
-            "output" => []
-        ];
+        $initContent2Descriptor = $this->getInitContentDescriptor(
+            level: 0,
+            fileKey: "initKey",
+            history: "",
+            fileContent: $file2Content
+        );
+        $fileKeys = $this->getInitContentKeys($file2Content, $file2Content);
 
         $this->content2Descriptor = $this->getContent(
             $fileKeys,
             $initContent2Descriptor
         );
 
-        $mergedFileKeys = array_keys(array_merge($file1Content, $file2Content));
-        asort($mergedFileKeys);
-        $initDifferenceDescriptor = [
-            "level" => 0,
-            "status" => "init",
-            "fileKey" => "initKey",
-            "history" => "",
-            "file1Content" => $file1Content,
-            "file2Content" => $file2Content,
-            "output" => []
-        ];
+        $initDifferenceDescriptor = $this->getInitDifferenceDescriptor(
+            level: 0,
+            status: "init",
+            fileKey: "initKey",
+            history: "",
+            file1Content: $file1Content,
+            file2Content: $file2Content
+        );
+        $mergedFileKeys = $this->getInitContentKeys($file1Content, $file2Content);
 
-        $differenceResult = $this->getDifference(
+        $this->differenceDescriptor = $this->getDifference(
             $mergedFileKeys,
             $initDifferenceDescriptor
         );
-
-        if (is_array($differenceResult)) {
-            $this->differenceDescriptor = $differenceResult;
-        }
 
         return $this;
     }
