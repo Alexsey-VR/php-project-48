@@ -21,17 +21,17 @@ class CommandLineParser implements CommandLineParserInterface
         $this->defaultFormat = 'stylish';
 
         $filename = __DIR__ . "/../../docopt.txt";
-        if (file_exists($filename)) {
-            $handler = fopen($filename, 'r');
+        if (
+            file_exists($filename) &&
+            ($handler = fopen($filename, 'r'))
+        ) {
             $filesize = filesize($filename);
-            if ($handler !== false) {
-                $fileData = fread(
-                    $handler,
-                    ($filesize !== false) ? max(1, $filesize) : 1
-                );
-                $this->parserDescriptor = is_string($fileData) ? $fileData : "";
-                fclose($handler);
-            }
+            $fileData = fread(
+                $handler,
+                max(1, $filesize)
+            );
+            $this->parserDescriptor = is_string($fileData) ? $fileData : "";
+            fclose($handler);
         }
     }
 
@@ -41,12 +41,10 @@ class CommandLineParser implements CommandLineParserInterface
          * @var \Docopt\Response|DocoptDoubleInterface $objArgs
          */
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
-        if (isset($objArgs->args)) {
-            if (is_array($objArgs->args)) {
-                foreach ($objArgs->args as $key => $value) {
-                    if (is_string($key)) {
-                        $this->args[$key] = is_string($value) ? $value : "";
-                    }
+        if (isset($objArgs->args) && is_array($objArgs->args)) {
+            foreach ($objArgs->args as $key => $value) {
+                if (is_string($key)) {
+                    $this->args[$key] = is_string($value) ? $value : "";
                 }
             }
         } else {
