@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Parsers;
+namespace Differ\Tests\Fixtures;
 
 use Differ\Interfaces\DocoptDoubleInterface;
 
@@ -17,8 +17,8 @@ class DocoptDouble implements DocoptDoubleInterface
             "--help" => "",
             "--version" => "",
             "--format" => $format,
-            "FILE1" => __DIR__ . "/../../fixtures/file1.json",
-            "FILE2" => __DIR__ . "/../../fixtures/file2.json"
+            "FILE1" => $_ENV["FIXTURES_PATH"] . "/file1.json",
+            "FILE2" => $_ENV["FIXTURES_PATH"] . "/file2.json"
         ];
     }
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Differ\tests;
+namespace Differ\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\Parsers\DocoptDouble;
+use Differ\Tests\Fixtures\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
@@ -18,7 +18,6 @@ use Differ\Exceptions\DifferException;
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversClass(\Differ\Parsers\FileParser::class)]
 #[CoversClass(Formatters::class)]
-#[CoversClass(DocoptDouble::class)]
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
@@ -34,57 +33,57 @@ class FormattersTest extends TestCase
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.json",
-                    "FILE2" => __DIR__ . "/../fixtures/file2.json"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.json",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesStylishRecursiveJSONContent.txt",
+                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesStylishRecursiveJSONContent.txt",
                 'outputFormat' => 'STYLISH',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveStylishDiffs.txt"
+                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.yaml",
-                    "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesStylishRecursiveYAMLContent.txt",
+                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesStylishRecursiveYAMLContent.txt",
                 'outputFormat' => 'stylish',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveStylishDiffs.txt"
+                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.json",
-                    "FILE2" => __DIR__ . "/../fixtures/file2.json"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.json",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesPlainRecursiveJSONContent.txt",
+                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesPlainRecursiveJSONContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.yaml",
-                    "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesPlainRecursiveYAMLContent.txt",
+                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesPlainRecursiveYAMLContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' =>$_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.json",
-                    "FILE2" => __DIR__ . "/../fixtures/file2.json"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.json",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesJSONRecursiveJSONContent.txt",
+                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesJSONRecursiveJSONContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.json"
+                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveJSONDiffs.json"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.yaml",
-                    "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../fixtures/filesJSONRecursiveYAMLContent.txt",
+                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesJSONRecursiveYAMLContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.json"
+                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -151,8 +150,8 @@ class FormattersTest extends TestCase
     public function testFormatException()
     {
         $fileNamesInput = [
-            "FILE1" => __DIR__ . "/../fixtures/file1.yaml",
-            "FILE2" => __DIR__ . "/../fixtures/file2.yaml"
+            "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
+            "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
         ];
 
         $cmdLineParser = $this->createConfiguredStub(

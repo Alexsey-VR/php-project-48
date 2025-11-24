@@ -1,17 +1,16 @@
 <?php
 
-namespace Differ\tests;
+namespace Differ\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use \Differ\Parsers\DocoptDouble;
+use Differ\Tests\Fixtures\DocoptDouble;
 
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversMethod(\Differ\Parsers\CommandLineParser::class, 'setFileNames')]
 #[CoversMethod(\Differ\Parsers\CommandLineParser::class, 'getFileNames')]
-#[CoversClass(DocoptDouble::class)]
 class CommandLineParserTest extends TestCase
 {
     public static function getFiles(): array
@@ -19,14 +18,14 @@ class CommandLineParserTest extends TestCase
         return [
             [
                 "fileNames" => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.json",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.json"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.json",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.json"
                 ]
             ],
             [
                 "fileNames" => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.yaml",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.yaml",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.yaml"
                 ]
             ]
         ];

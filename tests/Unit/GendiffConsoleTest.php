@@ -1,12 +1,12 @@
 <?php
 
-namespace Differ\tests;
+namespace Differ\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\Parsers\DocoptDouble;
+use Differ\Tests\Fixtures\DocoptDouble;
 use Differ\Parsers\FileParser;
 use Differ\Parsers\CommandLineParser;
 use Differ\Readers\FileReader;
@@ -21,7 +21,6 @@ use Differ\Differ;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(Formatters::class)]
-#[CoversClass(DocoptDouble::class)]
 #[CoversClass(FileParser::class)]
 #[CoversClass(CommandLineParser::class)]
 #[CoversClass(FileReader::class)]
@@ -40,19 +39,19 @@ class GendiffConsoleTest extends TestCase
         return [
             [
                 "formatter" => null,
-                "filePath" => __DIR__ . "/../fixtures/filesRecursiveStylishDiffs.txt"
+                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "stylish",
-                "filePath" => __DIR__ . "/../fixtures/filesRecursiveStylishDiffs.txt"
+                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "plain",
-                "filePath" => __DIR__ . "/../fixtures/filesRecursivePlainDiffs.txt"
+                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
             ],
             [
                 "formatter" => "json",
-                "filePath" => __DIR__ . "/../fixtures/filesRecursiveJSONDiffs.json"
+                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -89,16 +88,17 @@ class GendiffConsoleTest extends TestCase
                 new Formatters()
             )
         );
+
         $outputBuffer = "";
         if (is_null($formatter)) {
             $outputBuffer = $differ->gendiff(
-                __DIR__ . "/../fixtures/file1.json",
-                __DIR__ . "/../fixtures/file2.json"
+                $_ENV['FIXTURES_PATH'] . "/file1.json",
+                $_ENV['FIXTURES_PATH'] . "/file2.json"
             );
         } else {
             $outputBuffer = $differ->genDiff(
-                __DIR__ . "/../fixtures/file1.json",
-                __DIR__ . "/../fixtures/file2.json",
+                $_ENV['FIXTURES_PATH'] . "/file1.json",
+                $_ENV['FIXTURES_PATH'] . "/file2.json",
                 $formatter
             );
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\tests;
+namespace Differ\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -34,17 +34,17 @@ class FilesDiffCommandTest extends TestCase
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.json",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.json"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.json",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.json"
                 ],
-                'outputFilePath' => __DIR__ . "/../fixtures/filesJSONContent.txt"
+                'outputFilePath' => $_ENV['FIXTURES_PATH'] . "/filesJSONContent.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1Entry.yaml",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.yaml",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.yaml"
                 ],
-                'outputFilePath' => __DIR__ . "/../fixtures/filesYAMLContent.txt"
+                'outputFilePath' => $_ENV['FIXTURES_PATH'] . "/filesYAMLContent.txt"
             ]
         ];
     }
@@ -86,8 +86,8 @@ class FilesDiffCommandTest extends TestCase
             \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => [
-                    "FILE1" => __DIR__ . "/../fixtures/file1.txt",
-                    "FILE2" => __DIR__ . "/../fixtures/file2Entry.yaml"
+                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.txt",
+                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.yaml"
                 ]
             ]
         );

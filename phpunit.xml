@@ -13,9 +13,12 @@
          failOnWarning="true">
     <testsuites>
         <testsuite name="default">
-            <directory>tests</directory>
+            <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="FIXTURES_PATH" value="./tests/Fixtures"/>
+    </php>
 
     <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>

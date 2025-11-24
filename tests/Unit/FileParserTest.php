@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\tests;
+namespace Differ\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -12,18 +12,19 @@ use Differ\Readers\FileReader;
 #[CoversMethod(FileReader::class, 'readFile')]
 class FileParserTest extends TestCase
 {
-    public const JSON_FILE_FOR_ARRAY = __DIR__ . "/../fixtures/fileForArray.json";
     public function testReadFileAsObject()
     {
+        $jsonFileForArray = $_ENV['FIXTURES_PATH'] . "/fileForArray.json";
+
         $fileReader = new FileReader();
         $fileParser = new \Differ\Parsers\FileParser();
 
         $fileReaderContainer = $fileReader->readFile(
-            self::JSON_FILE_FOR_ARRAY
+            $jsonFileForArray
         );
 
         $this->assertStringEqualsFile(
-            self::JSON_FILE_FOR_ARRAY,
+            $jsonFileForArray,
             $fileReaderContainer->getContent()
         );
 
@@ -33,32 +34,34 @@ class FileParserTest extends TestCase
         );
 
         $this->assertEquals(
-            self::JSON_FILE_FOR_ARRAY,
+            $jsonFileForArray,
             $fileReaderContainer->getName()
         );
 
         $fileContent = $fileParser->execute($fileReaderContainer);
 
         $this->assertJsonStringEqualsJsonFile(
-            self::JSON_FILE_FOR_ARRAY,
+            $jsonFileForArray,
             json_encode($fileContent)
         );
     }
 
     public function testReadFileAsArray()
     {
+        $jsonFileForArray = $_ENV['FIXTURES_PATH'] . "/fileForArray.json";
+
         $fileReader = new FileReader();
         $fileParser = new \Differ\Parsers\FileParser();
 
         $fileContent = $fileParser->execute(
             $fileReader->readFile(
-                self::JSON_FILE_FOR_ARRAY,
+                $jsonFileForArray,
                 true
             )
         );
 
         $this->assertJsonStringEqualsJsonFile(
-            self::JSON_FILE_FOR_ARRAY,
+            $jsonFileForArray,
             json_encode($fileContent)
         );
     }
@@ -70,7 +73,7 @@ class FileParserTest extends TestCase
 
         $fileContent = $fileParser->execute(
             $fileReader->readFile(
-                __DIR__ . "/../fixtures/fileNotJson.json"
+                $_ENV['FIXTURES_PATH'] . "/fileNotJson.json"
             )
         );
 
