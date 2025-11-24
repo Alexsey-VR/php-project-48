@@ -5,7 +5,7 @@ namespace Differ\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use Differ\Tests\Fixtures\DocoptDouble;
+use Differ\Parsers\DocoptDouble;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
@@ -15,6 +15,7 @@ use Differ\Exceptions\DifferException;
 #[CoversClass(DisplayCommand::class)]
 #[CoversMethod(DisplayCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
+#[CoversClass(DocoptDouble::class)]
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(FileReader::class)]
 class DisplayCommandTest extends TestCase

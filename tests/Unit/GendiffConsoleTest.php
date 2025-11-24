@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\Tests\Fixtures\DocoptDouble;
+use Differ\Parsers\DocoptDouble;
 use Differ\Parsers\FileParser;
 use Differ\Parsers\CommandLineParser;
 use Differ\Readers\FileReader;
@@ -21,6 +21,7 @@ use Differ\Differ;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(Formatters::class)]
+#[CoversClass(DocoptDouble::class)]
 #[CoversClass(FileParser::class)]
 #[CoversClass(CommandLineParser::class)]
 #[CoversClass(FileReader::class)]
@@ -59,7 +60,10 @@ class GendiffConsoleTest extends TestCase
     #[DataProvider('getTestData')]
     public function testConsoleDiffer($formatter, $filePath)
     {
-        $commandLineParser = is_null($formatter) ? new DocoptDouble() : new DocoptDouble($formatter);
+        $commandLineParser = is_null($formatter) ?
+            new DocoptDouble($_ENV["FIXTURES_PATH"] . "/file1.json", $_ENV["FIXTURES_PATH"] . "/file2.json") 
+            :
+            new DocoptDouble($_ENV["FIXTURES_PATH"] . "/file1.json", $_ENV["FIXTURES_PATH"] . "/file2.json", $formatter);
         $commandFactory = new CommandFactory(
             $commandLineParser,
             new FileReader(),

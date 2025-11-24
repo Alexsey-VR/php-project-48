@@ -6,11 +6,12 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\Tests\Fixtures\DocoptDouble;
+use Differ\Parsers\DocoptDouble;
 
 #[CoversClass(\Differ\Parsers\CommandLineParser::class)]
 #[CoversMethod(\Differ\Parsers\CommandLineParser::class, 'setFileNames')]
 #[CoversMethod(\Differ\Parsers\CommandLineParser::class, 'getFileNames')]
+#[CoversClass(DocoptDouble::class)]
 class CommandLineParserTest extends TestCase
 {
     public static function getFiles(): array
