@@ -72,7 +72,7 @@ class Differ
         $this->nextDCICommand->execute($this->initFICommand);
     }
 
-    public function gendiff(
+    public function genDiff(
         string $pathToFile1,
         string $pathToFile2,
         string $format = 'stylish'

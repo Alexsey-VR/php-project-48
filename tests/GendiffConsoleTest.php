@@ -32,6 +32,7 @@ use Differ\Differ;
 #[CoversClass(DisplayCommand::class)]
 #[CoversClass(Differ::class)]
 #[CoversMethod(Differ::class, "run")]
+#[CoversMethod(Differ::class, "genDiff")]
 class GendiffConsoleTest extends TestCase
 {
     public static function getTestData(): array
@@ -95,7 +96,7 @@ class GendiffConsoleTest extends TestCase
                 __DIR__ . "/../fixtures/file2.json"
             );
         } else {
-            $outputBuffer = $differ->gendiff(
+            $outputBuffer = $differ->genDiff(
                 __DIR__ . "/../fixtures/file1.json",
                 __DIR__ . "/../fixtures/file2.json",
                 $formatter
