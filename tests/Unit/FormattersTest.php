@@ -7,25 +7,30 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\Parsers\DocoptDouble;
+use Differ\Parsers\CommandLineParser;
+use Differ\Parsers\FileParser;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
-use Differ\Differs\FilesDiffCommand;
+use Differ\Differ\FilesDiffCommand;
 use Differ\Readers\FileReader;
 use Differ\Exceptions\DifferException;
+use Differ\Formatters\StylishCommand;
+use Differ\Formatters\PlainCommand;
+use Differ\Formatters\JSONCommand;
 
 #[CoversClass(CommandFactory::class)]
-#[CoversClass(\Differ\Parsers\CommandLineParser::class)]
-#[CoversClass(\Differ\Parsers\FileParser::class)]
+#[CoversClass(CommandLineParser::class)]
+#[CoversClass(FileParser::class)]
 #[CoversClass(Formatters::class)]
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(DocoptDouble::class)]
 #[CoversClass(FileReader::class)]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
-#[CoversClass(\Differ\Formatters\StylishCommand::class)]
-#[CoversClass(\Differ\Formatters\PlainCommand::class)]
-#[CoversClass(\Differ\Formatters\JSONCommand::class)]
+#[CoversClass(StylishCommand::class)]
+#[CoversClass(PlainCommand::class)]
+#[CoversClass(JSONCommand::class)]
 #[CoversClass(DisplayCommand::class)]
 class FormattersTest extends TestCase
 {
@@ -93,7 +98,7 @@ class FormattersTest extends TestCase
     public function testExecute($fileNamesInput, $contentFilePath, $outputFormat, $outputDiffsPath)
     {
         $cmdLineParser = $this->createConfiguredStub(
-            \Differ\Parsers\CommandLineParser::class,
+            CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput,
                 'getFormat' => $outputFormat
@@ -156,7 +161,7 @@ class FormattersTest extends TestCase
         ];
 
         $cmdLineParser = $this->createConfiguredStub(
-            \Differ\Parsers\CommandLineParser::class,
+            CommandLineParser::class,
             [
                 'getFileNames' => $fileNamesInput,
                 'getFormat' => 'undefined'

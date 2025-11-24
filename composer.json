@@ -18,7 +18,8 @@
             "Differ\\Tests\\": "tests/"
         },
         "files": [
-            "vendor/docopt/docopt/src/docopt.php"
+            "vendor/docopt/docopt/src/docopt.php",
+            "src/Differ/Differ.php"
         ]
     },
     "authors": [

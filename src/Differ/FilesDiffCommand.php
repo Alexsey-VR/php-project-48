@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Differs;
+namespace Differ\Differ;
 
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
 use Differ\Interfaces\CommandLineParserInterface as CLPI;

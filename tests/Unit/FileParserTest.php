@@ -6,9 +6,10 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\Readers\FileReader;
+use Differ\Parsers\FileParser;
 
 #[CoversClass(FileReader::class)]
-#[CoversClass(\Differ\Parsers\FileParser::class)]
+#[CoversClass(FileParser::class)]
 #[CoversMethod(FileReader::class, 'readFile')]
 class FileParserTest extends TestCase
 {
@@ -17,7 +18,7 @@ class FileParserTest extends TestCase
         $jsonFileForArray = $_ENV['FIXTURES_PATH'] . "/fileForArray.json";
 
         $fileReader = new FileReader();
-        $fileParser = new \Differ\Parsers\FileParser();
+        $fileParser = new FileParser();
 
         $fileReaderContainer = $fileReader->readFile(
             $jsonFileForArray
@@ -51,7 +52,7 @@ class FileParserTest extends TestCase
         $jsonFileForArray = $_ENV['FIXTURES_PATH'] . "/fileForArray.json";
 
         $fileReader = new FileReader();
-        $fileParser = new \Differ\Parsers\FileParser();
+        $fileParser = new FileParser();
 
         $fileContent = $fileParser->execute(
             $fileReader->readFile(
@@ -69,7 +70,7 @@ class FileParserTest extends TestCase
     public function testReadFileNotJson()
     {
         $fileReader = new FileReader();
-        $fileParser = new \Differ\Parsers\FileParser();
+        $fileParser = new FileParser();
 
         $fileContent = $fileParser->execute(
             $fileReader->readFile(

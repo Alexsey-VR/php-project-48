@@ -9,13 +9,18 @@ use Differ\Interfaces\FormattersInterface as FI;
 use Differ\Interfaces\DisplayCommandInterface as DCI;
 use Differ\Interfaces\DocoptDoubleInterface;
 use Differ\Interfaces\FileReaderInterface;
+use Differ\Interfaces\CommandFactoryInterface;
 use Differ\Exceptions\DifferException;
+use Differ\Parsers\CommandLineParser;
+use Differ\Parsers\FileParser;
+use Differ\Differ\FilesDiffCommand;
+use Differ\Displays\DisplayCommand;
 
-class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
+class CommandFactory implements CommandFactoryInterface
 {
-    private \Docopt|\Differ\Interfaces\DocoptDoubleInterface $parser;
+    private \Docopt|DocoptDoubleInterface $parser;
     private FileReaderInterface $fileReader;
-    private \Differ\Interfaces\CommandFactoryInterface $formatters;
+    private CommandFactoryInterface $formatters;
 
     private const array FORMAT_KEYS = [
         "stylish" => "stylish",
@@ -25,8 +30,8 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
 
     public function __construct(
         \Docopt|DocoptDoubleInterface $parser,
-        \Differ\Interfaces\FileReaderInterface $fileReader,
-        \Differ\Interfaces\CommandFactoryInterface $formatters
+        FileReaderInterface $fileReader,
+        CommandFactoryInterface $formatters
     ) {
         $this->parser = $parser;
         $this->fileReader = $fileReader;
@@ -45,13 +50,13 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
     {
         switch ($commandType) {
             case "parseCMDLine":
-                $requestedCommand = new \Differ\Parsers\CommandLineParser($this->parser);
+                $requestedCommand = new CommandLineParser($this->parser);
                 break;
             case "parseFile":
-                $requestedCommand = new \Differ\Parsers\FileParser();
+                $requestedCommand = new FileParser();
                 break;
             case "difference":
-                $requestedCommand = new \Differ\Differs\FilesDiffCommand($this->fileReader);
+                $requestedCommand = new FilesDiffCommand($this->fileReader);
                 break;
             case self::FORMAT_KEYS["stylish"]:
                 $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["stylish"]);
@@ -63,7 +68,7 @@ class CommandFactory implements \Differ\Interfaces\CommandFactoryInterface
                 $requestedCommand = $this->formatters->createCommand(self::FORMAT_KEYS["json"]);
                 break;
             case "show":
-                $requestedCommand = new \Differ\Displays\DisplayCommand();
+                $requestedCommand = new DisplayCommand();
                 break;
             default:
                 throw new DifferException("internal error: unknown command factory option\n");

@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ;
+namespace Differ\Differ;
 
 use Differ\Interfaces\CommandFactoryInterface;
 use Differ\Interfaces\FilesDiffCommandInterface;

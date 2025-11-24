@@ -6,13 +6,14 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Differ\Differs\FilesDiffCommand;
+use Differ\Differ\FilesDiffCommand;
 use Differ\Readers\FileReader;
 use Differ\Exceptions\DifferException;
+use Differ\Parsers\FileParser;
 
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
-#[CoversClass(\Differ\Parsers\FileParser::class)]
+#[CoversClass(FileParser::class)]
 #[CoversMethod(FilesDiffCommand::class, 'execute')]
 #[CoversClass(DifferException::class)]
 class FilesDiffCommandTest extends TestCase
@@ -62,7 +63,7 @@ class FilesDiffCommandTest extends TestCase
         $diffCommand = new FilesDiffCommand(
             new FileReader()
         );
-        $fileParser = new \Differ\Parsers\FileParser();
+        $fileParser = new FileParser();
 
         $resultContent1Descriptor = $diffCommand->execute($cmdLineParser, $fileParser)
                                  ->getContent1Descriptor();
@@ -93,7 +94,7 @@ class FilesDiffCommandTest extends TestCase
         );
 
         $diffCommand = new FilesDiffCommand(new FileReader());
-        $fileParser = new \Differ\Parsers\FileParser();
+        $fileParser = new FileParser();
 
         $this->expectException(DifferException::class);
         $this->expectExceptionMessageMatches("/unknown files format: use json, yaml \(yml\) enstead\\n/");

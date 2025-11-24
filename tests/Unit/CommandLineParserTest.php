@@ -7,10 +7,11 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\Parsers\DocoptDouble;
+use Differ\Parsers\CommandLineParser;
 
-#[CoversClass(\Differ\Parsers\CommandLineParser::class)]
-#[CoversMethod(\Differ\Parsers\CommandLineParser::class, 'setFileNames')]
-#[CoversMethod(\Differ\Parsers\CommandLineParser::class, 'getFileNames')]
+#[CoversClass(CommandLineParser::class)]
+#[CoversMethod(CommandLineParser::class, 'setFileNames')]
+#[CoversMethod(CommandLineParser::class, 'getFileNames')]
 #[CoversClass(DocoptDouble::class)]
 class CommandLineParserTest extends TestCase
 {
@@ -35,9 +36,9 @@ class CommandLineParserTest extends TestCase
     #[DataProvider('getFiles')]
     public function testFileNames($fileNames)
     {
-        $cmdLineParser = new \Differ\Parsers\CommandLineParser(new DocoptDouble());
+        $cmdLineParser = new CommandLineParser(new DocoptDouble());
 
-        $this->assertInstanceOf(\Differ\Parsers\CommandLineParser::class, $cmdLineParser->setFileNames($fileNames));
+        $this->assertInstanceOf(CommandLineParser::class, $cmdLineParser->setFileNames($fileNames));
 
         $this->assertEquals($fileNames, $cmdLineParser->setFileNames($fileNames)
                                                       ->getFileNames());
@@ -46,7 +47,7 @@ class CommandLineParserTest extends TestCase
     public function testExecute()
     {
         $parser = new DocoptDouble();
-        $cmdLineParser = new \Differ\Parsers\CommandLineParser($parser);
+        $cmdLineParser = new CommandLineParser($parser);
 
         ob_start();
         $cmdLineParser->execute($cmdLineParser);
@@ -61,7 +62,7 @@ class CommandLineParserTest extends TestCase
     public function testPlainExecute()
     {
         $parser = new DocoptDouble("plain");
-        $cmdLineParser = new \Differ\Parsers\CommandLineParser($parser);
+        $cmdLineParser = new CommandLineParser($parser);
 
         ob_start();
         $cmdLineParser->execute($cmdLineParser);
@@ -76,7 +77,7 @@ class CommandLineParserTest extends TestCase
     public function testSetFormat()
     {
         $parser = new DocoptDouble("plain");
-        $cmdLineParser = new \Differ\Parsers\CommandLineParser($parser);
+        $cmdLineParser = new CommandLineParser($parser);
 
         $outputFormat = $cmdLineParser->setFormat("stylish")
                                     ->getFormat();

@@ -11,7 +11,7 @@ use Differ\Parsers\FileParser;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
 use Differ\Displays\DisplayCommand;
-use Differ\Differs\FilesDiffCommand;
+use Differ\Differ\FilesDiffCommand;
 use Differ\Readers\FileReader;
 use Differ\Exceptions\DifferException;
 use Differ\Formatters\StylishCommand;

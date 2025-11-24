@@ -5,6 +5,7 @@ namespace Differ\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\Parsers\DocoptDouble;
 use Differ\Parsers\FileParser;
@@ -12,12 +13,12 @@ use Differ\Parsers\CommandLineParser;
 use Differ\Readers\FileReader;
 use Differ\Factories\CommandFactory;
 use Differ\Factories\Formatters;
-use Differ\Differs\FilesDiffCommand;
+use Differ\Differ\FilesDiffCommand;
+use Differ\Differ\Differ;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\formatters\JSONCommand;
 use Differ\Displays\DisplayCommand;
-use Differ\Differ;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(Formatters::class)]
