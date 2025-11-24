@@ -17,6 +17,7 @@ use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\formatters\JSONCommand;
 use Differ\Displays\DisplayCommand;
+
 use function Differ\Differ\genDiff;
 
 #[CoversNothing]

@@ -62,7 +62,7 @@ class GendiffConsoleTest extends TestCase
     public function testConsoleDiffer($formatter, $filePath)
     {
         $commandLineParser = is_null($formatter) ?
-            new DocoptDouble($_ENV["FIXTURES_PATH"] . "/file1.json", $_ENV["FIXTURES_PATH"] . "/file2.json") 
+            new DocoptDouble($_ENV["FIXTURES_PATH"] . "/file1.json", $_ENV["FIXTURES_PATH"] . "/file2.json")
             :
             new DocoptDouble($_ENV["FIXTURES_PATH"] . "/file1.json", $_ENV["FIXTURES_PATH"] . "/file2.json", $formatter);
         $commandFactory = new CommandFactory(

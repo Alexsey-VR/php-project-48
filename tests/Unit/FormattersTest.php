@@ -71,7 +71,7 @@ class FormattersTest extends TestCase
                 ],
                 'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesPlainRecursiveYAMLContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' =>$_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
