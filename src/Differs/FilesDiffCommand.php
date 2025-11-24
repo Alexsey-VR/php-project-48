@@ -67,45 +67,21 @@ class FilesDiffCommand implements FDCI
         return $normalizedValue;
     }
 
-    private function getNextLevel(mixed $currentLevel): int
-    {
-        return is_integer($currentLevel) ? $currentLevel + 1 : 0;
-    }
-
-    private function getNextLevelHistory(
-        string $currentHistory,
-        string $fileKey
-    ): string {
-        return ($currentHistory === "") ?
-            $fileKey : $currentHistory . "." . $fileKey;
-    }
-
-    /**
-     * @return array<int,string>
-     */
-    private function getInitContentKeys(
-        mixed $file1Content,
-        mixed $file2Content
-    ): array {
-        $contentKeys = array_keys(array_merge(
-            is_array($file1Content) ? $file1Content : [],
-            is_array($file2Content) ? $file2Content : []
-        ));
-        asort($contentKeys);
-
-        return $contentKeys;
-    }
-
     /**
      * @return array<int,string>
      */
     private function getNextContentKeys(
         mixed $file1Item,
         mixed $file2Item,
-        string $fileKey
+        string $fileKey = ""
     ): array {
-        $file1Content = $this->getNextItemContent($file1Item, $fileKey);
-        $file2Content = $this->getNextItemContent($file2Item, $fileKey);
+        if ($fileKey !== "") {
+            $file1Content = $this->getNextItemContent($file1Item, $fileKey);
+            $file2Content = $this->getNextItemContent($file2Item, $fileKey);
+        } else {
+            $file1Content = $file1Item;
+            $file2Content = $file2Item;
+        }
 
         $contentKeys = array_keys(array_merge(
             is_array($file1Content) ? $file1Content : [],
@@ -181,11 +157,10 @@ class FilesDiffCommand implements FDCI
                 $currentHistory = is_array($contentDescriptor) ? $contentDescriptor["history"] : "";
                 $currentLevel = is_array($contentDescriptor) ? $contentDescriptor["level"] : 0;
 
-                $nextLevel = $this->getNextLevel($currentLevel);
-                $nextHistory = $this->getNextLevelHistory(
-                    is_string($currentHistory) ? $currentHistory : "",
-                    $fileKey
-                );
+                $nextLevel = is_integer($currentLevel) ? $currentLevel + 1 : 0;
+                $nextHistory = (($currentHistory !== "") && (is_string($currentHistory))) ?
+                    $currentHistory . "." . $fileKey : $fileKey;
+
                 $fileContent = $this->getNextItemContent($fileItem, $fileKey);
 
                 $nextInitContentDescriptor = $this->getNextInitContentDescriptor(
@@ -341,11 +316,10 @@ class FilesDiffCommand implements FDCI
                     $fileKey,
                     is_string($currentStatus) ? $currentStatus : ""
                 );
-                $nextLevel = $this->getNextLevel($currentLevel);
-                $nextHistory = $this->getNextLevelHistory(
-                    is_string($currentHistory) ? $currentHistory : "",
-                    $fileKey
-                );
+                $nextLevel = is_integer($currentLevel) ? $currentLevel + 1 : 0;
+                $nextHistory = (($currentHistory !== "") && (is_string($currentHistory))) ?
+                    $currentHistory . "." . $fileKey : $fileKey;
+
                 $file1Content = $this->getNextItemContent($file1Item, $fileKey);
                 $file2Content = $this->getNextItemContent($file2Item, $fileKey);
 
@@ -427,7 +401,7 @@ class FilesDiffCommand implements FDCI
             history: "",
             fileContent: $file1Content
         );
-        $fileKeys = $this->getInitContentKeys($file1Content, $file1Content);
+        $fileKeys = $this->getNextContentKeys($file1Content, $file1Content);
 
         $this->content1Descriptor = $this->getContent(
             $fileKeys,
@@ -440,7 +414,7 @@ class FilesDiffCommand implements FDCI
             history: "",
             fileContent: $file2Content
         );
-        $fileKeys = $this->getInitContentKeys($file2Content, $file2Content);
+        $fileKeys = $this->getNextContentKeys($file2Content, $file2Content);
 
         $this->content2Descriptor = $this->getContent(
             $fileKeys,
@@ -455,7 +429,7 @@ class FilesDiffCommand implements FDCI
             file1Content: $file1Content,
             file2Content: $file2Content
         );
-        $mergedFileKeys = $this->getInitContentKeys($file1Content, $file2Content);
+        $mergedFileKeys = $this->getNextContentKeys($file1Content, $file2Content);
 
         $this->differenceDescriptor = $this->getDifference(
             $mergedFileKeys,
