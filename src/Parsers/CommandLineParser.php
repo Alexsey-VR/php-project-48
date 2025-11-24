@@ -23,7 +23,7 @@ class CommandLineParser implements CommandLineParserInterface
         $filename = __DIR__ . "/../../docopt.txt";
         if (
             file_exists($filename) &&
-            ($handler = fopen($filename, 'r'))
+            ($handler = fopen($filename, 'r')) !== false
         ) {
             $filesize = filesize($filename);
             $fileData = fread(
