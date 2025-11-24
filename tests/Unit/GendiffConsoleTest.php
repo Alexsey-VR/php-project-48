@@ -86,7 +86,7 @@ class GendiffConsoleTest extends TestCase
     {
         $commandLineParser = is_null($formatter) ? new DocoptDouble() : new DocoptDouble($formatter);
         $differ = new Differ(
-            $commandFactory = new CommandFactory(
+            new CommandFactory(
                 $commandLineParser,
                 new FileReader(),
                 new Formatters()

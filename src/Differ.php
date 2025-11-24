@@ -12,6 +12,7 @@ use Differ\Factories\CommandFactory;
 use Differ\Readers\FileReader;
 use Differ\Factories\Formatters;
 use Differ\Exceptions\DifferException;
+use Differ\Parsers\DocoptDouble;
 
 class Differ
 {
@@ -129,4 +130,24 @@ class Differ
         return $nextDCICommand->setFormatter($initFICommand)
                                         ->getFilesDiffs();
     }
+}
+
+function genDiff(
+    string $pathToFile1,
+    string $pathToFile2,
+    string $format = 'stylish'
+): string {
+    $differ = new Differ(
+        new CommandFactory(
+            new DocoptDouble(),
+            new FileReader(),
+            new Formatters()
+        )
+    );
+
+    return $differ->genDiff(
+        $pathToFile1,
+        $pathToFile2,
+        $format
+    );
 }

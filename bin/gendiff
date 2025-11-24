@@ -16,7 +16,7 @@ use Differ\Factories\Formatters;
 use Differ\Exceptions\DifferException;
 
 $differ = new Differ(
-    $commandFactory = new CommandFactory(
+    new CommandFactory(
         new \Docopt(),
         new FileReader(),
         new Formatters()
