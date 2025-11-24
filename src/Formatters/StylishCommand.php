@@ -314,10 +314,12 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
             $this->statusKeys[2] => "  + ",
             $this->statusKeys[3] => "  - "
         ];
+
         $altStatusComments = [];
         foreach ($this->statusKeys as $key) {
             $altStatusComments[$key] = "";
         }
+
         $this->statusComments = (strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES["verbose"]) === 0) ?
         [
             $this->statusKeys[0] => "",

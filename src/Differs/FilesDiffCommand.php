@@ -381,7 +381,8 @@ class FilesDiffCommand implements FDCI
     /**
      * @return array<int,mixed>
      */
-    private function getFileDataItems(CLPI $command, FPI $fileParser): array {
+    private function getFileDataItems(CLPI $command, FPI $fileParser): array
+    {
         $fileNames = $command->getFileNames();
         $this->filesPaths = [
             $fileNames['FILE1'],

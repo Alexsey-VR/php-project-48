@@ -34,22 +34,18 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
         $result = array_reduce(
             $content,
             function ($result, $contentItem) {
-                if (is_array($contentItem)) {
-                    if (is_array($contentItem["output"])) {
-                        if (sizeof($contentItem["output"]) > 0) {
-                            if (is_array($result)) {
-                                $result[] = implode($this->plainContent($contentItem["output"])) .
-                                        "\n";
-                            }
-                        } else {
-                            if (is_array($result)) {
-                                $strHistory = is_string($contentItem['history']) ? $contentItem['history'] : "";
-                                $strFileContent = $this->normalizeValue($contentItem["fileContent"]);
-                                $result[] = "Property '{$strHistory}' has value " .
-                                        "{$strFileContent}\n";
-                            }
-                        }
-                    }
+                if (
+                    is_array($contentItem) &&
+                    is_array($contentItem["output"]) &&
+                    is_array($result)
+                ) {
+                    $strHistory = is_string($contentItem['history']) ? $contentItem['history'] : "";
+                    $strFileContent = $this->normalizeValue($contentItem["fileContent"]);
+
+                    $result[] = (sizeof($contentItem["output"]) > 0) ?
+                        implode($this->plainContent($contentItem["output"])) . "\n"
+                        :
+                        "Property '{$strHistory}' has value " . "{$strFileContent}\n";
                 }
 
                 return $result;
