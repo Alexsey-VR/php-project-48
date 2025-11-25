@@ -18,8 +18,14 @@ To print help to the console use command:
 
 $ bin/gendiff -h
 
-For developers may be used function, that return string result in selected format: 
+For developers may be used function, that return string result in selected format:
 
-### List of functions:
-* [gendiff(string file1, string file2, string format)](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff.gif)
+\Differ\Differ\genDiff(file1, file2, format)
+
+### Examples:
+* [Comparison of flat files (JSON)](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff-4.gif)
+* [Comparison of flat files (YAML)](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff-6.gif)
+* [Recursive comparison](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff-7.gif)
+* [Plain format](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff-8.gif)
+* [Output in JSON](https://github.com/Alexsey-VR/php-project-48/blob/main/docs/gendiff-9.gif)
 
