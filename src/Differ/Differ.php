@@ -2,6 +2,7 @@
 
 namespace Differ\Differ;
 
+use Docopt;
 use Differ\Interfaces\CommandFactoryInterface;
 use Differ\Interfaces\FilesDiffCommandInterface;
 use Differ\Interfaces\FileParserInterface;
@@ -79,7 +80,7 @@ class Differ
         string $format = 'stylish'
     ): string {
         $commandFactory = new CommandFactory(
-            new \Docopt(),
+            new Docopt(),
             new FileReader(),
             new Formatters()
         );

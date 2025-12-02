@@ -3,15 +3,16 @@
 namespace Differ\Formatters;
 
 use Differ\Interfaces\FormattersInterface as FI;
+use Differ\Interfaces\FilesDiffCommandInterface;
 
-class JSONCommand implements \Differ\Interfaces\FormattersInterface
+class JSONCommand implements FI
 {
     private string $files1ContentString;
     private string $files2ContentString;
     public string $filesContentString;
     public string $filesDiffsString;
 
-    public function execute(\Differ\Interfaces\FilesDiffCommandInterface $command): FI
+    public function execute(FilesDiffCommandInterface $command): FI
     {
         $file1Name = $command->getFile1Name();
         $file2Name = $command->getFile2Name();

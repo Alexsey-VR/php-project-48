@@ -3,27 +3,32 @@
 namespace Differ\Factories;
 
 use Differ\Exceptions\DifferException;
+use Differ\Interfaces\CommandFactoryInterface;
+use Differ\Interfaces\FormattersInterface;
+use Differ\Formatters\StylishCommand;
+use Differ\Formatters\PlainCommand;
+use Differ\Formatters\JSONCommand;
 
-class Formatters implements \Differ\Interfaces\CommandFactoryInterface
+class Formatters implements CommandFactoryInterface
 {
-    private \Differ\Interfaces\FormattersInterface $formatCommand;
+    private FormattersInterface $formatCommand;
     private const array FORMAT_KEYS = [
         "stylish" => "stylish",
         "plain" => "plain",
         "json" => "json"
     ];
 
-    public function createCommand(string $commandKey): \Differ\Interfaces\FormattersInterface
+    public function createCommand(string $commandKey): FormattersInterface
     {
         switch ($commandKey) {
             case self::FORMAT_KEYS["stylish"]:
-                $this->formatCommand = new \Differ\Formatters\StylishCommand();
+                $this->formatCommand = new StylishCommand();
                 break;
             case self::FORMAT_KEYS["plain"]:
-                $this->formatCommand = new \Differ\Formatters\PlainCommand();
+                $this->formatCommand = new PlainCommand();
                 break;
             case self::FORMAT_KEYS["json"]:
-                $this->formatCommand = new \Differ\Formatters\JSONCommand();
+                $this->formatCommand = new JSONCommand();
                 break;
             default:
                 return throw new DifferException("input error: unknown output format\n");

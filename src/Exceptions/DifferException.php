@@ -2,7 +2,9 @@
 
 namespace Differ\Exceptions;
 
-class DifferException extends \Exception
+use Exception;
+
+class DifferException extends Exception
 {
     public function __construct(string $message)
     {

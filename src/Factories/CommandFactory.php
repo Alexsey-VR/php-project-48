@@ -2,6 +2,7 @@
 
 namespace Differ\Factories;
 
+use Docopt;
 use Differ\Interfaces\CommandLineParserInterface as CLPI;
 use Differ\Interfaces\FileParserInterface as FPI;
 use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
@@ -18,7 +19,7 @@ use Differ\Displays\DisplayCommand;
 
 class CommandFactory implements CommandFactoryInterface
 {
-    private \Docopt|DocoptDoubleInterface $parser;
+    private Docopt|DocoptDoubleInterface $parser;
     private FileReaderInterface $fileReader;
     private CommandFactoryInterface $formatters;
 
@@ -29,7 +30,7 @@ class CommandFactory implements CommandFactoryInterface
     ];
 
     public function __construct(
-        \Docopt|DocoptDoubleInterface $parser,
+        Docopt|DocoptDoubleInterface $parser,
         FileReaderInterface $fileReader,
         CommandFactoryInterface $formatters
     ) {

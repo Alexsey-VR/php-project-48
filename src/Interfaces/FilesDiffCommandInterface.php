@@ -27,7 +27,7 @@ interface FilesDiffCommandInterface
     public function getDifferenceDescriptor(): array;
 
     /**
-     * @return array<int,string>
+     * @return array<string,string>
      */
     public function getStatusKeys(): array;
 }

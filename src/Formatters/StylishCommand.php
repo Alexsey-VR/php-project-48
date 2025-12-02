@@ -3,14 +3,15 @@
 namespace Differ\Formatters;
 
 use Differ\Interfaces\FormattersInterface as FI;
+use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
 
-class StylishCommand implements \Differ\Interfaces\FormattersInterface
+class StylishCommand implements FI
 {
     private string $files1ContentString;
     private string $files2ContentString;
 
     /**
-     * @var array<int,string> $statusKeys
+     * @var array<string,string> $statusKeys
      */
     private array $statusKeys;
 
@@ -48,7 +49,9 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
             function ($result, $contentItem) {
                 if (is_array($contentItem) && is_array($result)) {
                     $levelNumValue = is_integer($contentItem["level"]) ? $contentItem["level"] : 0;
-                    $itemLevelShift = str_repeat($this->statusPrefixes[$this->statusKeys[0]], $levelNumValue);
+                    $itemLevelShift = str_repeat($this->statusPrefixes[
+                        $this->statusKeys["for not changed value"]
+                    ], $levelNumValue);
 
                     $outputValue = is_array($contentItem["output"]) ? $contentItem["output"] : [];
                     $fileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
@@ -124,10 +127,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
     ): string {
         if (is_array($contentItem)) {
             $currentPrefixKey = (is_array($contentItem["output"]) &&
-                ($contentItem["status"] === $this->statusKeys[1])) ?
+                ($contentItem["status"] === $this->statusKeys["for changed value"])) ?
                 $prefixKey : $altPrefixKey;
 
-            $currentCommentKey = ($contentItem["status"] === $this->statusKeys[1]) ?
+            $currentCommentKey = ($contentItem["status"] === $this->statusKeys["for changed value"]) ?
                 $commentKey : $altCommentKey;
 
             $strFileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
@@ -135,7 +138,7 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
             $output = $this->statusPrefixes[$currentPrefixKey] .
                 "{$strFileKeyItem}: {" . $this->statusComments[$currentCommentKey] . "\n" .
                 implode($currentItemList) .
-                $itemLevelShift . $this->statusPrefixes[$this->statusKeys[0]] .
+                $itemLevelShift . $this->statusPrefixes[$this->statusKeys["for not changed value"]] .
                 "}";
         } else {
             $output = "";
@@ -169,7 +172,9 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
             function ($result, $contentItem) {
                 if (is_array($contentItem) && is_array($result)) {
                     $numLevelValue = is_integer($contentItem["level"]) ? $contentItem["level"] : 1;
-                    $itemLevelShift = str_repeat($this->statusPrefixes[$this->statusKeys[0]], $numLevelValue - 1);
+                    $itemLevelShift = str_repeat($this->statusPrefixes[
+                        $this->statusKeys["for not changed value"]
+                    ], $numLevelValue - 1);
 
                     $firstContent = $contentItem["file1Content"];
                     $secondContent = $contentItem["file2Content"];
@@ -183,10 +188,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
                         $styledArray = $this->getStyledList(
                             contentItem: $contentItem,
                             currentItemList: $this->stylizeDifference($outputItem),
-                            prefixKey: $this->statusKeys[3],
-                            altPrefixKey: $this->statusKeys[3],
-                            commentKey: $this->statusKeys[1],
-                            altCommentKey: $this->statusKeys[1],
+                            prefixKey: $this->statusKeys["for deleted value"],
+                            altPrefixKey: $this->statusKeys["for deleted value"],
+                            commentKey: $this->statusKeys["for changed value"],
+                            altCommentKey: $this->statusKeys["for changed value"],
                             itemLevelShift: $itemLevelShift
                         );
                         $result[] = $itemLevelShift .
@@ -195,10 +200,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
 
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
-                            prefixKey: $this->statusKeys[2],
+                            prefixKey: $this->statusKeys["for added value"],
                             currentContent: $this->normalizeContent($secondContent),
-                            commentKey: $this->statusKeys[4],
-                            altCommentKey: $this->statusKeys[5]
+                            commentKey: $this->statusKeys["for empty value"],
+                            altCommentKey: $this->statusKeys["for new value"]
                         );
                         $result[] = $itemLevelShift .
                                     $styledItem .
@@ -206,10 +211,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
                     } elseif ($secondContentIsArray) {
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
-                            prefixKey: $this->statusKeys[3],
+                            prefixKey: $this->statusKeys["for deleted value"],
                             currentContent: $this->normalizeContent($firstContent),
-                            commentKey: $this->statusKeys[4],
-                            altCommentKey: $this->statusKeys[1]
+                            commentKey: $this->statusKeys["for empty value"],
+                            altCommentKey: $this->statusKeys["for changed value"]
                         );
                         $result[] = $itemLevelShift .
                                     $styledItem .
@@ -218,10 +223,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
                         $styledArray = $this->getStyledList(
                             contentItem: $contentItem,
                             currentItemList: $this->stylizeDifference($outputItem),
-                            prefixKey: $this->statusKeys[2],
-                            altPrefixKey: $this->statusKeys[2],
-                            commentKey: $this->statusKeys[5],
-                            altCommentKey: $this->statusKeys[5],
+                            prefixKey: $this->statusKeys["for added value"],
+                            altPrefixKey: $this->statusKeys["for added value"],
+                            commentKey: $this->statusKeys["for new value"],
+                            altCommentKey: $this->statusKeys["for new value"],
                             itemLevelShift: $itemLevelShift
                         );
                         $result[] = $itemLevelShift .
@@ -231,22 +236,22 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
                         $styledArray = $this->getStyledList(
                             contentItem: $contentItem,
                             currentItemList: $this->stylizeDifference($outputItem),
-                            prefixKey: $this->statusKeys[0],
+                            prefixKey: $this->statusKeys["for not changed value"],
                             altPrefixKey: $strContentStatus,
-                            commentKey: $this->statusKeys[0],
+                            commentKey: $this->statusKeys["for not changed value"],
                             altCommentKey: $strContentStatus,
                             itemLevelShift: $itemLevelShift
                         );
                         $result[] = $itemLevelShift .
                                     $styledArray .
                                     "\n";
-                    } elseif ($contentItem["status"] === $this->statusKeys[1]) {
+                    } elseif ($contentItem["status"] === $this->statusKeys["for changed value"]) {
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
-                            prefixKey: $this->statusKeys[3],
+                            prefixKey: $this->statusKeys["for deleted value"],
                             currentContent: $this->normalizeContent($firstContent),
-                            commentKey: $this->statusKeys[4],
-                            altCommentKey: $this->statusKeys[1]
+                            commentKey: $this->statusKeys["for empty value"],
+                            altCommentKey: $this->statusKeys["for changed value"]
                         );
                         $result[] = $itemLevelShift .
                                     $styledItem .
@@ -254,10 +259,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
 
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
-                            prefixKey: $this->statusKeys[2],
+                            prefixKey: $this->statusKeys["for added value"],
                             currentContent: $this->normalizeContent($secondContent),
-                            commentKey: $this->statusKeys[4],
-                            altCommentKey: $this->statusKeys[5]
+                            commentKey: $this->statusKeys["for empty value"],
+                            altCommentKey: $this->statusKeys["for new value"]
                         );
                         $result[] = $itemLevelShift .
                                     $styledItem .
@@ -299,7 +304,7 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
         }
     }
 
-    public function execute(\Differ\Interfaces\FilesDiffCommandInterface $command): FI
+    public function execute(FDCI $command): FI
     {
         $file1Name = $command->getFile1Name();
         $file2Name = $command->getFile2Name();
@@ -309,10 +314,10 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
 
         $this->statusKeys = $command->getStatusKeys();
         $this->statusPrefixes = [
-            $this->statusKeys[0] => "    ",
-            $this->statusKeys[1] => " -+ ",
-            $this->statusKeys[2] => "  + ",
-            $this->statusKeys[3] => "  - "
+            $this->statusKeys["for not changed value"] => "    ",
+            $this->statusKeys["for changed value"] => " -+ ",
+            $this->statusKeys["for added value"] => "  + ",
+            $this->statusKeys["for deleted value"] => "  - "
         ];
 
         $altStatusComments = [];
@@ -322,12 +327,12 @@ class StylishCommand implements \Differ\Interfaces\FormattersInterface
 
         $this->statusComments = (strcmp($this->commentType, self::AVAILABLE_COMMENT_TYPES["verbose"]) === 0) ?
         [
-            $this->statusKeys[0] => "",
-            $this->statusKeys[1] => " # Old value",
-            $this->statusKeys[2] => " # Added",
-            $this->statusKeys[3] => " # Removed",
-            $this->statusKeys[4] => "# There are no values, but a space exists after the colon",
-            $this->statusKeys[5] => " # New value"
+            $this->statusKeys["for not changed value"] => "",
+            $this->statusKeys["for changed value"] => " # Old value",
+            $this->statusKeys["for added value"] => " # Added",
+            $this->statusKeys["for deleted value"] => " # Removed",
+            $this->statusKeys["for empty value"] => "# There are no values, but a space exists after the colon",
+            $this->statusKeys["for new value"] => " # New value"
         ]
         :
         $altStatusComments;

@@ -3,8 +3,9 @@
 namespace Differ\Readers;
 
 use Differ\Exceptions\DifferException;
+use Differ\Interfaces\FileReaderInterface;
 
-class FileReader implements \Differ\Interfaces\FileReaderInterface
+class FileReader implements FileReaderInterface
 {
     private const MAX_FILE_SIZE = 4096;
     private string $fileName;
@@ -23,7 +24,7 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
         return strtolower($fileName);
     }
 
-    public function readFile(string $fileName): \Differ\Interfaces\FileReaderInterface
+    public function readFile(string $fileName): FileReaderInterface
     {
         $this->fileName = __DIR__;
         $fileExists = file_exists($fileName);

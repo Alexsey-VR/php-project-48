@@ -2,20 +2,22 @@
 
 namespace Differ\Parsers;
 
+use Docopt;
+use Docopt\Response;
 use Differ\Interfaces\CommandLineParserInterface;
 use Differ\Interfaces\DocoptDoubleInterface;
 
 class CommandLineParser implements CommandLineParserInterface
 {
     private string $parserDescriptor;
-    private \Docopt|DocoptDoubleInterface $parser;
+    private Docopt|DocoptDoubleInterface $parser;
     /**
      * @var array<string,string> $args
      */
     private array $args;
     private string $defaultFormat;
 
-    public function __construct(\Docopt|DocoptDoubleInterface $parser)
+    public function __construct(Docopt|DocoptDoubleInterface $parser)
     {
         $this->parser = $parser;
         $this->defaultFormat = 'stylish';
@@ -38,7 +40,7 @@ class CommandLineParser implements CommandLineParserInterface
     public function execute(CommandLineParserInterface $command): CommandLineParserInterface
     {
         /**
-         * @var \Docopt\Response|DocoptDoubleInterface $objArgs
+         * @var Response|DocoptDoubleInterface $objArgs
          */
         $objArgs = $this->parser->handle($this->parserDescriptor, array('version' => '1.0.6'));
         if (isset($objArgs->args) && is_array($objArgs->args)) {

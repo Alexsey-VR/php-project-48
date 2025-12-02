@@ -6,10 +6,11 @@ use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
 use Differ\Interfaces\CommandLineParserInterface as CLPI;
 use Differ\Interfaces\FileParserInterface as FPI;
 use Differ\Exceptions\DifferException;
+use Differ\Interfaces\FileReaderInterface;
 
 class FilesDiffCommand implements FDCI
 {
-    private \Differ\Interfaces\FileReaderInterface $fileReader;
+    private FileReaderInterface $fileReader;
 
     /**
      * @var array<int,string> $filesPaths
@@ -37,10 +38,15 @@ class FilesDiffCommand implements FDCI
     private array $differenceDescriptor;
 
     private const array STATUS_KEYS = [
-        "not changed", "changed", "added", "deleted", "empty", "new value"
+        "for not changed value" => "not changed",
+        "for changed value" => "changed",
+        "for added value" => "added",
+        "for deleted value" => "deleted",
+        "for empty value" => "empty",
+        "for new value" => "new value"
     ];
 
-    public function __construct(\Differ\Interfaces\FileReaderInterface $reader)
+    public function __construct(FileReaderInterface $reader)
     {
         $this->filesDataItems = [];
 
@@ -207,20 +213,20 @@ class FilesDiffCommand implements FDCI
         $file1Content = $this->getNextItemContent($file1Item, $fileKey);
         $file2Content = $this->getNextItemContent($file2Item, $fileKey);
 
-        $status = self::STATUS_KEYS[0];
+        $status = self::STATUS_KEYS["for not changed value"];
         $bothFilesKeySet = isset($file1Content, $file2Content);
         $file1KeyOnlySet = isset($file1Content) && !isset($file2Content);
         $file2KeyOnlySet = !isset($file1Content) && isset($file2Content);
 
         if ($bothFilesKeySet) {
             $status = ($file1Content === $file2Content) ?
-                self::STATUS_KEYS[0] : self::STATUS_KEYS[1];
+                self::STATUS_KEYS["for not changed value"] : self::STATUS_KEYS["for changed value"];
         } elseif ($file1KeyOnlySet) {
-            $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
-                self::STATUS_KEYS[0] : self::STATUS_KEYS[3];
+            $status = (($currentStatus === self::STATUS_KEYS["for changed value"]) && $nextItemIsNotArray) ?
+                self::STATUS_KEYS["for not changed value"] : self::STATUS_KEYS["for deleted value"];
         } elseif ($file2KeyOnlySet) {
-            $status = (($currentStatus === self::STATUS_KEYS[1]) && $nextItemIsNotArray) ?
-                self::STATUS_KEYS[0] : self::STATUS_KEYS[2];
+            $status = (($currentStatus === self::STATUS_KEYS["for changed value"]) && $nextItemIsNotArray) ?
+                self::STATUS_KEYS["for not changed value"] : self::STATUS_KEYS["for added value"];
         }
 
         return $status;
@@ -259,12 +265,12 @@ class FilesDiffCommand implements FDCI
         mixed $file1Content,
         mixed $file2Content
     ): array {
-        if ($status === self::STATUS_KEYS[2]) {
+        if ($status === self::STATUS_KEYS["for added value"]) {
             $initDifferenceDescriptor = [
                 "file1Content" => $file2Content,
                 "file2Content" => $file2Content,
             ];
-        } elseif ($status === self::STATUS_KEYS[3]) {
+        } elseif ($status === self::STATUS_KEYS["for deleted value"]) {
             $initDifferenceDescriptor = [
                 "file1Content" => $file1Content,
                 "file2Content" => $file1Content,
@@ -285,7 +291,7 @@ class FilesDiffCommand implements FDCI
     }
 
     /**
-     * @return array<int,string>
+     * @return array<string,string>
      */
     public function getStatusKeys(): array
     {

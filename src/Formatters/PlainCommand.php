@@ -3,14 +3,15 @@
 namespace Differ\Formatters;
 
 use Differ\Interfaces\FormattersInterface as FI;
+use Differ\Interfaces\FilesDiffCommandInterface as FDCI;
 
-class PlainCommand implements \Differ\Interfaces\FormattersInterface
+class PlainCommand implements FI
 {
     private string $file1ContentString;
     private string $file2ContentString;
 
     /**
-     * @var array<int,string> $statusKeys
+     * @var array<string,string> $statusKeys
      */
     private array $statusKeys;
 
@@ -89,7 +90,6 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
         return $result;
     }
 
-
     private function getPlainItem(
         mixed $contentItem,
         string $prefixKey,
@@ -100,15 +100,17 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
         $secondContentValue = $this->normalizeValue($secondContent);
 
         $altComment = "";
-        if ($prefixKey === $this->statusKeys[1]) {
+        if ($prefixKey === $this->statusKeys["for changed value"]) {
             $altComment = ". From {$firstContentValue} to {$secondContentValue}";
-        } elseif ($prefixKey === $this->statusKeys[2]) {
+        } elseif ($prefixKey === $this->statusKeys["for added value"]) {
             $altComment = " with value: {$secondContentValue}";
         }
 
         $historyItem = is_array($contentItem) ? $contentItem['history'] : "";
         $strHistory = is_string($historyItem) ? $historyItem : "";
-        return ($this->statusPrefixes[$prefixKey] !== $this->statusPrefixes[$this->statusKeys[0]]) ?
+        return ($this->statusPrefixes[$prefixKey] !== $this->statusPrefixes[
+            $this->statusKeys["for not changed value"]
+            ]) ?
             "Property '{$strHistory}' was {$this->statusPrefixes[$prefixKey]}{$altComment}"
         :
         "";
@@ -128,13 +130,13 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
         $currentPrefixKey = "";
         if (is_array($contentItem)) {
             $currentPrefixKey = (is_array($contentItem["output"]) &&
-                ($contentItem["status"] === $this->statusKeys[1])) ?
+                ($contentItem["status"] === $this->statusKeys["for changed value"])) ?
                 $prefixKey : $altPrefixKey;
         }
 
         $currentCommentKey = "";
         if (is_array($contentItem)) {
-            $currentCommentKey = ($contentItem["status"] === $this->statusKeys[1]) ?
+            $currentCommentKey = ($contentItem["status"] === $this->statusKeys["for changed value"]) ?
                 $commentKey : $altCommentKey;
         }
 
@@ -144,14 +146,14 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
             $strHistory = is_string($historyItem) ? $historyItem : "";
         }
 
-        if ($currentCommentKey === $this->statusKeys[2]) {
+        if ($currentCommentKey === $this->statusKeys["for added value"]) {
             return "Property '{$strHistory}' was " .
-                "{$this->statusPrefixes[$this->statusKeys[2]]} with value: " .
+                "{$this->statusPrefixes[$this->statusKeys["for added value"]]} with value: " .
                 self::NORMALIZED_VALUES[3];
         } elseif (
-            $this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys[3]]
+            $this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys["for deleted value"]]
         ) {
-            return "Property '{$strHistory}' was {$this->statusPrefixes[$this->statusKeys[3]]}";
+            return "Property '{$strHistory}' was {$this->statusPrefixes[$this->statusKeys["for deleted value"]]}";
         }
 
         return implode($currentItemList);
@@ -176,15 +178,16 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
                 }
                 $bothContentIsArray = is_array($firstContent) && is_array($secondContent);
 
+
                 $outputItem = is_array($contentItem) ? $contentItem["output"] : [];
                 $outputData = is_array($outputItem) ? $outputItem : [];
                 if ($bothContentIsArray) {
                     $styledItem = $this->getPlainList(
                         contentItem: $contentItem,
                         currentItemList: $this->plainDifference($outputData),
-                        prefixKey: $this->statusKeys[0],
+                        prefixKey: $this->statusKeys["for not changed value"],
                         altPrefixKey: $statusContent,
-                        commentKey: $this->statusKeys[0],
+                        commentKey: $this->statusKeys["for not changed value"],
                         altCommentKey: $statusContent,
                     );
                 } else {
@@ -213,7 +216,7 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
         }
     }
 
-    public function execute(\Differ\Interfaces\FilesDiffCommandInterface $command): FI
+    public function execute(FDCI $command): FI
     {
         $file1Name = $command->getFile1Name();
         $file2Name = $command->getFile2Name();
@@ -223,10 +226,10 @@ class PlainCommand implements \Differ\Interfaces\FormattersInterface
 
         $this->statusKeys = $command->getStatusKeys();
         $this->statusPrefixes = [
-            $this->statusKeys[0] => "",
-            $this->statusKeys[1] => "updated",
-            $this->statusKeys[2] => "added",
-            $this->statusKeys[3] => "removed"
+            $this->statusKeys["for not changed value"] => "",
+            $this->statusKeys["for changed value"] => "updated",
+            $this->statusKeys["for added value"] => "added",
+            $this->statusKeys["for deleted value"] => "removed"
         ];
 
         $output1Content = is_array($content1Descriptor["output"]) ? $content1Descriptor["output"] : [];
