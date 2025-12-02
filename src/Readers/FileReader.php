@@ -35,17 +35,8 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
             throw new DifferException("input error: file {$fileName} is not exists.\n");
         }
 
-        if (
-            $fileExists &&
-            ($this->fileFormat === "yaml" ||
-             $this->fileFormat === "yml" ||
-             $this->fileFormat === 'json') === false
-        ) {
-            throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");           
-        }
-
         $this->fileContent = "";
-        if ($fileExists && ($handle = fopen($this->fileName, "r")) !== false) {
+        if (($handle = fopen($this->fileName, "r")) !== false) {
             $fileData = fread($handle, self::MAX_FILE_SIZE);
             $this->fileContent = ($fileData !== false) ? $fileData : "";
             fclose($handle);

@@ -39,6 +39,8 @@ class FileParser implements FileParserInterface
             $yamlVariables = Yaml::parseFile($this->fileName);
             $fileContentArray = is_array($yamlVariables) ?
             $yamlVariables : throw new DifferException("internal error: yaml file can't be parsed\n");
+        } else {
+            throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
         }
 
         return $fileContentArray;
