@@ -7,15 +7,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Differ\Readers\FileReader;
 use Differ\Parsers\FileParser;
+use Differ\Exceptions\DifferException;
 
 #[CoversClass(FileReader::class)]
 #[CoversClass(FileParser::class)]
 #[CoversMethod(FileReader::class, 'readFile')]
+#[CoversClass(DifferException::class)]
 class FileParserTest extends TestCase
 {
     public function testReadFileAsObject()
     {
-        $jsonFileForArray = $_ENV['FIXTURES_PATH'] . "/fileForArray.json";
+        $jsonFileForArray = __DIR__ . "/../Fixtures/fileForArray.json";
 
         $fileReader = new FileReader();
         $fileParser = new FileParser();
@@ -49,7 +51,7 @@ class FileParserTest extends TestCase
 
     public function testReadFileAsArray()
     {
-        $jsonFileForArray = $_ENV['FIXTURES_PATH'] . "/fileForArray.json";
+        $jsonFileForArray = __DIR__ . "/../Fixtures/fileForArray.json";
 
         $fileReader = new FileReader();
         $fileParser = new FileParser();
@@ -72,9 +74,11 @@ class FileParserTest extends TestCase
         $fileReader = new FileReader();
         $fileParser = new FileParser();
 
+        $this->expectException(DifferException::class);
+
         $fileContent = $fileParser->execute(
             $fileReader->readFile(
-                $_ENV['FIXTURES_PATH'] . "/fileNotJson.json"
+                __DIR__ . "/../Fixtures/fileNotJSON.json"
             )
         );
 

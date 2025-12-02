@@ -16,9 +16,6 @@
             <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <env name="FIXTURES_PATH" value="./tests/Fixtures"/>
-    </php>
 
     <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>

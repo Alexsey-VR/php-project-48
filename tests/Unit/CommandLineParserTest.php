@@ -20,14 +20,14 @@ class CommandLineParserTest extends TestCase
         return [
             [
                 "fileNames" => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.json",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.json"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.json",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.json"
                 ]
             ],
             [
                 "fileNames" => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.yaml",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.yaml"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.yaml",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.yaml"
                 ]
             ]
         ];

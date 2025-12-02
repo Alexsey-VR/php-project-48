@@ -35,17 +35,17 @@ class FilesDiffCommandTest extends TestCase
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.json",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.json"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.json",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.json"
                 ],
-                'outputFilePath' => $_ENV['FIXTURES_PATH'] . "/filesJSONContent.txt"
+                'outputFilePath' => __DIR__ . "/../Fixtures/filesJSONContent.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1Entry.yaml",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.yaml"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.yaml",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.yaml"
                 ],
-                'outputFilePath' => $_ENV['FIXTURES_PATH'] . "/filesYAMLContent.txt"
+                'outputFilePath' => __DIR__ . "/../Fixtures/filesYAMLContent.txt"
             ]
         ];
     }
@@ -87,8 +87,8 @@ class FilesDiffCommandTest extends TestCase
             \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.txt",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2Entry.yaml"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.txt",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.yaml"
                 ]
             ]
         );

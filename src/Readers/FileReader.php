@@ -31,6 +31,8 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
             $fileNameParts = explode(".", $this->normalizeFilename($fileName));
             $this->fileName = $fileName;
             $this->fileFormat = end($fileNameParts);
+        } else {
+            throw new DifferException("input error: file {$fileName} is not exists.\n");
         }
 
         if (
@@ -39,7 +41,7 @@ class FileReader implements \Differ\Interfaces\FileReaderInterface
              $this->fileFormat === "yml" ||
              $this->fileFormat === 'json') === false
         ) {
-            throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");
+            throw new DifferException("unknown files format: use json, yaml (yml) enstead\n");           
         }
 
         $this->fileContent = "";

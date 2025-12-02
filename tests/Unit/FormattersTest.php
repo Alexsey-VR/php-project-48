@@ -39,57 +39,57 @@ class FormattersTest extends TestCase
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.json",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.json"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.json",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2.json"
                 ],
-                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesStylishRecursiveJSONContent.txt",
+                'contentFilePath' => __DIR__ . "/../Fixtures/filesStylishRecursiveJSONContent.txt",
                 'outputFormat' => 'STYLISH',
-                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
+                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
                 ],
-                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesStylishRecursiveYAMLContent.txt",
+                'contentFilePath' => __DIR__ . "/../Fixtures/filesStylishRecursiveYAMLContent.txt",
                 'outputFormat' => 'stylish',
-                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
+                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.json",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.json"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.json",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2.json"
                 ],
-                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesPlainRecursiveJSONContent.txt",
+                'contentFilePath' => __DIR__ . "/../Fixtures/filesPlainRecursiveJSONContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
                 ],
-                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesPlainRecursiveYAMLContent.txt",
+                'contentFilePath' => __DIR__ . "/../Fixtures/filesPlainRecursiveYAMLContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.json",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.json"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.json",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2.json"
                 ],
-                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesJSONRecursiveJSONContent.txt",
+                'contentFilePath' => __DIR__ . "/../Fixtures/filesJSONRecursiveJSONContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveJSONDiffs.json"
+                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveJSONDiffs.json"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
-                    "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
+                    "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
+                    "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
                 ],
-                'contentFilePath' => $_ENV['FIXTURES_PATH'] . "/filesJSONRecursiveYAMLContent.txt",
+                'contentFilePath' => __DIR__ . "/../Fixtures/filesJSONRecursiveYAMLContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => $_ENV['FIXTURES_PATH'] . "/filesRecursiveJSONDiffs.json"
+                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -156,8 +156,8 @@ class FormattersTest extends TestCase
     public function testFormatException()
     {
         $fileNamesInput = [
-            "FILE1" => $_ENV['FIXTURES_PATH'] . "/file1.yaml",
-            "FILE2" => $_ENV['FIXTURES_PATH'] . "/file2.yaml"
+            "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
+            "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
         ];
 
         $cmdLineParser = $this->createConfiguredStub(

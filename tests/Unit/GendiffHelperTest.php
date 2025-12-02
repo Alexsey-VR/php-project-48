@@ -28,19 +28,19 @@ class GendiffHelperTest extends TestCase
         return [
             [
                 "formatter" => null,
-                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
+                "filePath" => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "stylish",
-                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursiveStylishDiffs.txt"
+                "filePath" => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "plain",
-                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursivePlainDiffs.txt"
+                "filePath" => __DIR__ . "/../Fixtures/filesRecursivePlainDiffs.txt"
             ],
             [
                 "formatter" => "json",
-                "filePath" => $_ENV['FIXTURES_PATH'] . "/filesRecursiveJSONDiffs.json"
+                "filePath" => __DIR__ . "/../Fixtures/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -51,13 +51,13 @@ class GendiffHelperTest extends TestCase
         $outputBuffer = "";
         if (is_null($formatter)) {
             $outputBuffer = genDiff(
-                $_ENV['FIXTURES_PATH'] . "/file1.json",
-                $_ENV['FIXTURES_PATH'] . "/file2.json"
+                __DIR__ . "/../Fixtures/file1.json",
+                __DIR__ . "/../Fixtures/file2.json"
             );
         } else {
             $outputBuffer = genDiff(
-                $_ENV['FIXTURES_PATH'] . "/file1.json",
-                $_ENV['FIXTURES_PATH'] . "/file2.json",
+                __DIR__ . "/../Fixtures/file1.json",
+                __DIR__ . "/../Fixtures/file2.json",
                 $formatter
             );
         }
