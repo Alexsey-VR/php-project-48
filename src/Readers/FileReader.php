@@ -19,17 +19,12 @@ class FileReader implements FileReaderInterface
         $this->fileContent = "";
     }
 
-    private function normalizeFilename(string $fileName): string
-    {
-        return strtolower($fileName);
-    }
-
     public function readFile(string $fileName): FileReaderInterface
     {
         $this->fileName = __DIR__;
         $fileExists = file_exists($fileName);
         if ($fileExists) {
-            $fileNameParts = explode(".", $this->normalizeFilename($fileName));
+            $fileNameParts = explode(".", strtolower($fileName));
             $this->fileName = $fileName;
             $this->fileFormat = end($fileNameParts);
         } else {

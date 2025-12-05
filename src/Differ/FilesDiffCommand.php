@@ -102,12 +102,11 @@ class FilesDiffCommand implements FDCI
         mixed $fileItem,
         string $fileKey
     ): mixed {
-        $fileContent = null;
         if (is_array($fileItem)) {
-            $fileContent = $fileItem[$fileKey] ?? null;
+            return $fileItem[$fileKey] ?? null;
         }
 
-        return $fileContent;
+        return null;
     }
 
     /**
@@ -243,7 +242,7 @@ class FilesDiffCommand implements FDCI
         mixed $file1Content,
         mixed $file2Content
     ): array {
-        return $initDifferenceDescriptor = [
+        return [
             "level" => $level,
             "status" => $status,
             "fileKey" => $fileKey,
@@ -383,15 +382,14 @@ class FilesDiffCommand implements FDCI
      */
     private function getNormalizedFileContent(mixed $dataItem): array
     {
-        $fileContent = [];
         if (is_array($dataItem)) {
-            $fileContent = array_map(
+            return array_map(
                 fn($item) => $this->normalizeData($item),
                 $dataItem
             );
         }
 
-        return $fileContent;
+        return [];
     }
 
     public function execute(CLPI $command, FPI $fileParser): FDCI
