@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Tests\Unit;
+namespace Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -41,19 +41,19 @@ class GendiffConsoleTest extends TestCase
         return [
             [
                 "formatter" => null,
-                "filePath" => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
+                "filePath" => __DIR__ . "/Fixtures/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "stylish",
-                "filePath" => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
+                "filePath" => __DIR__ . "/Fixtures/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "plain",
-                "filePath" => __DIR__ . "/../Fixtures/filesRecursivePlainDiffs.txt"
+                "filePath" => __DIR__ . "/Fixtures/filesRecursivePlainDiffs.txt"
             ],
             [
                 "formatter" => "json",
-                "filePath" => __DIR__ . "/../Fixtures/filesRecursiveJSONDiffs.json"
+                "filePath" => __DIR__ . "/Fixtures/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -62,9 +62,9 @@ class GendiffConsoleTest extends TestCase
     public function testConsoleDiffer($formatter, $filePath)
     {
         $commandLineParser = is_null($formatter) ?
-            new DocoptDouble(__DIR__ . "/../Fixtures/file1.json", __DIR__ . "/../Fixtures/file2.json")
+            new DocoptDouble(__DIR__ . "/Fixtures/file1.json", __DIR__ . "/Fixtures/file2.json")
             :
-            new DocoptDouble(__DIR__ . "/../Fixtures/file1.json", __DIR__ . "/../Fixtures/file2.json", $formatter);
+            new DocoptDouble(__DIR__ . "/Fixtures/file1.json", __DIR__ . "/Fixtures/file2.json", $formatter);
         $commandFactory = new CommandFactory(
             $commandLineParser,
             new FileReader(),
@@ -97,13 +97,13 @@ class GendiffConsoleTest extends TestCase
         $outputBuffer = "";
         if (is_null($formatter)) {
             $outputBuffer = $differ->gendiff(
-                __DIR__ . "/../Fixtures/file1.json",
-                __DIR__ . "/../Fixtures/file2.json"
+                __DIR__ . "/Fixtures/file1.json",
+                __DIR__ . "/Fixtures/file2.json"
             );
         } else {
             $outputBuffer = $differ->genDiff(
-                __DIR__ . "/../Fixtures/file1.json",
-                __DIR__ . "/../Fixtures/file2.json",
+                __DIR__ . "/Fixtures/file1.json",
+                __DIR__ . "/Fixtures/file2.json",
                 $formatter
             );
         }
