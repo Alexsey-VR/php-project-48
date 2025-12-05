@@ -195,17 +195,11 @@ class FilesDiffCommand implements FDCI
         }
     }
 
-    /**
-     * @param mixed $file1Item
-     * @param mixed $file2Item
-     * @param string $fileKey
-     * @param string $currentStatus
-     */
     private function getNextItemStatus(
-        $file1Item,
-        $file2Item,
-        $fileKey,
-        $currentStatus
+        mixed $file1Item,
+        mixed $file2Item,
+        string $fileKey,
+        string $currentStatus
     ): string {
         $nextItemIsNotArray = !(is_array($file1Item) && is_array($file2Item));
 
@@ -303,8 +297,8 @@ class FilesDiffCommand implements FDCI
      * @return array<mixed>
      */
     private function getDifference(
-        $fileContentKeys,
-        $initDifferenceDescriptor
+        array $fileContentKeys,
+        array $initDifferenceDescriptor
     ): array {
         $result = array_reduce(
             $fileContentKeys,
