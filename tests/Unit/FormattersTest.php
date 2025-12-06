@@ -18,6 +18,7 @@ use Differ\Exceptions\DifferException;
 use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\Formatters\JSONCommand;
+use Differ\Tests\Fixtures\FixturesHelper;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(CommandLineParser::class)]
@@ -36,60 +37,61 @@ class FormattersTest extends TestCase
 {
     public static function getParserArguments(): array
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.json",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2.json"
+                    "FILE1" => "{$fullFixturesPath}/file1.json",
+                    "FILE2" => "{$fullFixturesPath}/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../Fixtures/filesStylishRecursiveJSONContent.txt",
+                'contentFilePath' => "{$fullFixturesPath}/filesStylishRecursiveJSONContent.txt",
                 'outputFormat' => 'STYLISH',
-                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
+                'outputDiffsPath' => "{$fullFixturesPath}/filesRecursiveStylishDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
+                    "FILE1" => "{$fullFixturesPath}/file1.yaml",
+                    "FILE2" => "{$fullFixturesPath}/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../Fixtures/filesStylishRecursiveYAMLContent.txt",
+                'contentFilePath' => "{$fullFixturesPath}/filesStylishRecursiveYAMLContent.txt",
                 'outputFormat' => 'stylish',
-                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveStylishDiffs.txt"
+                'outputDiffsPath' => "{$fullFixturesPath}/filesRecursiveStylishDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.json",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2.json"
+                    "FILE1" => "{$fullFixturesPath}/file1.json",
+                    "FILE2" => "{$fullFixturesPath}/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../Fixtures/filesPlainRecursiveJSONContent.txt",
+                'contentFilePath' => "{$fullFixturesPath}/filesPlainRecursiveJSONContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' => "{$fullFixturesPath}/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
+                    "FILE1" => "{$fullFixturesPath}/file1.yaml",
+                    "FILE2" => "{$fullFixturesPath}/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../Fixtures/filesPlainRecursiveYAMLContent.txt",
+                'contentFilePath' => "{$fullFixturesPath}/filesPlainRecursiveYAMLContent.txt",
                 'outputFormat' => 'plain',
-                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursivePlainDiffs.txt"
+                'outputDiffsPath' => "{$fullFixturesPath}/filesRecursivePlainDiffs.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.json",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2.json"
+                    "FILE1" => "{$fullFixturesPath}/file1.json",
+                    "FILE2" => "{$fullFixturesPath}/file2.json"
                 ],
-                'contentFilePath' => __DIR__ . "/../Fixtures/filesJSONRecursiveJSONContent.txt",
+                'contentFilePath' => "{$fullFixturesPath}/filesJSONRecursiveJSONContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveJSONDiffs.json"
+                'outputDiffsPath' => "{$fullFixturesPath}/filesRecursiveJSONDiffs.json"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
+                    "FILE1" => "{$fullFixturesPath}/file1.yaml",
+                    "FILE2" => "{$fullFixturesPath}/file2.yaml"
                 ],
-                'contentFilePath' => __DIR__ . "/../Fixtures/filesJSONRecursiveYAMLContent.txt",
+                'contentFilePath' => "{$fullFixturesPath}/filesJSONRecursiveYAMLContent.txt",
                 'outputFormat' => 'json',
-                'outputDiffsPath' => __DIR__ . "/../Fixtures/filesRecursiveJSONDiffs.json"
+                'outputDiffsPath' => "{$fullFixturesPath}/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -155,9 +157,10 @@ class FormattersTest extends TestCase
 
     public function testFormatException()
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         $fileNamesInput = [
-            "FILE1" => __DIR__ . "/../Fixtures/file1.yaml",
-            "FILE2" => __DIR__ . "/../Fixtures/file2.yaml"
+            "FILE1" => "{$fullFixturesPath}/file1.yaml",
+            "FILE2" => "{$fullFixturesPath}/file2.yaml"
         ];
 
         $cmdLineParser = $this->createConfiguredStub(

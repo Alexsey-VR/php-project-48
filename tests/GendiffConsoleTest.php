@@ -19,6 +19,7 @@ use Differ\Formatters\StylishCommand;
 use Differ\Formatters\PlainCommand;
 use Differ\formatters\JSONCommand;
 use Differ\Displays\DisplayCommand;
+use Differ\Tests\Fixtures\FixturesHelper;
 
 #[CoversClass(CommandFactory::class)]
 #[CoversClass(Formatters::class)]
@@ -38,22 +39,23 @@ class GendiffConsoleTest extends TestCase
 {
     public static function getTestData(): array
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         return [
             [
                 "formatter" => null,
-                "filePath" => __DIR__ . "/Fixtures/filesRecursiveStylishDiffs.txt"
+                "filePath" => "{$fullFixturesPath}/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "stylish",
-                "filePath" => __DIR__ . "/Fixtures/filesRecursiveStylishDiffs.txt"
+                "filePath" => "{$fullFixturesPath}/filesRecursiveStylishDiffs.txt"
             ],
             [
                 "formatter" => "plain",
-                "filePath" => __DIR__ . "/Fixtures/filesRecursivePlainDiffs.txt"
+                "filePath" => "{$fullFixturesPath}/filesRecursivePlainDiffs.txt"
             ],
             [
                 "formatter" => "json",
-                "filePath" => __DIR__ . "/Fixtures/filesRecursiveJSONDiffs.json"
+                "filePath" =>"{$fullFixturesPath}/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
@@ -61,10 +63,11 @@ class GendiffConsoleTest extends TestCase
     #[DataProvider('getTestData')]
     public function testConsoleDiffer($formatter, $filePath)
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         $commandLineParser = is_null($formatter) ?
-            new DocoptDouble(__DIR__ . "/Fixtures/file1.json", __DIR__ . "/Fixtures/file2.json")
+            new DocoptDouble("{$fullFixturesPath}/file1.json", "{$fullFixturesPath}/file2.json")
             :
-            new DocoptDouble(__DIR__ . "/Fixtures/file1.json", __DIR__ . "/Fixtures/file2.json", $formatter);
+            new DocoptDouble("{$fullFixturesPath}/file1.json", "{$fullFixturesPath}/file2.json", $formatter);
         $commandFactory = new CommandFactory(
             $commandLineParser,
             new FileReader(),
@@ -94,16 +97,16 @@ class GendiffConsoleTest extends TestCase
             )
         );
 
-        $outputBuffer = "";
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         if (is_null($formatter)) {
             $outputBuffer = $differ->gendiff(
-                __DIR__ . "/Fixtures/file1.json",
-                __DIR__ . "/Fixtures/file2.json"
+                "{$fullFixturesPath}/file1.json",
+                "{$fullFixturesPath}/file2.json"
             );
         } else {
             $outputBuffer = $differ->genDiff(
-                __DIR__ . "/Fixtures/file1.json",
-                __DIR__ . "/Fixtures/file2.json",
+                "{$fullFixturesPath}/file1.json",
+                "{$fullFixturesPath}/file2.json",
                 $formatter
             );
         }

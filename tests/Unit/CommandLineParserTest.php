@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Differ\Parsers\DocoptDouble;
 use Differ\Parsers\CommandLineParser;
+use Differ\Tests\Fixtures\FixturesHelper;
 
 #[CoversClass(CommandLineParser::class)]
 #[CoversMethod(CommandLineParser::class, 'setFileNames')]
@@ -17,17 +18,18 @@ class CommandLineParserTest extends TestCase
 {
     public static function getFiles(): array
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         return [
             [
                 "fileNames" => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.json",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.json"
+                    "FILE1" => "{$fullFixturesPath}/file1Entry.json",
+                    "FILE2" => "{$fullFixturesPath}/file2Entry.json"
                 ]
             ],
             [
                 "fileNames" => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.yaml",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.yaml"
+                    "FILE1" => "{$fullFixturesPath}/file1Entry.yaml",
+                    "FILE2" => "{$fullFixturesPath}/file2Entry.yaml"
                 ]
             ]
         ];

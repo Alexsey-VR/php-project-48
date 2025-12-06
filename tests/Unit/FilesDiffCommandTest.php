@@ -10,6 +10,7 @@ use Differ\Differ\FilesDiffCommand;
 use Differ\Readers\FileReader;
 use Differ\Exceptions\DifferException;
 use Differ\Parsers\FileParser;
+use Differ\Tests\Fixtures\FixturesHelper;
 
 #[CoversClass(FilesDiffCommand::class)]
 #[CoversClass(FileReader::class)]
@@ -32,20 +33,21 @@ class FilesDiffCommandTest extends TestCase
 
     public static function getFileNames(): array
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         return [
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.json",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.json"
+                    "FILE1" => "{$fullFixturesPath}/file1Entry.json",
+                    "FILE2" => "{$fullFixturesPath}/file2Entry.json"
                 ],
-                'outputFilePath' => __DIR__ . "/../Fixtures/filesJSONContent.txt"
+                'outputFilePath' => "{$fullFixturesPath}/filesJSONContent.txt"
             ],
             [
                 'fileNamesInput' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1Entry.yaml",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.yaml"
+                    "FILE1" => "{$fullFixturesPath}/file1Entry.yaml",
+                    "FILE2" => "{$fullFixturesPath}/file2Entry.yaml"
                 ],
-                'outputFilePath' => __DIR__ . "/../Fixtures/filesYAMLContent.txt"
+                'outputFilePath' => "{$fullFixturesPath}/filesYAMLContent.txt"
             ]
         ];
     }
@@ -83,12 +85,13 @@ class FilesDiffCommandTest extends TestCase
 
     public function testExecuteForException()
     {
+        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
         $cmdLineParser = $this->createConfiguredStub(
             \Differ\Parsers\CommandLineParser::class,
             [
                 'getFileNames' => [
-                    "FILE1" => __DIR__ . "/../Fixtures/file1.txt",
-                    "FILE2" => __DIR__ . "/../Fixtures/file2Entry.yaml"
+                    "FILE1" => "{$fullFixturesPath}/file1.txt",
+                    "FILE2" => "{$fullFixturesPath}/file2Entry.yaml"
                 ]
             ]
         );
