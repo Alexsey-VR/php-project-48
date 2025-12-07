@@ -56,7 +56,7 @@ class GendiffConsoleTest extends TestCase
             ],
             [
                 "formatter" => "json",
-                "filePath" =>"{$fullFixturesPath}/filesRecursiveJSONDiffs.json"
+                "filePath" => "{$fullFixturesPath}/filesRecursiveJSONDiffs.json"
             ]
         ];
     }
