@@ -39,7 +39,8 @@ class GendiffConsoleTest extends TestCase
 {
     public static function getTestData(): array
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         return [
             [
                 "formatter" => null,
@@ -63,7 +64,8 @@ class GendiffConsoleTest extends TestCase
     #[DataProvider('getTestData')]
     public function testConsoleDiffer($formatter, $filePath)
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         $commandLineParser = is_null($formatter) ?
             new DocoptDouble("{$fullFixturesPath}/file1.json", "{$fullFixturesPath}/file2.json")
             :
@@ -97,7 +99,8 @@ class GendiffConsoleTest extends TestCase
             )
         );
 
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         if (is_null($formatter)) {
             $outputBuffer = $differ->gendiff(
                 "{$fullFixturesPath}/file1.json",
