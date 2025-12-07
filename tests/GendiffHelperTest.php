@@ -26,7 +26,8 @@ class GendiffHelperTest extends TestCase
 {
     public static function getTestData(): array
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         return [
             [
                 "formatter" => null,
@@ -50,7 +51,8 @@ class GendiffHelperTest extends TestCase
     #[DataProvider('getTestData')]
     public function testHelperDiffer($formatter, $filePath)
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         if (is_null($formatter)) {
             $outputBuffer = genDiff(
                 "{$fullFixturesPath}/file1.json",

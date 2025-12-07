@@ -33,7 +33,8 @@ class FilesDiffCommandTest extends TestCase
 
     public static function getFileNames(): array
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         return [
             [
                 'fileNamesInput' => [
@@ -85,7 +86,8 @@ class FilesDiffCommandTest extends TestCase
 
     public function testExecuteForException()
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         $cmdLineParser = $this->createConfiguredStub(
             \Differ\Parsers\CommandLineParser::class,
             [

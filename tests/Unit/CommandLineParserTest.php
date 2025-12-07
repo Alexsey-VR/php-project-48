@@ -18,7 +18,8 @@ class CommandLineParserTest extends TestCase
 {
     public static function getFiles(): array
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         return [
             [
                 "fileNames" => [

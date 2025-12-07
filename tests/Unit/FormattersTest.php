@@ -37,7 +37,8 @@ class FormattersTest extends TestCase
 {
     public static function getParserArguments(): array
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         return [
             [
                 'fileNamesInput' => [
@@ -157,7 +158,8 @@ class FormattersTest extends TestCase
 
     public function testFormatException()
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         $fileNamesInput = [
             "FILE1" => "{$fullFixturesPath}/file1.yaml",
             "FILE2" => "{$fullFixturesPath}/file2.yaml"

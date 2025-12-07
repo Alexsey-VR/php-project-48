@@ -18,7 +18,8 @@ class FileParserTest extends TestCase
 {
     public function testReadFileAsObject()
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         $jsonFileForArray = "{$fullFixturesPath}/fileForArray.json";
 
         $fileReader = new FileReader();
@@ -53,7 +54,8 @@ class FileParserTest extends TestCase
 
     public function testReadFileAsArray()
     {
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         $jsonFileForArray = "{$fullFixturesPath}/fileForArray.json";
 
         $fileReader = new FileReader();
@@ -79,7 +81,8 @@ class FileParserTest extends TestCase
 
         $this->expectException(DifferException::class);
 
-        $fullFixturesPath = new FixturesHelper()->getFullFixturesPath();
+        $fixturesHelper = new FixturesHelper();
+        $fullFixturesPath = $fixturesHelper->getFullFixturesPath();
         $fileContent = $fileParser->execute(
             $fileReader->readFile(
                 "{$fullFixturesPath}/fileNotJSON.json"
