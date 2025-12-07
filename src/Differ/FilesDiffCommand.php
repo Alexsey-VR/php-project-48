@@ -164,7 +164,7 @@ class FilesDiffCommand implements FDCI
 
                 $nextLevel = is_integer($currentLevel) ? $currentLevel + 1 : 0;
                 $nextHistory = (($currentHistory !== "") && (is_string($currentHistory))) ?
-                    $currentHistory . "." . $fileKey : $fileKey;
+                    "{$currentHistory}.{$fileKey}" : $fileKey;
 
                 $fileContent = $this->getNextItemContent($fileItem, $fileKey);
 
@@ -317,7 +317,7 @@ class FilesDiffCommand implements FDCI
                 );
                 $nextLevel = is_integer($currentLevel) ? $currentLevel + 1 : 0;
                 $nextHistory = (($currentHistory !== "") && (is_string($currentHistory))) ?
-                    $currentHistory . "." . $fileKey : $fileKey;
+                    "{$currentHistory}.{$fileKey}" : $fileKey;
 
                 $file1Content = $this->getNextItemContent($file1Item, $fileKey);
                 $file2Content = $this->getNextItemContent($file2Item, $fileKey);

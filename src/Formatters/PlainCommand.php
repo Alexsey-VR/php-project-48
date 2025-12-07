@@ -21,7 +21,10 @@ class PlainCommand implements FI
     private array $statusPrefixes;
 
     private const array NORMALIZED_VALUES = [
-        'false', 'true', 'null', '[complex value]'
+        'for false value' => 'false',
+        'for true value' => 'true',
+        'for null value' => 'null',
+        'for complex value' => '[complex value]'
     ];
     public string $filesContentString;
     public string $filesDiffsString;
@@ -43,10 +46,11 @@ class PlainCommand implements FI
                     $strHistory = is_string($contentItem['history']) ? $contentItem['history'] : "";
                     $strFileContent = $this->normalizeValue($contentItem["fileContent"]);
 
+                    $contentItemOutput = implode($this->plainContent($contentItem["output"]));
                     $result[] = (sizeof($contentItem["output"]) > 0) ?
-                        implode($this->plainContent($contentItem["output"])) . "\n"
+                        "{$contentItemOutput}\n"
                         :
-                        "Property '{$strHistory}' has value " . "{$strFileContent}\n";
+                        "Property '{$strHistory}' has value {$strFileContent}\n";
                 }
 
                 return $result;
@@ -62,7 +66,7 @@ class PlainCommand implements FI
 
     private function normalizeValue(mixed $value): string
     {
-        $firstNormalizedValue = is_array($value) ? self::NORMALIZED_VALUES[3] : $value;
+        $firstNormalizedValue = is_array($value) ? self::NORMALIZED_VALUES['for complex value'] : $value;
 
         $strNormalValue = $firstNormalizedValue;
         if (is_numeric($firstNormalizedValue)) {
@@ -149,7 +153,7 @@ class PlainCommand implements FI
         if ($currentCommentKey === $this->statusKeys["for added value"]) {
             return "Property '{$strHistory}' was " .
                 "{$this->statusPrefixes[$this->statusKeys["for added value"]]} with value: " .
-                self::NORMALIZED_VALUES[3];
+                self::NORMALIZED_VALUES['for complex value'];
         } elseif (
             $this->statusPrefixes[$currentPrefixKey] === $this->statusPrefixes[$this->statusKeys["for deleted value"]]
         ) {
@@ -218,8 +222,6 @@ class PlainCommand implements FI
 
     public function execute(FDCI $command): FI
     {
-        $file1Name = $command->getFile1Name();
-        $file2Name = $command->getFile2Name();
         $content1Descriptor = $command->getContent1Descriptor();
         $content2Descriptor = $command->getContent2Descriptor();
         $differenceDescriptor = $command->getDifferenceDescriptor();
@@ -249,12 +251,12 @@ class PlainCommand implements FI
                 fn($item) => $item !== ""
             );
 
-            $this->file1ContentString = "File {$file1Name} content:\n" .
-                implode("\n", $file1PlainContent) . "\n";
-            $this->file2ContentString = "File {$file2Name} content:\n" .
-                implode("\n", $file2PlainContent) . "\n";
+            $file1ContentString = implode("\n", $file1PlainContent);
+            $file2ContentString = implode("\n", $file2PlainContent);
+            $this->file1ContentString = "File {$command->getFile1Name()} content:\n{$file1ContentString}\n";
+            $this->file2ContentString = "File {$command->getFile2Name()} content:\n{$file2ContentString}\n";
 
-            $this->filesContentString = $this->file1ContentString . $this->file2ContentString;
+            $this->filesContentString = "{$this->file1ContentString}{$this->file2ContentString}";
 
             $outputDifference = is_array($differenceDescriptor["output"]) ? $differenceDescriptor["output"] : [];
             $filesDiffs = $this->plainDifference($outputDifference);
@@ -266,7 +268,8 @@ class PlainCommand implements FI
                 fn($item) => $item !== ""
             );
 
-            $this->filesDiffsString = implode("\n", $filesPlainDiffs) . "\n";
+            $filesPlainDiffsString = implode("\n", $filesPlainDiffs);
+            $this->filesDiffsString = "{$filesPlainDiffsString}\n";
 
         return $this;
     }

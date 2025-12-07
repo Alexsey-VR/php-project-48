@@ -65,17 +65,11 @@ class StylishCommand implements FI
                     }
 
                     if (sizeof($outputValue) > 0) {
-                        $result[] = $itemLevelShift .
-                                    "{$fileKeyItem}: ";
-                        $result[] = "{" .
-                                    "\n" . implode($this->stylizeContent($outputValue)) .
-                                    $itemLevelShift .
-                                    "}\n";
+                        $contentOutputString = implode($this->stylizeContent($outputValue));
+                        $result[] = "{$itemLevelShift}{$fileKeyItem}: {\n{$contentOutputString}{$itemLevelShift}}\n";
                     } else {
-                        $result[] = $itemLevelShift .
-                                    "{$fileKeyItem}: ";
-                        $result[] = $contentItem["fileContent"];
-                        $result[] = "\n";
+                        $normalizedFileContent = $this->normalizeContent($contentItem["fileContent"]);
+                        $result[] = "{$itemLevelShift}{$fileKeyItem}: {$normalizedFileContent}\n";
                     }
                 }
                 return $result;
@@ -102,10 +96,8 @@ class StylishCommand implements FI
 
         if (is_array($contentItem)) {
             $strFileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
-            $output = $this->statusPrefixes[$prefixKey] .
-                "{$strFileKeyItem}: " .
-                "{$currentContent}" .
-                $this->statusComments[$currentCommentKey];
+            $output = "{$this->statusPrefixes[$prefixKey]}{$strFileKeyItem}: " .
+                "{$currentContent}{$this->statusComments[$currentCommentKey]}";
         } else {
             $output = "";
         }
@@ -135,11 +127,10 @@ class StylishCommand implements FI
 
             $strFileKeyItem = is_string($contentItem['fileKey']) ? $contentItem['fileKey'] : "";
 
+            $currentItemListString = implode($currentItemList);
             $output = $this->statusPrefixes[$currentPrefixKey] .
-                "{$strFileKeyItem}: {" . $this->statusComments[$currentCommentKey] . "\n" .
-                implode($currentItemList) .
-                $itemLevelShift . $this->statusPrefixes[$this->statusKeys["for not changed value"]] .
-                "}";
+                "{$strFileKeyItem}: {{$this->statusComments[$currentCommentKey]}\n{$currentItemListString}" .
+                "{$itemLevelShift}{$this->statusPrefixes[$this->statusKeys["for not changed value"]]}}";
         } else {
             $output = "";
         }
@@ -194,9 +185,7 @@ class StylishCommand implements FI
                             altCommentKey: $this->statusKeys["for changed value"],
                             itemLevelShift: $itemLevelShift
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledArray .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledArray}\n";
 
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
@@ -205,9 +194,7 @@ class StylishCommand implements FI
                             commentKey: $this->statusKeys["for empty value"],
                             altCommentKey: $this->statusKeys["for new value"]
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledItem}\n";
                     } elseif ($secondContentIsArray) {
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
@@ -216,9 +203,7 @@ class StylishCommand implements FI
                             commentKey: $this->statusKeys["for empty value"],
                             altCommentKey: $this->statusKeys["for changed value"]
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledItem}\n";
 
                         $styledArray = $this->getStyledList(
                             contentItem: $contentItem,
@@ -229,9 +214,7 @@ class StylishCommand implements FI
                             altCommentKey: $this->statusKeys["for new value"],
                             itemLevelShift: $itemLevelShift
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledArray .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledArray}\n";
                     } elseif ($bothContentIsArray) {
                         $styledArray = $this->getStyledList(
                             contentItem: $contentItem,
@@ -242,9 +225,7 @@ class StylishCommand implements FI
                             altCommentKey: $strContentStatus,
                             itemLevelShift: $itemLevelShift
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledArray .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledArray}\n";
                     } elseif ($contentItem["status"] === $this->statusKeys["for changed value"]) {
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
@@ -253,9 +234,7 @@ class StylishCommand implements FI
                             commentKey: $this->statusKeys["for empty value"],
                             altCommentKey: $this->statusKeys["for changed value"]
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledItem}\n";
 
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
@@ -264,9 +243,7 @@ class StylishCommand implements FI
                             commentKey: $this->statusKeys["for empty value"],
                             altCommentKey: $this->statusKeys["for new value"]
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledItem}\n";
                     } elseif (isset($firstContent)) {
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
@@ -275,9 +252,7 @@ class StylishCommand implements FI
                             commentKey: $strContentStatus,
                             altCommentKey: $strContentStatus
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledItem}\n";
                     } else {
                         $styledItem = $this->getStyledItem(
                             contentItem: $contentItem,
@@ -286,9 +261,7 @@ class StylishCommand implements FI
                             commentKey: $strContentStatus,
                             altCommentKey: $strContentStatus
                         );
-                        $result[] = $itemLevelShift .
-                                    $styledItem .
-                                    "\n";
+                        $result[] = "{$itemLevelShift}{$styledItem}\n";
                     }
                 }
 
@@ -338,29 +311,20 @@ class StylishCommand implements FI
         $altStatusComments;
 
         if (is_array($content1Descriptor["output"])) {
-            $files1Content = $this->stylizeContent($content1Descriptor["output"]);
-            $this->files1ContentString = "File {$file1Name} content:\n" .
-                "{\n" . implode("", $files1Content) . "}\n";
-        } else {
-            $file1Content = [];
+            $files1ContentString = implode("", $this->stylizeContent($content1Descriptor["output"]));
+            $this->files1ContentString = "File {$file1Name} content:\n{\n{$files1ContentString}}\n";
         }
 
         if (is_array($content2Descriptor["output"])) {
-            $files2Content = $this->stylizeContent($content2Descriptor["output"]);
-            $this->files2ContentString = "File {$file2Name} content:\n" .
-                "{\n" . implode("", $files2Content) . "}\n";
-        } else {
-            $files2Content = [];
+            $files2ContentString = implode("", $this->stylizeContent($content2Descriptor["output"]));
+            $this->files2ContentString = "File {$file2Name} content:\n{\n{$files2ContentString}}\n";
         }
 
-        $this->filesContentString = $this->files1ContentString .
-                $this->files2ContentString;
+        $this->filesContentString = "{$this->files1ContentString}{$this->files2ContentString}";
 
         if (is_array($differenceDescriptor["output"])) {
-            $filesDiffs = $this->stylizeDifference($differenceDescriptor["output"]);
-                $this->filesDiffsString = "{\n" . implode("", $filesDiffs) . "}\n";
-        } else {
-            $filesDiffs = [];
+            $filesDiffsString = implode("", $this->stylizeDifference($differenceDescriptor["output"]));
+            $this->filesDiffsString = "{\n{$filesDiffsString}}\n";
         }
 
         return $this;
